@@ -1,8 +1,6 @@
 package com.game.code.Tank.Head;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
@@ -10,6 +8,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.AssetManagment.ParticleEffectActorPool;
 import com.game.code.Entity.Entity;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     private final Entity owner;
 
     private TextureRegion bulletTexture;
-    private ParticleEffectPool shards;
+    private ParticleEffectActorPool shards;
 
     private final float bulletWidth;
     private float bulletDamage;
@@ -44,10 +43,9 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     }
 
     @Override
-    public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectPool> particlePools) {
+    public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
         shards = getParticlePool(particlePools, assets.get("shards", ParticleEffect.class));
     }
-
     @Override
     public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
         addRequest(requests, clients, "TanksTheGame.atlas", TextureAtlas.class, this);

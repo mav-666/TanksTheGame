@@ -1,10 +1,9 @@
 package com.game.code.Tank.Head;
 
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.badlogic.gdx.utils.Pool;
 import com.game.code.BodyData;
 import com.game.code.Entity.BitCategories;
@@ -23,17 +22,17 @@ public class Bullet extends TextureEntity implements Projectile, Pool.Poolable {
 
     private final Pool<Bullet> AssociatedPool;
 
-    private final ParticleEffectPool.PooledEffect shards;
+    private final ParticleEffectActor shardEffect;
 
     private float damage;
     private float speed;
 
-    protected Bullet(World world, ParticleEffectPool.PooledEffect shards, Pool<Bullet> pool, Entity owner, TextureRegion texture, float width, float damage, float speed) {
+    protected Bullet(World world, ParticleEffectActor shardEffect, Pool<Bullet> pool, Entity owner, TextureRegion texture, float width, float damage, float speed) {
         super(texture);
 
         this.world = world;
-        this.shards = shards;
         this.AssociatedPool = pool;
+        this.shardEffect = shardEffect;
 
         Filter ownersFilters = owner.getBody().getFixtureList().first().getFilterData();
         if(ownersFilters.groupIndex >= 0)
@@ -48,6 +47,7 @@ public class Bullet extends TextureEntity implements Projectile, Pool.Poolable {
 
         bodyShape = new CircleShape();
         bodyShape.setRadius(width/18);
+
     }
 
     //angle in degrees
@@ -86,9 +86,12 @@ public class Bullet extends TextureEntity implements Projectile, Pool.Poolable {
         this.destroy();
     }
 
-    private void addShards() {
-        shards.setPosition(body.getPosition().x, body.getPosition().y);
-
+    private void applyShards() {
+        shardEffect.setScale(1/(42f*8));
+        shardEffect.setPosition(body.getPosition().x, body.getPosition().y);
+        shardEffect.setSize(getWidth(), getHeight());
+        shardEffect.start();
+        getStage().addActor(shardEffect);
     }
 
     private void applyImpulseToParticipant(Entity participant) {
@@ -109,6 +112,7 @@ public class Bullet extends TextureEntity implements Projectile, Pool.Poolable {
 
     @Override
     public void destroy() {
+        applyShards();
         Projectile.super.destroy();
         remove();
         AssociatedPool.free(this);

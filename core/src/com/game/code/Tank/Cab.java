@@ -1,10 +1,7 @@
 package com.game.code.Tank;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -13,11 +10,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.game.code.Animations;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.AssetManagment.ParticleEffectActorPool;
 import com.game.code.Entity.BitCategories;
 import com.game.code.BodyBuilder;
 import com.game.code.Entity.Breakable;
@@ -28,9 +26,7 @@ import java.util.*;
 public class Cab extends TextureEntity implements Breakable, AssetRequestParticlePools {
     private final Body body;
 
-    private ParticleEffectPool traces;
-    private ParticleEffectPool.PooledEffect trace1, trace2;
-    private MoveDirection lastMoveDirection;
+    private ParticleEffectActorPool traces;
 
     private long invincibilityTime;
 
@@ -56,6 +52,7 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
 
         body.setLinearDamping(4f);
         body.setAngularDamping(2.5f);
+
     }
 
     @Override
@@ -64,16 +61,8 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
     }
 
     @Override
-    public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectPool> particlePools) {
+    public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
         traces = getParticlePool(particlePools, assets.get("trace", ParticleEffect.class));
-        trace1 = traces.obtain();
-        trace2 = traces.obtain();
-        trace1.reset();
-        trace2.reset();
-        trace1.scaleEffect(1/42f);
-        trace2.scaleEffect(1/42f);
-        trace1.scaleEffect(1/4f);
-        trace2.scaleEffect(1/4f);
     }
 
     @Override
@@ -85,10 +74,6 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
     @Override
     public void act(float delta) {
         super.act(delta);
-
-        trace1.update(delta);
-        trace2.update(delta);
-
 
         this.getParent().setPosition(body.getPosition().x - getWidth()/2, body.getPosition().y - getHeight()/2);
         this.getParent().setRotation((float) Math.toDegrees(body.getAngle()));
@@ -120,17 +105,6 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
 //
 //    }
 
-
-
-    @Override
-    public void draw(Batch batch, float ParentAlpha) {
-            trace1.draw(batch);
-            trace2.draw(batch);
-
-
-        super.draw(batch, ParentAlpha);
-    }
-
     public void move(float delta, MoveDirection direction) {
         body.setLinearVelocity(body.getLinearVelocity().add(new Vector2(0, speed * delta * direction.mult).rotateRad(body.getAngle())));
         applyTrace(direction);
@@ -138,21 +112,30 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
     }
 
     private void applyTrace(MoveDirection direction) {
-        if(lastMoveDirection != direction && !trace1.isComplete())
-            return;
+        ParticleEffectActor trace1, trace2;
 
-        trace1.setPosition(getX() + getWidth() / 10,
-                            getY() + getHeight() / 10 * direction.mult + Math.max(0, getHeight() * -direction.mult));
-        trace2.setPosition(getX() + getWidth() - getWidth() / 10,
-                            getY() + getHeight() / 10 * direction.mult + Math.max(0, getHeight() * -direction.mult));
+        trace1 = traces.obtain();
+        trace2 = traces.obtain();
 
-        trace1.getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
-        trace2.getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
+        trace1.setScale(1/(42f*4));
+        trace2.setScale(1/(42f*4));
+
+        trace1.setSize(getWidth(), getHeight());
+        trace2.setSize(getWidth(), getHeight());
+
+        trace1.setPosition(getWidth() / 10,
+                getHeight() / 10 * direction.mult + Math.max(0, getHeight() * -direction.mult));
+        trace2.setPosition(getWidth() - getWidth() / 10,
+                getHeight() / 10 * direction.mult + Math.max(0, getHeight() * -direction.mult));
+
+        trace1.getEffect().getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
+        trace2.getEffect().getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
 
         trace1.start();
         trace2.start();
 
-        lastMoveDirection= direction;
+        getParent().addActorBefore(this, trace1);
+        getParent().addActorBefore(this, trace2);
     }
 
     public void turn(float delta, TurnDirection direction) {
@@ -200,8 +183,5 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
                 getParent().setTouchable(Touchable.disabled);
             }
         },  100);
-
-        trace1.free();
-        trace2.free();
     }
 }

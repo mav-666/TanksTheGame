@@ -60,7 +60,7 @@ public class AssetRequestProcessor implements Disposable {
     //give assets to clients//give assets to clients
     protected void sendAllAssets() {
         clients.forEach(client -> {
-            assetStrategies.forEach((strategy) -> strategy.respondOnRequest(client));
+            assetStrategies.forEach((strategy) -> strategy.respondOnRequest(this, client));
             client.passAssets(this);
         });
     }
@@ -91,6 +91,7 @@ public class AssetRequestProcessor implements Disposable {
 
     @Override
     public void dispose() {
+        assetStrategies.forEach(Disposable::dispose);
         assetManager.dispose();
     }
 }

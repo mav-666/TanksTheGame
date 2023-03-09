@@ -1,16 +1,13 @@
 package com.game.code.AssetManagment;
 
 import com.badlogic.gdx.assets.AssetLoaderParameters;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
+import com.badlogic.gdx.utils.Disposable;
 
-public interface AssetStrategy<T> {
+public interface AssetStrategy<T> extends Disposable {
 
     Class<T> getType();
     AssetLoaderParameters<T> getParameter();
 
-    void respondOnRequest(AssetRequest assetRequest);
-
-
+    void respondOnRequest(AssetRequestProcessor assetRequestProcessor, AssetRequest assetRequest);
 
 }

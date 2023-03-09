@@ -62,7 +62,7 @@ public class GameScreen implements Screen {
         AssetManager assetManager = new AssetManager();
 
         assetRequestProcessor  = new AssetRequestProcessor(assetManager);
-        assetRequestProcessor.addAssetStrategy(new ParticlePoolApplier(assetManager, new HashMap<>()));
+        assetRequestProcessor.addAssetStrategy(new ParticlePoolApplier(new HashMap<>()));
 
         BattleField battleField = new BattleField(world, new TextureRegion(new Texture(Gdx.files.internal("Map.png"))), MAP_WIDTH, MAP_HEIGHT);
 
