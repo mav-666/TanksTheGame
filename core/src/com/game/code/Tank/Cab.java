@@ -128,8 +128,8 @@ public class Cab extends TextureEntity implements Breakable, AssetRequestParticl
         trace2.setPosition(getWidth() - getWidth() / 10,
                 getHeight() / 10 * direction.mult + Math.max(0, getHeight() * -direction.mult));
 
-        trace1.getEffect().getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
-        trace2.getEffect().getEmitters().first().getAngle().setHigh(body.getAngle() - 90 * direction.mult);
+        trace1.getEffect().getEmitters().first().getAngle().setHigh(-90 * direction.mult);
+        trace2.getEffect().getEmitters().first().getAngle().setHigh(-90 * direction.mult);
 
         trace1.start();
         trace2.start();

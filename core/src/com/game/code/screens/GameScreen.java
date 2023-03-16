@@ -1,12 +1,12 @@
 package com.game.code.screens;
 
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.game.code.*;
 import com.badlogic.gdx.Gdx;
@@ -27,7 +27,7 @@ import java.util.HashMap;
 //одина единица в мире равна танку (считаем за квадрат)
 public class GameScreen implements Screen {
     private final Application app;
-    private final Stage stage;
+    private final Stage stage, stageUI;
     private final Player player;
 
     private final AssetRequestProcessor assetRequestProcessor;
@@ -39,9 +39,9 @@ public class GameScreen implements Screen {
     private final BoundedCamera camera;
 
     private final World world;
-    private final ArrayList<Body> destroyedBodies;
+    private final BodyDisposal bodyDisposal;
 
-    private final Box2DDebugRenderer box2DDebugRenderer;
+    //private final Box2DDebugRenderer box2DDebugRenderer;
 
     public GameScreen(Application application) {
         app = application;
@@ -49,12 +49,18 @@ public class GameScreen implements Screen {
         camera = new BoundedCamera(MAP_WIDTH, MAP_HEIGHT);
 
         stage = new Stage(new FillViewport(18 , 12, camera), app.batch);
-        Gdx.input.setInputProcessor(stage);
+        stageUI = new Stage(new FillViewport(18, 12, camera), app.batch);
 
-        world = initWorld();
-        destroyedBodies = new ArrayList<>();
+        Gdx.input.setInputProcessor(new InputMultiplexer(stage, stageUI));
+
+
+
+        world = new World(new Vector2(0,0), false);
+        DisposeAfterContact disposeAfterContact = new DisposeAfterContact(new ShareInfoContactListener(), world);
+        bodyDisposal = disposeAfterContact;
+        world.setContactListener(disposeAfterContact);
         //debug
-        box2DDebugRenderer = new Box2DDebugRenderer();
+        //box2DDebugRenderer = new Box2DDebugRenderer();
         //stage.setDebugAll(true);
         //stage.setDebugInvisible(true);
         //debug
@@ -92,36 +98,11 @@ public class GameScreen implements Screen {
 
     }
 
-    private World initWorld() {
-        World world= new World(new Vector2(0,0), false);
-        world.setContactListener(new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                Entity A = ((Entity) contact.getFixtureA().getUserData());
-                Entity B = ((Entity) contact.getFixtureB().getUserData());
+    void initUIStage() {
+        Table table = new Table();
+        table.setFillParent(true);
 
-                A.collusionRespond(B);
-                B.collusionRespond(A);
-            }
-
-            @Override
-            public void endContact(Contact contact) {}
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {}
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-                Entity A = ((Entity) contact.getFixtureA().getUserData());
-                Entity B = ((Entity) contact.getFixtureB().getUserData());
-
-                if(!destroyedBodies.contains(A.getBody()) && ((BodyData) A.getBody().getUserData()).flaggedForDispose)
-                    destroyedBodies.add(A.getBody());
-                if(!destroyedBodies.contains(B.getBody()) && ((BodyData) B.getBody().getUserData()).flaggedForDispose)
-                    destroyedBodies.add(B.getBody());
-            }
-
-        });
-
-        return world;
+        stageUI.addActor(table);
     }
 
     @Override
@@ -143,8 +124,9 @@ public class GameScreen implements Screen {
         update(delta);
 
         stage.draw();
+        stageUI.draw();
 
-        box2DDebugRenderer.render(world, camera.combined);
+        //box2DDebugRenderer.render(world, camera.combined);
 
         camera.update();
 
@@ -152,15 +134,16 @@ public class GameScreen implements Screen {
 
     private void update(float delta) {
         stage.act(delta);
-        world.step(delta, 6,2);
+        stageUI.act(delta);
 
-        destroyedBodies.forEach(world::destroyBody);
-        destroyedBodies.clear();
+        world.step(delta, 6,2);
+        bodyDisposal.destroyAllBodies();
     }
 
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
+        stageUI.getViewport().update(width, height, false);
         camera.update();
     }
 

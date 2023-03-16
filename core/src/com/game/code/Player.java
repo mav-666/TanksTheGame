@@ -29,7 +29,7 @@ public class Player extends Actor {
             canTurn = true;
         }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+        else if(Gdx.input.isKeyPressed(Input.Keys.S)) {
             tank.move(delta, MoveDirection.backward);
             canTurn = true;
         }
