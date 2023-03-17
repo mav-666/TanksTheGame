@@ -3,11 +3,11 @@ package com.game.code.Tank.Head;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.ColoredGroup;
 import com.game.code.Tank.TurnDirection;
-import com.game.code.TextureEntity;
+import com.game.code.TextureActor;
 
 public abstract class Head extends ColoredGroup implements AssetRequest {
-    protected TextureEntity head;
-    protected TextureEntity barrel;
+    protected TextureActor head;
+    protected TextureActor barrel;
 
     protected float rotationSpeed;
 
@@ -16,11 +16,11 @@ public abstract class Head extends ColoredGroup implements AssetRequest {
 
         setOrigin(width/2, height/2);
 
-        head = new TextureEntity();
+        head = new TextureActor();
         head.setSize(width/2, height/2);
         head.setPosition(width/2 - head.getWidth()/2, height/2 - head.getHeight()/2);
 
-        barrel = new TextureEntity();
+        barrel = new TextureActor();
         barrel.setSize(head.getWidth()/3, head.getHeight()*1.25f);
         barrel.setPosition(width/2 - barrel.getWidth()/2, height/2);
         barrel.setOrigin(barrel.getX() + barrel.getWidth()/2, 0);

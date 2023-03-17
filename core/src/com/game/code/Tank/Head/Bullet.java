@@ -11,9 +11,9 @@ import com.game.code.BodyBuilder;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Entity.Projectile;
-import com.game.code.TextureEntity;
+import com.game.code.TextureActor;
 
-public class Bullet extends TextureEntity implements Projectile, Pool.Poolable {
+public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
     private final World world;
     private Body body;
 

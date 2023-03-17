@@ -1,55 +1,160 @@
 
 TanksTheGame.png
-size: 108, 75
+size: 94, 142
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 MovementKey
   rotate: false
-  xy: 48, 37
+  xy: 0, 52
   size: 52, 38
   orig: 52, 38
   offset: 0, 0
   index: -1
 RotationKey
   rotate: false
-  xy: 48, 6
+  xy: 48, 111
   size: 46, 31
   orig: 46, 31
   offset: 0, 0
   index: -1
 ShootKey
   rotate: false
-  xy: 0, 0
+  xy: 0, 1
   size: 29, 23
   orig: 29, 23
   offset: 0, 0
   index: -1
 barrel
   rotate: false
-  xy: 100, 47
+  xy: 28, 24
   size: 8, 28
   orig: 8, 28
   offset: 0, 0
   index: -1
 body
   rotate: false
-  xy: 0, 23
+  xy: 0, 90
   size: 48, 52
   orig: 48, 52
   offset: 0, 0
   index: -1
+box
+  rotate: false
+  xy: 54, 41
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: 1
+box
+  rotate: false
+  xy: 70, 42
+  size: 16, 15
+  orig: 16, 15
+  offset: 0, 0
+  index: 3
+box
+  rotate: false
+  xy: 36, 19
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 2
+box
+  rotate: false
+  xy: 29, 4
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 4
+box
+  rotate: false
+  xy: 54, 26
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 6
+box
+  rotate: false
+  xy: 44, 4
+  size: 15, 15
+  orig: 15, 15
+  offset: 0, 0
+  index: 5
 bullet
   rotate: false
-  xy: 94, 25
+  xy: 59, 0
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
+gasoline
+  rotate: false
+  xy: 59, 12
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: 2
+gasolinel
+  rotate: false
+  xy: 70, 29
+  size: 13, 13
+  orig: 13, 13
+  offset: 0, 0
+  index: 1
 head
   rotate: false
-  xy: 29, 4
+  xy: 48, 92
   size: 18, 19
   orig: 18, 19
+  offset: 0, 0
+  index: -1
+sand
+  rotate: false
+  xy: 66, 93
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 5
+sand
+  rotate: false
+  xy: 36, 34
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+sand
+  rotate: false
+  xy: 52, 74
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 4
+sand
+  rotate: false
+  xy: 52, 56
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
+sand
+  rotate: false
+  xy: 70, 75
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 6
+sand
+  rotate: false
+  xy: 70, 57
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 3
+spawn
+  rotate: false
+  xy: 0, 24
+  size: 28, 28
+  orig: 28, 28
   offset: 0, 0
   index: -1

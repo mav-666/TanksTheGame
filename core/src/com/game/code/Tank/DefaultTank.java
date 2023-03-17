@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.game.code.AssetManagment.AssetRequest;
+import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.Tank.Head.Canon;
 
 import java.util.HashMap;
@@ -34,8 +35,12 @@ public class DefaultTank extends Tank implements AssetRequest {
 
     @Override
     public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
-
         cab.request(requests, clients);
         head.request(requests, clients);
+    }
+
+    @Override
+    public void passAssets(AssetRequestProcessor assets) {
+
     }
 }

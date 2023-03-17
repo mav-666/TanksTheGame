@@ -1,0 +1,97 @@
+
+Particles.png
+size: 30, 29
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+shard1
+  rotate: false
+  xy: 0, 21
+  size: 6, 4
+  orig: 6, 4
+  offset: 0, 0
+  index: -1
+shard2
+  rotate: false
+  xy: 0, 9
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+shard3
+  rotate: false
+  xy: 0, 17
+  size: 6, 4
+  orig: 6, 4
+  offset: 0, 0
+  index: -1
+shard4
+  rotate: false
+  xy: 0, 25
+  size: 7, 4
+  orig: 7, 4
+  offset: 0, 0
+  index: -1
+shard5
+  rotate: false
+  xy: 0, 13
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+shard6
+  rotate: false
+  xy: 7, 26
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
+shard7
+  rotate: false
+  xy: 14, 26
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
+trace1
+  rotate: false
+  xy: 0, 6
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+trace2
+  rotate: false
+  xy: 0, 0
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+trace3
+  rotate: false
+  xy: 27, 26
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+trace4
+  rotate: false
+  xy: 21, 26
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+trace5
+  rotate: false
+  xy: 0, 3
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
+trace6
+  rotate: false
+  xy: 24, 26
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1

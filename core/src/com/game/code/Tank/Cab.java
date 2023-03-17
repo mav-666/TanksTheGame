@@ -19,11 +19,11 @@ import com.game.code.AssetManagment.ParticleEffectActorPool;
 import com.game.code.Entity.BitCategories;
 import com.game.code.BodyBuilder;
 import com.game.code.Entity.Breakable;
-import com.game.code.TextureEntity;
+import com.game.code.TextureActor;
 
 import java.util.*;
 
-public class Cab extends TextureEntity implements Breakable, AssetRequestParticlePools {
+public class Cab extends TextureActor implements Breakable, AssetRequestParticlePools {
     private final Body body;
 
     private ParticleEffectActorPool traces;

@@ -2,15 +2,16 @@ package com.game.code;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class TextureEntity extends Actor {
+public class TextureActor extends Actor {
     private TextureRegion texture;
 
-    public TextureEntity () {}
+    public TextureActor() {}
 
-    public TextureEntity (TextureRegion texture) {
+    public TextureActor(TextureRegion texture) {
         this.texture= texture;
     }
 

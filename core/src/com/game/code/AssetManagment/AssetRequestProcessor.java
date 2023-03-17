@@ -1,5 +1,6 @@
 package com.game.code.AssetManagment;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -44,16 +45,15 @@ public class AssetRequestProcessor implements Disposable {
 
     public void update() {
         assetManager.update();
-    }
 
-    public boolean isFinished() {
         if(assetManager.isFinished()) {
-            update();
             assetManager.finishLoading();
             sendAllAssets();
         }
 
+    }
 
+    public boolean isFinished() {
         return assetManager.isFinished();
 
     }

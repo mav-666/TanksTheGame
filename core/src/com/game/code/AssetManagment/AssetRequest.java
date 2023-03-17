@@ -12,7 +12,7 @@ public interface AssetRequest {
     void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients);
 
     //receive requested assets
-    default void passAssets(AssetRequestProcessor assets) {}
+    void passAssets(AssetRequestProcessor assets);
 
     //add request to a buffer
     default void addRequest(HashMap<String, Class<?>> currentRequests, HashSet<AssetRequest> clients, String fileName, Class<?> fileClass, AssetRequest client) {

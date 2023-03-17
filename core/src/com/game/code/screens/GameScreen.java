@@ -2,8 +2,8 @@ package com.game.code.screens;
 
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -14,13 +14,15 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticlePoolApplier;
+import com.game.code.BattleField.BattleField;
+import com.game.code.BattleField.BattleFieldBuilder;
+import com.game.code.BattleField.PlainBuilder;
 import com.game.code.Tank.DefaultTank;
-import com.game.code.Entity.Entity;
 import com.game.code.Tank.Tank;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -61,16 +63,18 @@ public class GameScreen implements Screen {
         world.setContactListener(disposeAfterContact);
         //debug
         //box2DDebugRenderer = new Box2DDebugRenderer();
-        //stage.setDebugAll(true);
-        //stage.setDebugInvisible(true);
+        stage.setDebugAll(true);
+        stage.setDebugInvisible(true);
         //debug
 
         AssetManager assetManager = new AssetManager();
+        assetManager.setLoader(TiledMap.class, new TmxMapLoader());
 
         assetRequestProcessor  = new AssetRequestProcessor(assetManager);
         assetRequestProcessor.addAssetStrategy(new ParticlePoolApplier(new HashMap<>()));
 
-        BattleField battleField = new BattleField(world, new TextureRegion(new Texture(Gdx.files.internal("Map.png"))), MAP_WIDTH, MAP_HEIGHT);
+        BattleFieldBuilder battleFieldBuilder = new PlainBuilder(world, MAP_WIDTH, MAP_HEIGHT, "sand", 1, 1);
+        battleFieldBuilder.buildBattleField();
 
         Tank tank = new DefaultTank(world, new Vector2(1,1), 1, 1);
         tank.setName("A");
@@ -85,10 +89,11 @@ public class GameScreen implements Screen {
         assetRequestProcessor.receiveRequest(tank);
         assetRequestProcessor.receiveRequest(tank2);
         assetRequestProcessor.receiveRequest(tank3);
+        assetRequestProcessor.receiveRequest((AssetRequest) battleFieldBuilder);
 
         camera.attach(tank);
 
-        stage.addActor(battleField);
+        stage.addActor(battleFieldBuilder.getBattleField());
         stage.addActor(player);
         stage.addActor(tank);
         stage.addActor(tank2);

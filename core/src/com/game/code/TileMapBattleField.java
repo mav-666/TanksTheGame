@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.game.code.BattleField.BattleField;
 
 public class TileMapBattleField extends BattleField {
     private TiledMap map;
@@ -23,6 +24,8 @@ public class TileMapBattleField extends BattleField {
                 addObject((PolygonMapObject) object);
         }
     }
+
+
 
     private void addObject(PolygonMapObject object) {
         Polygon polygon = object.getPolygon();
