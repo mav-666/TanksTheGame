@@ -5,6 +5,7 @@ public enum BitCategories {
     WALL((short) 1),
     BREAKABLE((short) 2),
     PROJECTILE((short) 4),
+    AREA((short) 8),
     ;
     private short bit;
 

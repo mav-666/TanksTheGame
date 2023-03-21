@@ -2,16 +2,18 @@ package com.game.code;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.game.code.Tank.MoveDirection;
 import com.game.code.Tank.Tank;
 import com.game.code.Tank.TurnDirection;
 
-public class Player extends Actor {
+public class Player extends Group {
     private Tank tank;
 
     public Player(Tank tank) {
         this.tank = tank;
+        addActor(tank);
     }
 
     @Override

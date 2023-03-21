@@ -55,7 +55,7 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
         setPosition(pos.x, pos.y);
         setRotation(angle);
 
-        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), bodyShape, BodyDef.BodyType.DynamicBody, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex,0.1f, 0);
+        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), bodyShape, BodyDef.BodyType.DynamicBody, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex,0.1f, 0, 0.1f);
         body.setTransform(body.getPosition(), (float) Math.toRadians(angle));
 
         body.setBullet(true);
@@ -76,6 +76,9 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
 
     @Override
     public void collusionRespond(Entity participant) {
+        if(participant.getCategory() == BitCategories.AREA.bit())
+            return;
+
         if(participant.getCategory() == BitCategories.BREAKABLE.bit()) {
             if(!((Breakable) participant).takeDamage(this.damage))
                 return;
@@ -83,7 +86,7 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
 
         applyImpulseToParticipant(participant);
 
-        this.destroy();
+        flagForDispose();
     }
 
     private void applyShards() {
@@ -91,7 +94,8 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
         shardEffect.setPosition(body.getPosition().x, body.getPosition().y);
         shardEffect.setSize(getWidth(), getHeight());
         shardEffect.start();
-        getStage().addActor(shardEffect);
+        if(getStage() != null)
+            getStage().addActor(shardEffect);
     }
 
     private void applyImpulseToParticipant(Entity participant) {

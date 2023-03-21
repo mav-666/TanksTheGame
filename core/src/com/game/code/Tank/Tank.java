@@ -4,13 +4,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.ColoredGroup;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Tank.Head.Head;
 
-public abstract class Tank extends ColoredGroup implements Breakable, Disposable, AssetRequest {
+public abstract class Tank extends ColoredGroup implements Breakable, Disposable {
     protected Cab cab;
     protected Head head;
 

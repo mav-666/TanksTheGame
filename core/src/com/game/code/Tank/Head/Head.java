@@ -1,17 +1,16 @@
 package com.game.code.Tank.Head;
 
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.ColoredGroup;
 import com.game.code.Tank.TurnDirection;
 import com.game.code.TextureActor;
 
-public abstract class Head extends ColoredGroup implements AssetRequest {
+public abstract class Head extends ColoredGroup {
     protected TextureActor head;
     protected TextureActor barrel;
 
     protected float rotationSpeed;
 
-    protected Head( float width, float height, float rotationSpeed) {
+    protected Head(float width, float height, float rotationSpeed) {
         this.rotationSpeed= rotationSpeed;
 
         setOrigin(width/2, height/2);

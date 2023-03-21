@@ -7,8 +7,15 @@ public interface Entity {
 
     default void collusionRespond(Entity participant) {}
 
+    default void endContactRespond(Entity participant) {}
+
     default void destroy() {
-        ((BodyData) getBody().getUserData()).flaggedForDispose = true;
+        getBody().getWorld().destroyBody(getBody());
+    }
+
+    default void flagForDispose() {
+        if(getBody().getUserData() != null)
+            ((BodyData) getBody().getUserData()).flaggedForDispose = true;
     }
 
     Body getBody();

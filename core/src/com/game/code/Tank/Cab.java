@@ -1,6 +1,5 @@
 package com.game.code.Tank;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -9,10 +8,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.game.code.Animations;
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticleEffectActorPool;
@@ -34,9 +31,12 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     private float speed;
     private float mobility;
 
-    protected Cab(World world, Vector2 pos, float width, float height,
-                  float health, float speed, float mobility, long invisibilityTime) {
-
+    protected Cab(AssetRequestProcessor assetRequestProcessor,
+                  World world,
+                  Vector2 pos,
+                  float width, float height,
+                  float health, float speed, float mobility, long invisibilityTime)
+    {
         this.health = health;
         this.speed = speed;
         this.mobility = mobility;
@@ -47,13 +47,26 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(width/2, height/2);
 
-        body = BodyBuilder.createBody(world, this, pos.add(width/2, height/2), polygonShape,
-                BodyDef.BodyType.DynamicBody, this.getCategory(), BitCategories.ALL.bit(),0.1f, 0.1f);
+        body = BodyBuilder.createBody(
+                world,
+                this,
+                pos.add(width/2, height/2), polygonShape,
+                BodyDef.BodyType.DynamicBody,
+                this.getCategory(), BitCategories.ALL.bit(),
+                0.5f, 0.1f, 250);
 
         body.setLinearDamping(4f);
         body.setAngularDamping(2.5f);
 
+        request(assetRequestProcessor);
     }
+
+    @Override
+    public void request(AssetRequestProcessor assetRequestProcessor) {
+        assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
+        assetRequestProcessor.receiveRequest("trace", ParticleEffect.class, this);
+    }
+
 
     @Override
     public void passAssets(AssetRequestProcessor assets) {
@@ -65,17 +78,13 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
         traces = getParticlePool(particlePools, assets.get("trace", ParticleEffect.class));
     }
 
-    @Override
-    public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
-        addRequest(requests,  clients, "TanksTheGame.atlas", TextureAtlas.class, this);
-        addRequest(requests, clients, "trace", ParticleEffect.class, this);
-    }
 
     @Override
     public void act(float delta) {
         super.act(delta);
 
-        this.getParent().setPosition(body.getPosition().x - getWidth()/2, body.getPosition().y - getHeight()/2);
+        this.getParent().setPosition(body.getPosition().x - getWidth()/2,
+                body.getPosition().y - getHeight()/2);
         this.getParent().setRotation((float) Math.toDegrees(body.getAngle()));
     }
 
@@ -106,12 +115,16 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
 //    }
 
     public void move(float delta, MoveDirection direction) {
-        body.setLinearVelocity(body.getLinearVelocity().add(new Vector2(0, speed * delta * direction.mult).rotateRad(body.getAngle())));
+        body.setLinearVelocity(body.getLinearVelocity().add(
+                new Vector2(0, speed * delta * direction.mult).rotateRad(body.getAngle())));
         applyTrace(direction);
 
     }
 
     private void applyTrace(MoveDirection direction) {
+        if(getColor().a != 1)
+            return;
+
         ParticleEffectActor trace1, trace2;
 
         trace1 = traces.obtain();
@@ -154,6 +167,9 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
 
     @Override
     public boolean takeDamage(float damage) {
+        if(health <= 0 ) {
+            return true;
+        }
         health -= damage;
         getParent().addAction(Animations.damaged(invincibilityTime));
 
@@ -175,7 +191,6 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     public void die() {
 
         //Anim
-        getParent().addAction(Actions.color(Color.valueOf("1a453b"), 1f));
 
         new Timer().schedule(new TimerTask() {
             @Override

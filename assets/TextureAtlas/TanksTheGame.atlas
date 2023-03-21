@@ -1,159 +1,173 @@
 
 TanksTheGame.png
-size: 94, 142
+size: 237, 62
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 MovementKey
   rotate: false
-  xy: 0, 52
+  xy: 48, 24
   size: 52, 38
   orig: 52, 38
   offset: 0, 0
   index: -1
 RotationKey
   rotate: false
-  xy: 48, 111
+  xy: 100, 31
   size: 46, 31
   orig: 46, 31
   offset: 0, 0
   index: -1
 ShootKey
   rotate: false
-  xy: 0, 1
+  xy: 174, 39
   size: 29, 23
   orig: 29, 23
   offset: 0, 0
   index: -1
 barrel
   rotate: false
-  xy: 28, 24
+  xy: 174, 11
   size: 8, 28
   orig: 8, 28
   offset: 0, 0
   index: -1
 body
   rotate: false
-  xy: 0, 90
+  xy: 0, 10
   size: 48, 52
   orig: 48, 52
   offset: 0, 0
   index: -1
 box
   rotate: false
-  xy: 54, 41
+  xy: 221, 47
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: 1
 box
   rotate: false
-  xy: 70, 42
+  xy: 221, 32
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: 3
 box
   rotate: false
-  xy: 36, 19
+  xy: 182, 24
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 2
 box
   rotate: false
-  xy: 29, 4
+  xy: 182, 9
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 4
 box
   rotate: false
-  xy: 54, 26
+  xy: 197, 10
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 6
 box
   rotate: false
-  xy: 44, 4
+  xy: 212, 10
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 5
 bullet
   rotate: false
-  xy: 59, 0
+  xy: 115, 1
   size: 12, 12
   orig: 12, 12
   offset: 0, 0
   index: -1
 gasoline
   rotate: false
-  xy: 59, 12
+  xy: 156, 2
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: 2
 gasolinel
   rotate: false
-  xy: 70, 29
+  xy: 102, 0
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: 1
+grass
+  rotate: false
+  xy: 84, 6
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 2
+grass
+  rotate: false
+  xy: 156, 16
+  size: 18, 18
+  orig: 18, 18
+  offset: 0, 0
+  index: 1
 head
   rotate: false
-  xy: 48, 92
+  xy: 203, 43
   size: 18, 19
   orig: 18, 19
   offset: 0, 0
   index: -1
 sand
   rotate: false
-  xy: 66, 93
+  xy: 203, 25
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 5
 sand
   rotate: false
-  xy: 36, 34
+  xy: 48, 6
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 2
 sand
   rotate: false
-  xy: 52, 74
+  xy: 66, 6
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 4
 sand
   rotate: false
-  xy: 52, 56
+  xy: 102, 13
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 1
 sand
   rotate: false
-  xy: 70, 75
+  xy: 120, 13
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 6
 sand
   rotate: false
-  xy: 70, 57
+  xy: 138, 13
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 3
 spawn
   rotate: false
-  xy: 0, 24
+  xy: 146, 34
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

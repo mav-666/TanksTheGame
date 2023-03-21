@@ -1,6 +1,5 @@
 package com.game.code.AssetManagment;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -25,8 +24,10 @@ public class AssetRequestProcessor implements Disposable {
         this.assetStrategies = new HashSet<>();
     }
     //receive requests
-    public void receiveRequest(AssetRequest assetRequest) {
-        assetRequest.request(requests, clients);
+    public void receiveRequest(String fileName, Class<?> fileClass, AssetRequest client) {
+        if(!requests.containsKey(fileName))
+            requests.put(fileName, fileClass);
+        clients.add(client);
     }
 
     //load after all requests are obtained
@@ -50,7 +51,6 @@ public class AssetRequestProcessor implements Disposable {
             assetManager.finishLoading();
             sendAllAssets();
         }
-
     }
 
     public boolean isFinished() {

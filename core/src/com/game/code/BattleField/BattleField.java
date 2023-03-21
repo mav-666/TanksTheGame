@@ -21,25 +21,38 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class BattleField extends Group implements Wall {
-    private Body body;
+    private final World world;
+    private final Body body;
 
-    public BattleField(World world, float width, float height) {
+    private float tileWidth, tileHeight;
+
+    public BattleField(World world, float width, float height, float tileWidth, float tileHeight) {
         setSize(width, height);
+        this.tileWidth = tileWidth;
+        this.tileHeight = tileHeight;
+        this.world = world;
 
         ChainShape shape= new ChainShape();
-        shape.createChain(new float[] {0,0, width,0, width,height, 0,height, 0,0});
+        shape.createChain(new float[] {0,0, width-2,0, width-2,height-2, 0,height-2, 0,0});
 
-        body = BodyBuilder.createBody(world, this, new Vector2(0,0), shape, BodyDef.BodyType.StaticBody, this.getCategory(), BitCategories.ALL.bit(),0.1f, 0);
+        body = BodyBuilder.createBody(world, this, new Vector2(1,1), shape, BodyDef.BodyType.StaticBody, this.getCategory(), BitCategories.ALL.bit(),0.1f, 0, 1);
 
-    }
-
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
     }
 
     @Override
     public Body getBody() {
         return body;
+    }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public float getTileWidth() {
+        return tileWidth;
+    }
+
+    public float getTileHeight() {
+        return tileHeight;
     }
 }

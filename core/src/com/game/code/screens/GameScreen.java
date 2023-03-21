@@ -14,12 +14,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticlePoolApplier;
-import com.game.code.BattleField.BattleField;
-import com.game.code.BattleField.BattleFieldBuilder;
-import com.game.code.BattleField.PlainBuilder;
+import com.game.code.BattleField.*;
 import com.game.code.Tank.DefaultTank;
 import com.game.code.Tank.Tank;
 
@@ -30,13 +27,11 @@ import java.util.HashMap;
 public class GameScreen implements Screen {
     private final Application app;
     private final Stage stage, stageUI;
-    private final Player player;
-
     private final AssetRequestProcessor assetRequestProcessor;
 
 //    private final TmxMapLoader tmxMapLoader;
 
-    final static float MAP_WIDTH = 50f, MAP_HEIGHT = 50f;
+    final static float MAP_WIDTH = 20f, MAP_HEIGHT = 20f;
 
     private final BoundedCamera camera;
 
@@ -50,12 +45,10 @@ public class GameScreen implements Screen {
 
         camera = new BoundedCamera(MAP_WIDTH, MAP_HEIGHT);
 
-        stage = new Stage(new FillViewport(18 , 12, camera), app.batch);
+        stage = new Stage(new FillViewport(9, 6, camera), app.batch);
         stageUI = new Stage(new FillViewport(18, 12, camera), app.batch);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage, stageUI));
-
-
 
         world = new World(new Vector2(0,0), false);
         DisposeAfterContact disposeAfterContact = new DisposeAfterContact(new ShareInfoContactListener(), world);
@@ -63,8 +56,8 @@ public class GameScreen implements Screen {
         world.setContactListener(disposeAfterContact);
         //debug
         //box2DDebugRenderer = new Box2DDebugRenderer();
-        stage.setDebugAll(true);
-        stage.setDebugInvisible(true);
+        //stage.setDebugAll(true);
+        //stage.setDebugInvisible(true);
         //debug
 
         AssetManager assetManager = new AssetManager();
@@ -73,29 +66,30 @@ public class GameScreen implements Screen {
         assetRequestProcessor  = new AssetRequestProcessor(assetManager);
         assetRequestProcessor.addAssetStrategy(new ParticlePoolApplier(new HashMap<>()));
 
-        BattleFieldBuilder battleFieldBuilder = new PlainBuilder(world, MAP_WIDTH, MAP_HEIGHT, "sand", 1, 1);
+        BattleFieldBuilder battleFieldBuilder =
+                new BorderBuilder(assetRequestProcessor,
+                new BoxBuilder(assetRequestProcessor , 0.0f,
+                new GrassBuilder(assetRequestProcessor, 0.15f,
+                        new PlainBuilder(world, assetRequestProcessor, MAP_WIDTH, MAP_HEIGHT, "sand", 1, 1)
+                )));
+
         battleFieldBuilder.buildBattleField();
 
-        Tank tank = new DefaultTank(world, new Vector2(1,1), 1, 1);
+        Tank tank = new DefaultTank(assetRequestProcessor, world, new Vector2(1,1), 1, 1);
         tank.setName("A");
-        player = new Player(tank);
+        Player player = new Player(tank);
 
-        Tank tank2 = new DefaultTank(world, new Vector2(5,5), 1, 1);
+        Tank tank2 = new DefaultTank(assetRequestProcessor, world, new Vector2(1,3), 1, 1);
         tank2.setName("B");
 
-        Tank tank3 = new DefaultTank(world, new Vector2(16,12), 1, 1);
-        tank3.setName("C");
 
-        assetRequestProcessor.receiveRequest(tank);
-        assetRequestProcessor.receiveRequest(tank2);
-        assetRequestProcessor.receiveRequest(tank3);
-        assetRequestProcessor.receiveRequest((AssetRequest) battleFieldBuilder);
+        Tank tank3 = new DefaultTank(assetRequestProcessor, world, new Vector2(16,12), 1, 1);
+        tank3.setName("C");
 
         camera.attach(tank);
 
         stage.addActor(battleFieldBuilder.getBattleField());
         stage.addActor(player);
-        stage.addActor(tank);
         stage.addActor(tank2);
         stage.addActor(tank3);
 
@@ -130,6 +124,9 @@ public class GameScreen implements Screen {
 
         stage.draw();
         stageUI.draw();
+
+
+//        System.out.println(Gdx.graphics.getFramesPerSecond());
 
         //box2DDebugRenderer.render(world, camera.combined);
 

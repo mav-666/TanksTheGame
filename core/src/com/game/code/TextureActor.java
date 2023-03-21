@@ -15,15 +15,22 @@ public class TextureActor extends Actor {
         this.texture= texture;
     }
 
-    public void draw(Batch batch, float ParentAlpha) {
+    public void draw(Batch batch, float parentAlpha) {
         if(texture == null)
             return;
 
         batch.setColor(getColor());
-        batch.draw(texture, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+        batch.draw(
+                texture,
+                getX(), getY(),
+                getOriginX(), getOriginY(),
+                getWidth(), getHeight(),
+                getScaleX(), getScaleY(),
+                getRotation()
+        );
         batch.setColor(Color.WHITE);
-    }
 
+    }
     public void setTexture(TextureRegion texture) {
         this.texture = texture;
     }

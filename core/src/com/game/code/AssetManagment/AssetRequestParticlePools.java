@@ -8,7 +8,8 @@ public interface AssetRequestParticlePools extends AssetRequest {
 
     void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools);
 
-    default ParticleEffectActorPool getParticlePool(HashMap<ParticleEffect, ParticleEffectActorPool> particlePools, ParticleEffect particleEffect) {
+    default ParticleEffectActorPool getParticlePool(HashMap<ParticleEffect, ParticleEffectActorPool> particlePools,
+                                                    ParticleEffect particleEffect) {
         if(!particlePools.containsKey(particleEffect))
             particlePools.put(particleEffect, new ParticleEffectActorPool(particleEffect));
 

@@ -1,10 +1,7 @@
 package com.game.code.AssetManagment;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 
 import java.util.HashMap;

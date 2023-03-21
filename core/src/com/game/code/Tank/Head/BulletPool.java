@@ -5,14 +5,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticleEffectActorPool;
 import com.game.code.Entity.Entity;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 
 public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePools {
@@ -27,7 +25,12 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     private float bulletSpeed;
 
 
-    BulletPool(World world, Entity owner, float width, float damage, float speed) {
+    BulletPool(AssetRequestProcessor assetRequestProcessor,
+               World world,
+               Entity owner,
+               float width, float damage,
+               float speed)
+    {
         this.world = world;
         this.owner = owner;
 
@@ -35,6 +38,14 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
         this.bulletDamage = damage;
         this.bulletSpeed = speed;
 
+        request(assetRequestProcessor);
+
+    }
+
+    @Override
+    public void request(AssetRequestProcessor assetRequestProcessor) {
+        assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
+        assetRequestProcessor.receiveRequest("shards", ParticleEffect.class, this);
     }
 
     @Override
@@ -46,11 +57,7 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
         shards = getParticlePool(particlePools, assets.get("shards", ParticleEffect.class));
     }
-    @Override
-    public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
-        addRequest(requests, clients, "TanksTheGame.atlas", TextureAtlas.class, this);
-        addRequest(requests, clients, "shards", ParticleEffect.class, this);
-    }
+
 
     @Override
     protected Bullet newObject() {

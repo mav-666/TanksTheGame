@@ -1,6 +1,7 @@
 package com.game.code.BattleField;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
@@ -9,36 +10,54 @@ import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.TextureActor;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
-public class PlainBuilder extends BattleFieldBuilder implements AssetRequest {
+public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
+    private final BattleField battleField;
+
+    private final HashMap<Vector2, Vector2> freeSpace;
+
     private final String plainTileName;
     private Group plain;
-    private final float tileWidth, tileHeight;
 
-    public PlainBuilder(World world, float width, float height, String plainTileName, float tileWidth, float tileHeight) {
-        super(world, width, height);
+    public PlainBuilder(World world, AssetRequestProcessor assetRequestProcessor, float width, float height, String plainTileName, float tileWidth, float tileHeight) {
         this.plainTileName = plainTileName;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+
+        battleField = new BattleField(world, width, height, tileWidth, tileHeight);
+
+        freeSpace = new HashMap<>();
+        this.resetMap();
+
+        request(assetRequestProcessor);
+    }
+
+    @Override
+    public void request(AssetRequestProcessor assetRequestProcessor) {
+        assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
+    }
+
+    @Override
+    public void passAssets(AssetRequestProcessor assets) {
+        Array<TextureAtlas.AtlasRegion> tileTextures = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions(plainTileName);
+
+        plain.getChildren().forEach((actor) ->
+                ((TextureActor) actor).setTexture((tileTextures.get((int)(Math.random() * tileTextures.size)))));
     }
 
     @Override
     public void buildBattleField() {
-        super.buildBattleField();
-
         buildPlain();
     }
 
-    void buildPlain() {
+    private void buildPlain() {
         plain = new Group();
 
         TextureActor plainTile;
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
+        for(int i = 0; i < battleField.getWidth(); i++) {
+            for(int j = 0; j < battleField.getHeight(); j++) {
                 plainTile = new TextureActor();
-                plainTile.setSize(tileWidth, tileHeight);
-                plainTile.setPosition(i * tileWidth, j * tileHeight);
+                plainTile.setSize(battleField.getTileWidth(), battleField.getTileHeight());
+                plainTile.setPosition(i * battleField.getTileWidth(), j * battleField.getTileHeight());
+                plainTile.setScale(1.0001f);
 
                 plain.addActor(plainTile);
             }
@@ -48,15 +67,12 @@ public class PlainBuilder extends BattleFieldBuilder implements AssetRequest {
     }
 
     @Override
-    public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
-        addRequest(requests, clients, "TanksTheGame.atlas", TextureAtlas.class, this);
+    public BattleField getBattleField() {
+        return battleField;
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
-        Array<TextureAtlas.AtlasRegion> plainTextures = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions(plainTileName);
-
-        plain.getChildren().forEach((actor) ->
-            ((TextureActor) actor).setTexture((plainTextures.get((int)(Math.random() * plainTextures.size)))));
+    public HashMap<Vector2, Vector2> getFreeSpace() {
+        return freeSpace;
     }
 }

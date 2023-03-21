@@ -9,14 +9,14 @@ import java.util.HashSet;
 public class DisposeAfterContact implements ContactListener, BodyDisposal {
     ContactListener contactListener;
 
-    HashSet<Body> destroyedBodies;
+    HashSet<Entity> destroyedEntities;
     World world;
 
     public DisposeAfterContact(ContactListener contactListener, World world) {
         this.contactListener = contactListener;
         this.world = world;
 
-        destroyedBodies = new HashSet<>();
+        destroyedEntities = new HashSet<>();
     }
 
 
@@ -39,18 +39,18 @@ public class DisposeAfterContact implements ContactListener, BodyDisposal {
     public void postSolve(Contact contact, ContactImpulse impulse) {
         contactListener.postSolve(contact, impulse);
 
-        Entity A = ((Entity) contact.getFixtureA().getUserData());
-        Entity B = ((Entity) contact.getFixtureB().getUserData());
+        Entity A = ((BodyData) contact.getFixtureA().getUserData()).owner;
+        Entity B = ((BodyData) contact.getFixtureB().getUserData()).owner;
 
-        if(((BodyData) A.getBody().getUserData()).flaggedForDispose)
-            destroyedBodies.add(A.getBody());
-        if(((BodyData) B.getBody().getUserData()).flaggedForDispose)
-            destroyedBodies.add(B.getBody());
+            if (A.getBody().getUserData() == null || ((BodyData) A.getBody().getUserData()).flaggedForDispose)
+                destroyedEntities.add(A);
+            if (B.getBody().getUserData() == null || ((BodyData) B.getBody().getUserData()).flaggedForDispose)
+                destroyedEntities.add(B);
     }
 
     @Override
     public void destroyAllBodies() {
-        destroyedBodies.forEach(world::destroyBody);
-        destroyedBodies.clear();
+        destroyedEntities.forEach(Entity::destroy);
+        destroyedEntities.clear();
     }
 }

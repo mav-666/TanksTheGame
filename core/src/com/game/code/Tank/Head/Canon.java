@@ -1,21 +1,17 @@
 package com.game.code.Tank.Head;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.game.code.Animations;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.Entity.Entity;
 
 import java.util.*;
 
-public class Canon extends Head {
+public class Canon extends Head implements AssetRequest {
     private final Entity owner;
 
     private final BulletPool bulletPool;
@@ -25,18 +21,30 @@ public class Canon extends Head {
 
     private boolean isRecharging;
 
-    public Canon(World world, Entity owner, float width, float height, float rotationSpeed, float damage, float projectileSpeed, float recoil, long recharge) {
+    public Canon(AssetRequestProcessor assetRequestProcessor,
+                 World world,
+                 Entity owner,
+                 float width, float height,
+                 float rotationSpeed, float damage, float projectileSpeed, float recoil, long recharge)
+    {
         super(width, height, rotationSpeed);
         this.owner= owner;
 
         setWidth(width);
 
-        bulletPool = new BulletPool(world, owner, width, damage, projectileSpeed);
+        bulletPool = new BulletPool(assetRequestProcessor, world, owner, width, damage, projectileSpeed);
 
         this.recoil = recoil;
         this.recharge = recharge;
 
         this.isRecharging= false;
+
+        request(assetRequestProcessor);
+    }
+
+    @Override
+    public void request(AssetRequestProcessor assetRequestProcessor) {
+        assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
     @Override
@@ -44,12 +52,6 @@ public class Canon extends Head {
         TextureAtlas atlas = assets.get("TanksTheGame.atlas", TextureAtlas.class);
         barrel.setTexture(atlas.findRegion("barrel"));
         head.setTexture(atlas.findRegion("head"));
-    }
-
-    @Override
-    public void request(HashMap<String, Class<?>> requests, HashSet<AssetRequest> clients) {
-        addRequest(requests, clients, "TanksTheGame.atlas", TextureAtlas.class, this);
-        bulletPool.request(requests, clients);
     }
 
     @Override
@@ -64,7 +66,7 @@ public class Canon extends Head {
         Bullet bullet = bulletPool.obtain();
         bullet.init(calculateBulletPosition(), getParent().getRotation() + getRotation());
 
-        getStage().getRoot().addActorBefore(barrel.getParent().getParent(), bullet);
+        getStage().getRoot().addActor(bullet);
         recoil(bullet);
         recharge();
     }
@@ -97,11 +99,14 @@ public class Canon extends Head {
     private Vector2 calculateBulletPosition() {
         float angle = getParent().getRotation() + getRotation();
 
-        Vector2 barrelVector = new Vector2(0, getParent().getY() + barrel.getY() + barrel.getHeight() - (getParent().getY() + getParent().getHeight()/2));
+        Vector2 barrelVector = new Vector2(0,
+                getParent().getY() + barrel.getY() + barrel.getHeight()
+                        - (getParent().getY() + getParent().getHeight()/2));
 
         barrelVector.rotateDeg(angle);
 
-        return new Vector2(getParent().getX() + getParent().getWidth()/2 - getParent().getWidth()/16, getParent().getY() + getParent().getHeight()/2 - getParent().getWidth()/16).add(barrelVector);
+        return new Vector2(getParent().getX() + getParent().getWidth()/2 - getParent().getWidth()/16,
+                getParent().getY() + getParent().getHeight()/2 - getParent().getWidth()/16).add(barrelVector);
 
     }
 }

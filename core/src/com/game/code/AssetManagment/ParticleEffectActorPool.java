@@ -15,11 +15,20 @@ public class ParticleEffectActorPool extends Pool<ParticleEffectActorPool.Pooled
         return new PooledEffectActor(this, new ParticleEffect(prototype), true);
     }
 
+    @Override
+    public PooledEffectActor obtain() {
+        return super.obtain();
+
+    }
+
     public class PooledEffectActor extends ParticleEffectActor {
         ParticleEffectActorPool associatedPool;
 
-        public PooledEffectActor(ParticleEffectActorPool associatedPool, ParticleEffect particleEffect, boolean resetOnStart) {
+        public PooledEffectActor(ParticleEffectActorPool associatedPool,
+                                 ParticleEffect particleEffect,
+                                 boolean resetOnStart) {
             super(particleEffect, resetOnStart);
+            this.setAutoRemove(true);
             this.associatedPool = associatedPool;
         }
 
@@ -30,7 +39,7 @@ public class ParticleEffectActorPool extends Pool<ParticleEffectActorPool.Pooled
         }
 
         public void free() {
-            ParticleEffectActorPool.this.free(this);
+            associatedPool.free(this);
         }
     }
 }
