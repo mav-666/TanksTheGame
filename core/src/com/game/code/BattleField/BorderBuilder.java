@@ -10,14 +10,15 @@ import com.game.code.TextureActor;
 public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetRequest {
     private Group border;
 
-    public BorderBuilder(AssetRequestProcessor assetRequestProcessor, BattleFieldBuilder battleFieldBuilder) {
+    public BorderBuilder(BattleFieldBuilder battleFieldBuilder) {
         super(battleFieldBuilder);
         border = new Group();
-        request(assetRequestProcessor);
     }
 
     @Override
     public void request(AssetRequestProcessor assetRequestProcessor) {
+        super.request(assetRequestProcessor);
+
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
@@ -27,7 +28,7 @@ public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetR
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("box");
 
         border.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture((tileTextures.get((int)(Math.random() * tileTextures.size)))));
+                ((TextureActor) actor).setTexture(tileTextures.get(getRandom().nextInt(tileTextures.size))));
     }
 
     @Override
@@ -38,17 +39,23 @@ public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetR
     }
 
     protected void buildBorder() {
-        getFreeSpace().values().stream().filter(
-                (cord) -> cord.x == 0 || cord.y == 0 || cord.x == getBattleField().getWidth()-1 || cord.y == getBattleField().getHeight()-1
+        getFreeSpace().stream().filter(
+                (cord) -> cord.x == 0 || cord.y == 0 || cord.x == getBattleFieldWidth()-1 || cord.y == getBattleFieldHeight()-1
         ).toList().forEach( (vector2) -> {
+            getFreeSpace().remove(vector2);
             TextureActor actor = new TextureActor();
             actor.setPosition(vector2.x, vector2.y);
-            actor.setSize(getBattleField().getTileWidth(), getBattleField().getTileHeight());
+            actor.setSize(getBattleFieldTileWidth(), getBattleFieldTileHeight());
             border.addActor(actor);
         });
-
-        getBattleField().addActor(border);
     }
 
+    @Override
+    public BattleField createBattleField() {
+        BattleField battleField = super.createBattleField();
+        battleField.addActor(border);
+
+        return battleField;
+    }
 
 }

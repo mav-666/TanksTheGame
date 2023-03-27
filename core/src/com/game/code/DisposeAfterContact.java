@@ -22,7 +22,8 @@ public class DisposeAfterContact implements ContactListener, BodyDisposal {
 
     @Override
     public void beginContact(Contact contact) {
-        contactListener.beginContact(contact);
+        if(contact.getFixtureA() != null && contact.getFixtureB() != null)
+            contactListener.beginContact(contact);
     }
 
     @Override

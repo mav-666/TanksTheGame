@@ -11,9 +11,7 @@ import com.game.code.Entity.Entity;
 
 import java.util.*;
 
-public class Canon extends Head implements AssetRequest {
-    private final Entity owner;
-
+public class Canon extends Head {
     private final BulletPool bulletPool;
 
     protected float recoil;
@@ -21,37 +19,36 @@ public class Canon extends Head implements AssetRequest {
 
     private boolean isRecharging;
 
-    public Canon(AssetRequestProcessor assetRequestProcessor,
+    public Canon(
                  World world,
                  Entity owner,
                  float width, float height,
-                 float rotationSpeed, float damage, float projectileSpeed, float recoil, long recharge)
+                 CanonData canonData)
     {
-        super(width, height, rotationSpeed);
-        this.owner= owner;
+        super(width, height, owner, canonData);
 
         setWidth(width);
 
-        bulletPool = new BulletPool(assetRequestProcessor, world, owner, width, damage, projectileSpeed);
+        bulletPool = new BulletPool(world, owner, width, canonData.damage, canonData.projectileSpeed);
 
-        this.recoil = recoil;
-        this.recharge = recharge;
+        this.recoil = canonData.recoil;
+        this.recharge = canonData.recharge;
 
         this.isRecharging= false;
-
-        request(assetRequestProcessor);
     }
 
     @Override
     public void request(AssetRequestProcessor assetRequestProcessor) {
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
+
+        bulletPool.request(assetRequestProcessor);
     }
 
     @Override
     public void passAssets(AssetRequestProcessor assets) {
         TextureAtlas atlas = assets.get("TanksTheGame.atlas", TextureAtlas.class);
         barrel.setTexture(atlas.findRegion("barrel"));
-        head.setTexture(atlas.findRegion("head"));
+        head.setTexture(atlas.findRegion("canon"));
     }
 
     @Override

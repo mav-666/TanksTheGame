@@ -7,6 +7,10 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.game.code.*;
 import com.badlogic.gdx.Gdx;
@@ -14,39 +18,40 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticlePoolApplier;
 import com.game.code.BattleField.*;
-import com.game.code.Tank.DefaultTank;
+import com.game.code.Tank.CabData;
+import com.game.code.Tank.Head.HeadData;
 import com.game.code.Tank.Tank;
+import com.game.code.Tank.TankData;
 
 import java.util.HashMap;
 
 
 //одина единица в мире равна танку (считаем за квадрат)
 public class GameScreen implements Screen {
-    private final Application app;
     private final Stage stage, stageUI;
     private final AssetRequestProcessor assetRequestProcessor;
 
 //    private final TmxMapLoader tmxMapLoader;
 
-    final static float MAP_WIDTH = 20f, MAP_HEIGHT = 20f;
+    final static float MAP_WIDTH = 50f, MAP_HEIGHT = 50f;
 
     private final BoundedCamera camera;
 
     private final World world;
     private final BodyDisposal bodyDisposal;
 
-    //private final Box2DDebugRenderer box2DDebugRenderer;
+//    private final Box2DDebugRenderer box2DDebugRenderer;
 
     public GameScreen(Application application) {
-        app = application;
 
         camera = new BoundedCamera(MAP_WIDTH, MAP_HEIGHT);
 
-        stage = new Stage(new FillViewport(9, 6, camera), app.batch);
-        stageUI = new Stage(new FillViewport(18, 12, camera), app.batch);
+        stage = new Stage(new FillViewport(9, 6, camera), application.batch);
+        stageUI = new Stage(new FillViewport(18, 12, camera), application.batch);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage, stageUI));
 
@@ -55,7 +60,7 @@ public class GameScreen implements Screen {
         bodyDisposal = disposeAfterContact;
         world.setContactListener(disposeAfterContact);
         //debug
-        //box2DDebugRenderer = new Box2DDebugRenderer();
+//        box2DDebugRenderer = new Box2DDebugRenderer();
         //stage.setDebugAll(true);
         //stage.setDebugInvisible(true);
         //debug
@@ -66,35 +71,50 @@ public class GameScreen implements Screen {
         assetRequestProcessor  = new AssetRequestProcessor(assetManager);
         assetRequestProcessor.addAssetStrategy(new ParticlePoolApplier(new HashMap<>()));
 
-        BattleFieldBuilder battleFieldBuilder =
-                new BorderBuilder(assetRequestProcessor,
-                new BoxBuilder(assetRequestProcessor , 0.0f,
-                new GrassBuilder(assetRequestProcessor, 0.15f,
-                        new PlainBuilder(world, assetRequestProcessor, MAP_WIDTH, MAP_HEIGHT, "sand", 1, 1)
-                )));
+        JsonValue jsonValue = new JsonReader().parse(Gdx.files.internal("Json/Tanks.json")).get("default");
+        Json json = new Json();
 
-        battleFieldBuilder.buildBattleField();
+        TankData tankData = new TankData();
 
-        Tank tank = new DefaultTank(assetRequestProcessor, world, new Vector2(1,1), 1, 1);
-        tank.setName("A");
-        Player player = new Player(tank);
+        try {
+            tankData.headData = json.fromJson(Class.forName(jsonValue.get("head").getString("class")).asSubclass(HeadData.class), jsonValue.get("head").toJson(JsonWriter.OutputType.json));
+            tankData.cabData = json.fromJson(CabData.class, jsonValue.get("cab").toJson(JsonWriter.OutputType.json));
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
 
-        Tank tank2 = new DefaultTank(assetRequestProcessor, world, new Vector2(1,3), 1, 1);
-        tank2.setName("B");
+        HashMap<String, TankData> tankDataHashMap = new HashMap<>();
+
+        tankDataHashMap.put("1", tankData);
+        tankDataHashMap.put("2", tankData);
+        tankDataHashMap.put("3", tankData);
+        tankDataHashMap.put("4", tankData);
+
+        TankBuilder tankBuilder = new TankBuilder(tankDataHashMap,
+                new BoxBuilder( 0.20f,
+                        new GrassBuilder( 0.005f,
+                                new BorderBuilder(
+                                        new PlainBuilder(190, world, MAP_WIDTH, MAP_HEIGHT, 1, 1, "sand")
+                                ))));
 
 
-        Tank tank3 = new DefaultTank(assetRequestProcessor, world, new Vector2(16,12), 1, 1);
-        tank3.setName("C");
+        tankBuilder.buildBattleField();
 
-        camera.attach(tank);
+        ((AssetRequest) tankBuilder).request(assetRequestProcessor);
 
-        stage.addActor(battleFieldBuilder.getBattleField());
-        stage.addActor(player);
-        stage.addActor(tank2);
-        stage.addActor(tank3);
+        Tank playerTank = (Tank) tankBuilder.getTanks().getChildren().get(tankBuilder.getRandom().nextInt(tankBuilder.getTanks().getChildren().size));
+
+        camera.attach(playerTank);
+        playerTank.remove();
+        tankBuilder.getTanks().addActor(new Player(playerTank));
+
+
+
+        stage.addActor(((BattleFieldBuilder) tankBuilder).createBattleField());
+
+
 
         assetRequestProcessor.load();
-
     }
 
     void initUIStage() {
@@ -128,7 +148,7 @@ public class GameScreen implements Screen {
 
 //        System.out.println(Gdx.graphics.getFramesPerSecond());
 
-        //box2DDebugRenderer.render(world, camera.combined);
+//        box2DDebugRenderer.render(world, camera.combined);
 
         camera.update();
 

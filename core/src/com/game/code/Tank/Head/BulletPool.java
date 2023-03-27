@@ -25,7 +25,7 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     private float bulletSpeed;
 
 
-    BulletPool(AssetRequestProcessor assetRequestProcessor,
+    BulletPool(
                World world,
                Entity owner,
                float width, float damage,
@@ -37,9 +37,6 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
         this.bulletWidth = width;
         this.bulletDamage = damage;
         this.bulletSpeed = speed;
-
-        request(assetRequestProcessor);
-
     }
 
     @Override

@@ -3,13 +3,17 @@ package com.game.code.Tank;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 
-import com.badlogic.gdx.utils.Disposable;
+import com.game.code.AssetManagment.AssetRequest;
+import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.BodyData;
 import com.game.code.ColoredGroup;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Tank.Head.Head;
 
-public abstract class Tank extends ColoredGroup implements Breakable, Disposable {
+public class Tank extends ColoredGroup implements Breakable, AssetRequest {
+    private String id;
+
     protected Cab cab;
     protected Head head;
 
@@ -19,8 +23,18 @@ public abstract class Tank extends ColoredGroup implements Breakable, Disposable
         setOrigin(width/2, height/2);
     }
 
+    @Override
+    public void request(AssetRequestProcessor assetRequestProcessor) {
+        cab.request(assetRequestProcessor);
+        head.request(assetRequestProcessor);
+    }
+
+    @Override
+    public void passAssets(AssetRequestProcessor assets) {}
+
     public void setCab(Cab cab) {
-        this.cab= cab;
+        this.cab = cab;
+        ((BodyData) cab.getBody().getUserData()).owner = this;
         if(head != null) {
             addActorBefore(head, cab);
             return;
@@ -54,6 +68,14 @@ public abstract class Tank extends ColoredGroup implements Breakable, Disposable
         head.shoot();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @Override
     public Body getBody() {
         return cab.getBody();
@@ -79,6 +101,4 @@ public abstract class Tank extends ColoredGroup implements Breakable, Disposable
         cab.die();
     }
 
-    @Override
-    public void dispose() {}
 }

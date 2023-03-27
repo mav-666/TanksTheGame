@@ -1,28 +1,43 @@
 package com.game.code.BattleField;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
 
 
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 
 public interface BattleFieldBuilder {
 
-     default void resetMap() {
-        for(int i = 0; i < getBattleField().getWidth(); i++) {
-            for(int j = 0; j < getBattleField().getHeight(); j++) {
-                getFreeSpace().put(
-                        new Vector2(getBattleField().getWidth() - i, getBattleField().getHeight() - j),
-                        new Vector2(i, j)
-                );
-            }
-        }
-        getBattleField().clear();
+    default void buildBattleField() {
+        resetFreeSpace();
     }
 
-    void buildBattleField();
+    BattleField createBattleField();
 
-    BattleField getBattleField();
+    HashSet<Vector2> getFreeSpace();
 
-    HashMap<Vector2, Vector2> getFreeSpace();
+    Random getRandom();
+
+    default void resetFreeSpace() {
+        getFreeSpace().clear();
+        for(int i = 0; i < getBattleFieldWidth(); i++) {
+            for(int j = 0; j < getBattleFieldHeight(); j++) {
+                getFreeSpace().add(new Vector2(i, j));
+            }
+        }
+    }
+
+
+    float getBattleFieldWidth();
+
+    float getBattleFieldHeight();
+
+    float getBattleFieldTileWidth();
+
+    float getBattleFieldTileHeight();
+
+    World getBattleFieldWorld();
+
 
 }

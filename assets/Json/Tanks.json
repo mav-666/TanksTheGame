@@ -1,0 +1,21 @@
+{
+  "default" : {
+    "cab" : {
+      "class" : "com.game.code.Tank.CabData",
+      "type" : "Cab",
+      "invincibilityTime" : 500,
+      "health" : 150,
+      "speed" : 12,
+      "mobility" : 1.5
+    },
+    "head" : {
+      "class": "com.game.code.Tank.Head.CanonData",
+      "type" : "Canon",
+      "damage" : 50,
+      "projectileSpeed" : 6,
+      "rotationSpeed" : 75,
+      "recoil" : 0.75,
+      "recharge" : 750
+    }
+  }
+}

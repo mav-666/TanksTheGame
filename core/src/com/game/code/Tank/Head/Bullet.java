@@ -55,7 +55,8 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
         setPosition(pos.x, pos.y);
         setRotation(angle);
 
-        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), bodyShape, BodyDef.BodyType.DynamicBody, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex,0.1f, 0, 0.1f);
+        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), BodyDef.BodyType.DynamicBody,0.1f);
+        BodyBuilder.createFixture(body, this, bodyShape, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex,0.1f, 0);
         body.setTransform(body.getPosition(), (float) Math.toRadians(angle));
 
         body.setBullet(true);
@@ -107,12 +108,12 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
     }
 
     @Override
+    public void reset() {}
+
+    @Override
     public Body getBody() {
         return body;
     }
-
-    @Override
-    public void reset() {}
 
     @Override
     public void destroy() {

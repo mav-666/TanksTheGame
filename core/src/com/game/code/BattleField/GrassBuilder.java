@@ -1,29 +1,33 @@
 package com.game.code.BattleField;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.BodyBuilder;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Entity;
+import com.game.code.Player;
 import com.game.code.TextureActor;
 
-import java.util.List;
+import java.util.HashMap;
 
 public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
+    Obstacle grassGroup;
 
-    public GrassBuilder(AssetRequestProcessor assetRequestProcessor,
-                 float density, BattleFieldBuilder battleFieldBuilder) {
+    public GrassBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
         super(density, battleFieldBuilder);
-        request(assetRequestProcessor);
     }
 
     @Override
     public void request(AssetRequestProcessor assetRequestProcessor) {
+        super.request(assetRequestProcessor);
+
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
@@ -37,22 +41,28 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     @Override
-    protected void addObstacle() {
-        List<Vector2> spaces = getFreeSpace().keySet().stream().toList();
-        Vector2 space = spaces.get((int)(Math.random() * spaces.size()));
+    protected void buildObstacles() {
+        Vector2 pos = new Vector2(0,0);
+        grassGroup =  createObstacle(pos, getBattleFieldWidth(), getBattleFieldHeight());
+        grassGroup.setBody(BodyBuilder.createBody(getBattleFieldWorld(), grassGroup, pos, BodyDef.BodyType.StaticBody, 1));
 
-        obstacles.addActor(createGrass(getFreeSpace().get(space),
-                getBattleField().getTileWidth(), getBattleField().getTileHeight()));
-
-        getFreeSpace().remove(space);
+        super.buildObstacles();
     }
 
-    private Obstacle createGrass(Vector2 pos , float width, float height) {
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width/2 - 0.05f, height/2 - 0.05f);
+    @Override
+    protected void addObstacle() {
+        Vector2 space = getFreeSpace().stream().toList().get(getRandom().nextInt(getFreeSpace().size()));
+        getFreeSpace().remove(space);
 
-        Obstacle grass =  new Obstacle(getBattleField().getWorld(), BodyDef.BodyType.StaticBody, BitCategories.AREA, shape, pos, width, height)
+        obstacles.addActor(createGrassPiece(space, getBattleFieldTileWidth(), getBattleFieldTileHeight()));
+    }
+
+    protected Obstacle createObstacle(Vector2 pos, float width, float height) {
+        return new Obstacle(BitCategories.AREA,
+                pos, width, height)
         {
+            private final HashMap<Actor, Integer> faded = new HashMap<>();
+
             @Override
             public void collusionRespond(Entity participant) {
                 super.collusionRespond(participant);
@@ -62,8 +72,20 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
 
                 Actor actor = (Actor) participant;
 
-                actor.getColor().a /= 1.5;
+                if(faded.containsKey(actor)){
+                    faded.put(actor, faded.get(actor) + 1);
+                    return;
+                }
+                else
+                    faded.put(actor, 0);
 
+                Color fadedColor = new Color(actor.getColor());
+
+                if(participant instanceof Player)
+                    fadedColor.a = 0.5f;
+                else
+                    fadedColor.a = 0f;
+                actor.addAction(Actions.color(fadedColor, 0.3f));
             }
 
             @Override
@@ -76,11 +98,33 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
 
                 Actor actor = (Actor) participant;
 
-                actor.getColor().a *= 1.5;
+                if(faded.get(actor) != 0) {
+                    faded.put(actor, faded.get(actor) - 1);
+                    return;
+                }
+
+                faded.remove(actor);
+
+                Color fadedColor = new Color(actor.getColor());
+                fadedColor.a = 1f;
+
+                actor.addAction(Actions.color(fadedColor, 0.3f));
             }
         };
+    }
 
-        grass.getBody().getFixtureList().first().setSensor(true);
+    private Obstacle createGrassPiece(Vector2 pos, float width, float height) {
+        Obstacle grass = new Obstacle(BitCategories.AREA, pos, width, height);
+        grass.setScale(1.25f);
+
+        float shapeW = width/8, shapeH = height/8;
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(shapeW, shapeH, pos.add(width/2, height/2), 0);
+
+
+        Fixture fixture = BodyBuilder.createFixture(grassGroup.getBody(), grassGroup, shape, BitCategories.AREA.bit(), BitCategories.ALL.bit(), 0.1f, 0);
+        fixture.setSensor(true);
 
         return grass;
     }

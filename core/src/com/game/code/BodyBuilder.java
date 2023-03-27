@@ -11,15 +11,29 @@ public class BodyBuilder {
           World world,
           Entity userData,
           Vector2 pos,
-          Shape shape,
           BodyDef.BodyType type,
-          short category, short mask, short groupIndex,
-          float density, float restitution, float mass)
+          float mass)
     {
         BodyDef bodyDef = new BodyDef();
         bodyDef.position.set(pos);
         bodyDef.type = type;
         bodyDef.fixedRotation = true;
+
+        Body body = world.createBody(bodyDef);
+
+        MassData massData = new MassData();
+        massData.mass = mass;
+        massData.center.set(body.getLocalCenter());
+
+        body.setMassData(massData);
+
+        body.setUserData(new BodyData(userData, (userData instanceof Projectile)? 0 : ++LastBodyIndex));
+
+        return body;
+    }
+
+    public static Fixture createFixture(Body body, Entity userData, Shape shape, short category, short mask, short groupIndex,
+                                     float density, float restitution) {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -30,30 +44,15 @@ public class BodyBuilder {
         fixtureDef.filter.categoryBits = category;
         fixtureDef.filter.groupIndex = groupIndex;
 
-        Body body = world.createBody(bodyDef);
+        Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(body.getUserData());
+        ((BodyData) fixture.getUserData()).owner = userData;
 
-        MassData massData = new MassData();
-        massData.mass = mass;
-        massData.center.set(body.getLocalCenter());
-
-        body.setMassData(massData);
-
-        body.createFixture(fixtureDef);
-
-        body.setUserData(new BodyData(userData, (userData instanceof Projectile)? 0 : ++LastBodyIndex));
-
-        body.getFixtureList().first().setUserData(body.getUserData());
-
-        return body;
+        return fixture;
     }
 
-    public static Body createBody(World world,
-                                  Entity userData,
-                                  Vector2 pos,
-                                  Shape shape,
-                                  BodyDef.BodyType type,
-                                  short category, short mask,
-                                  float density, float restitution, float mass) {
-        return createBody(world, userData, pos, shape, type, category, mask, (short) 0, density, restitution, mass);
+
+    public static Fixture createFixture(Body body, Entity userData, Shape shape, short category, short mask, float density, float restitution) {
+        return createFixture(body, userData, shape, category, mask, (short) 0, density, restitution);
     }
 }

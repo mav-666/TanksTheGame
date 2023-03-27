@@ -31,34 +31,28 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     private float speed;
     private float mobility;
 
-    protected Cab(AssetRequestProcessor assetRequestProcessor,
+    protected Cab(
                   World world,
                   Vector2 pos,
                   float width, float height,
-                  float health, float speed, float mobility, long invisibilityTime)
+                  CabData cabData)
     {
-        this.health = health;
-        this.speed = speed;
-        this.mobility = mobility;
-        this.invincibilityTime = invisibilityTime;
+        this.health = cabData.health;
+        this.speed = cabData.speed;
+        this.mobility = cabData.mobility;
+        this.invincibilityTime = cabData.invincibilityTime;
         
         setSize(width, height);
 
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.setAsBox(width/2, height/2);
 
-        body = BodyBuilder.createBody(
-                world,
-                this,
-                pos.add(width/2, height/2), polygonShape,
-                BodyDef.BodyType.DynamicBody,
-                this.getCategory(), BitCategories.ALL.bit(),
-                0.5f, 0.1f, 250);
+        body = BodyBuilder.createBody(world, this, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody, 250);
+        BodyBuilder.createFixture(body, this, polygonShape, this.getCategory(), BitCategories.ALL.bit(),0.5f, 0.1f);
 
         body.setLinearDamping(4f);
         body.setAngularDamping(2.5f);
 
-        request(assetRequestProcessor);
     }
 
     @Override
@@ -70,7 +64,7 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
 
     @Override
     public void passAssets(AssetRequestProcessor assets) {
-        setTexture(assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegion("body"));
+        setTexture(assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegion("cab"));
     }
 
     @Override
@@ -116,7 +110,7 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
 
     public void move(float delta, MoveDirection direction) {
         body.setLinearVelocity(body.getLinearVelocity().add(
-                new Vector2(0, speed * delta * direction.mult).rotateRad(body.getAngle())));
+                new Vector2(0, (direction.mult == -1? speed* 0.75f : speed) * delta * direction.mult).rotateRad(body.getAngle())));
         applyTrace(direction);
 
     }
