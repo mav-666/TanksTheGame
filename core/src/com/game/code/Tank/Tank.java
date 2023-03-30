@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.BodyData;
+import com.game.code.BodyHandler;
 import com.game.code.ColoredGroup;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
@@ -32,6 +33,7 @@ public class Tank extends ColoredGroup implements Breakable, AssetRequest {
     @Override
     public void passAssets(AssetRequestProcessor assets) {}
 
+
     public void setCab(Cab cab) {
         this.cab = cab;
         ((BodyData) cab.getBody().getUserData()).owner = this;
@@ -52,6 +54,7 @@ public class Tank extends ColoredGroup implements Breakable, AssetRequest {
         addActor(head);
     }
 
+
     public void move(float delta, MoveDirection direction) {
         cab.move(delta, direction);
     }
@@ -68,6 +71,7 @@ public class Tank extends ColoredGroup implements Breakable, AssetRequest {
         head.shoot();
     }
 
+
     public String getId() {
         return id;
     }
@@ -75,6 +79,7 @@ public class Tank extends ColoredGroup implements Breakable, AssetRequest {
     public void setId(String id) {
         this.id = id;
     }
+
 
     @Override
     public Body getBody() {

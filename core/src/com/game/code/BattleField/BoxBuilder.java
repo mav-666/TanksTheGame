@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.BodyBuilder;
+import com.game.code.BodyHandler;
 import com.game.code.Entity.BitCategories;
 import com.game.code.TextureActor;
 
@@ -47,19 +47,30 @@ public class BoxBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     protected Obstacle createObstacle(Vector2 pos, float width, float height) {
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width/2, height/2);
+        return new Box(getBattleFieldBodyHandler(), pos, width, height);
+    }
 
-        Obstacle box = new Obstacle(BitCategories.WALL, pos, width, height);
+     private class Box extends Obstacle {
 
-        box.setBody(BodyBuilder.createBody(getBattleFieldWorld(), box, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody, 75));
-        BodyBuilder.createFixture(box.getBody(), box, shape, box.getCategory(), BitCategories.ALL.bit(),0.5f, 0);
+        private Box(BodyHandler bodyHandler, Vector2 pos, float width, float height) {
+            super(BitCategories.WALL, pos, width, height);
+            setSize(width, height);
 
-        box.getBody().setFixedRotation(false);
-        box.getBody().setAngularDamping(6);
-        box.getBody().setLinearDamping(6);
+            body = bodyHandler.requestCreation(this, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody);
 
-        box.getBody().setTransform(box.getBody().getPosition(), (float) Math.toRadians(30f * (getRandom().nextInt(12))));
-        return box;
+            PolygonShape shape = new PolygonShape();
+            shape.setAsBox(getWidth()/2, getHeight()/2);
+
+            bodyHandler.createFixture(body, this, shape, this.getCategory(), BitCategories.ALL.bit(), false, 0.5f, 0.1f);
+
+            body.setFixedRotation(false);
+
+            body.getMassData().mass = 75;
+
+            body.setTransform(body.getPosition(), (float) Math.toRadians(30f * (getRandom().nextInt(12))));
+
+            body.setAngularDamping(6);
+            body.setLinearDamping(6);
+        }
     }
 }

@@ -1,53 +1,64 @@
 package com.game.code;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
-import com.game.code.Entity.Area;
-import com.game.code.Entity.BitCategories;
-import com.game.code.Entity.Breakable;
-import com.game.code.Entity.Entity;
+import com.game.code.Entity.*;
 
-public class Explosion extends Actor implements Area {
+public class Explosion extends Actor implements Area, DelayedEntity {
     private Body body;
 
-    private ParticleEffectActor explosionEffect;
+    private final ParticleEffectActor explosionEffect;
 
-    private float damage;
+    private final float damage;
 
-    Explosion(World world, ParticleEffectActor explosionEffect, Vector2 pos, float radius, float damage) {
+    public Explosion(BodyHandler bodyHandler, ParticleEffectActor explosionEffect, Vector2 pos, float radius, float damage) {
         this.explosionEffect = explosionEffect;
         this.damage = damage;
 
+        setPosition(pos.x - radius/2, pos.y - radius/2);
+        setSize(radius, radius);
+
+        bodyHandler.requestCreation( this, pos, BodyDef.BodyType.DynamicBody);
+    }
+
+    @Override
+    public void initBody(Body body, BodyHandler bodyHandler) {
         CircleShape bodyShape = new CircleShape();
-        bodyShape.setRadius(radius);
+        bodyShape.setRadius(getWidth());
 
-        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), BodyDef.BodyType.DynamicBody, 0.1f);
-        BodyBuilder.createFixture(body, this, bodyShape, this.getCategory(), BitCategories.ALL.bit(),0.1f, 0);
+        bodyHandler.createFixture(body, this, bodyShape, this.getCategory(), BitCategories.ALL.bit(), true,0.1f, 0);
 
-        body.getFixtureList().first().setSensor(true);
+        this.body = body;
+
+        applyExplosionEffect();
+    }
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        if(explosionEffect.getEffect().getEmitters().first().getPercentComplete() > 0.5 && body != null)
+            ((BodyData) body.getUserData()).bodyHandler.requestDisposal(this);
     }
 
     private void applyExplosionEffect() {
-        explosionEffect.setPosition(body.getPosition().x, body.getPosition().y);
+        explosionEffect.setScale(1/(42f*2));
+        explosionEffect.setPosition(getBody().getPosition().x, getBody().getPosition().y);
+        explosionEffect.setSize(getWidth(), getHeight());
         explosionEffect.start();
         if(this.getStage() != null)
             getStage().addActor(explosionEffect);
     }
 
     @Override
-    public void act(float delta) {
-        super.act(delta);
-        flagForDispose();
-    }
-
-    @Override
     public void collusionRespond(Entity participant) {
-        if(participant instanceof Breakable) ((Breakable) participant).takeDamage(damage);
+        if(participant.getCategory() == BitCategories.BREAKABLE.bit())
+            ((Breakable) participant).takeDamage(damage);
     }
 
     @Override
@@ -57,7 +68,7 @@ public class Explosion extends Actor implements Area {
 
     @Override
     public void destroy() {
-        applyExplosionEffect();
         Area.super.destroy();
+        remove();
     }
 }

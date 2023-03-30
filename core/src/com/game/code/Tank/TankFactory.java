@@ -1,26 +1,26 @@
 package com.game.code.Tank;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.game.code.BodyHandler;
 import com.game.code.Tank.Head.Head;
 import com.game.code.Tank.Head.HeadData;
 
 public class TankFactory {
 
-    public Tank createTank(World world, Vector2 pos, float width, float height, HeadData headData, CabData cabData) {
+    public Tank createTank(BodyHandler bodyHandler, Vector2 pos, float width, float height, HeadData headData, CabData cabData) {
         Tank tank = new Tank(pos, width, height);
 
-        tank.setCab(createCab(world, tank, cabData));
-        tank.setHead(createHead(world, tank, headData));
+        tank.setCab(createCab(bodyHandler, tank, cabData));
+        tank.setHead(createHead(bodyHandler, tank, headData));
 
         return tank;
     }
 
-    private Head createHead(World world, Tank tank, HeadData headData) {
-        return Heads.valueOf(headData.type).creator.create(world, tank, headData);
+    private Head createHead(BodyHandler bodyHandler, Tank tank, HeadData headData) {
+        return Heads.valueOf(headData.type).creator.create(bodyHandler, tank, headData);
     }
 
-    private Cab createCab(World world, Tank tank, CabData cabData) {
-        return Cabs.valueOf(cabData.type).creator.createCab(world, tank, cabData);
+    private Cab createCab(BodyHandler bodyHandler, Tank tank, CabData cabData) {
+        return Cabs.valueOf(cabData.type).creator.createCab(bodyHandler, tank, cabData);
     }
 }

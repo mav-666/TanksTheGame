@@ -8,7 +8,7 @@ import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.TextureActor;
 
 public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetRequest {
-    private Group border;
+    private final Group border;
 
     public BorderBuilder(BattleFieldBuilder battleFieldBuilder) {
         super(battleFieldBuilder);

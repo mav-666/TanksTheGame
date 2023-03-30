@@ -6,15 +6,14 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.badlogic.gdx.utils.Pool;
 import com.game.code.BodyData;
+import com.game.code.BodyHandler;
 import com.game.code.Entity.BitCategories;
-import com.game.code.BodyBuilder;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Entity.Projectile;
 import com.game.code.TextureActor;
 
 public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
-    private final World world;
     private Body body;
 
     private final short ownersGroupIndex;
@@ -27,10 +26,8 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
     private float damage;
     private float speed;
 
-    protected Bullet(World world, ParticleEffectActor shardEffect, Pool<Bullet> pool, Entity owner, TextureRegion texture, float width, float damage, float speed) {
+    protected Bullet(ParticleEffectActor shardEffect, Pool<Bullet> pool, Entity owner, TextureRegion texture, float width, float damage, float speed) {
         super(texture);
-
-        this.world = world;
         this.AssociatedPool = pool;
         this.shardEffect = shardEffect;
 
@@ -47,21 +44,23 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
 
         bodyShape = new CircleShape();
         bodyShape.setRadius(width/18);
-
     }
 
     //angle in degrees
-    public void init(Vector2 pos, float angle) {
+    public void init(BodyHandler bodyHandler, Vector2 pos, float angle) {
         setPosition(pos.x, pos.y);
         setRotation(angle);
 
-        body = BodyBuilder.createBody(world, this, pos.add(getWidth()/2, getHeight()/2), BodyDef.BodyType.DynamicBody,0.1f);
-        BodyBuilder.createFixture(body, this, bodyShape, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex,0.1f, 0);
-        body.setTransform(body.getPosition(), (float) Math.toRadians(angle));
+        body = bodyHandler.requestCreation(this, pos.add(getWidth()/2, getHeight()/2), BodyDef.BodyType.DynamicBody);
+
+        bodyHandler.createFixture(body, this, bodyShape, this.getCategory(), BitCategories.ALL.bit(), ownersGroupIndex, false,0.1f, 0);
+
+        body.getMassData().mass = 0.1f;
 
         body.setBullet(true);
-    }
 
+        body.setTransform(body.getPosition(), (float) Math.toRadians(getRotation()));
+    }
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -86,8 +85,7 @@ public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
         }
 
         applyImpulseToParticipant(participant);
-
-        flagForDispose();
+        ((BodyData) body.getUserData()).bodyHandler.requestDisposal(this);
     }
 
     private void applyShards() {

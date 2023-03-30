@@ -3,7 +3,7 @@
     "cab" : {
       "class" : "com.game.code.Tank.CabData",
       "type" : "Cab",
-      "invincibilityTime" : 500,
+      "invincibilityTime" : 0.5,
       "health" : 150,
       "speed" : 12,
       "mobility" : 1.5

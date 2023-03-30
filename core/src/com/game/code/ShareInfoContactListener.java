@@ -12,6 +12,8 @@ public class ShareInfoContactListener implements ContactListener {
         Entity A = ((BodyData) contact.getFixtureA().getUserData()).owner;
         Entity B = ((BodyData) contact.getFixtureB().getUserData()).owner;
 
+
+
         A.collusionRespond(B);
         B.collusionRespond(A);
     }
@@ -26,7 +28,10 @@ public class ShareInfoContactListener implements ContactListener {
     }
 
     @Override
-    public void preSolve(Contact contact, Manifold oldManifold) {}
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        if(((BodyData) contact.getFixtureA().getUserData()).flaggedForDispose ||
+                ((BodyData) contact.getFixtureB().getUserData()).flaggedForDispose) contact.setEnabled(false);
+    }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {}

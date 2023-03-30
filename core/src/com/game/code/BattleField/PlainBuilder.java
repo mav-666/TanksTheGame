@@ -2,11 +2,11 @@ package com.game.code.BattleField;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.BodyHandler;
 import com.game.code.TextureActor;
 
 import java.util.HashSet;
@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     private final Random random;
-    private final World world;
+    private final BodyHandler bodyHandler;
     private final float width, height, tileWidth, tileHeight;
 
     private final HashSet<Vector2> freeSpace;
@@ -22,10 +22,10 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     private final String plainTileName;
     private Group plain;
 
-    public PlainBuilder(int seed, World world, float width, float height,  float tileWidth, float tileHeight, String plainTileName) {
+    public PlainBuilder(int seed, BodyHandler bodyHandler, float width, float height,  float tileWidth, float tileHeight, String plainTileName) {
         random = new Random(seed);
 
-        this.world = world;
+        this.bodyHandler = bodyHandler;
         this.width = width;
         this.height = height;
         this.tileWidth = tileWidth;
@@ -75,7 +75,7 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
 
     @Override
     public BattleField createBattleField() {
-        BattleField battleField = new BattleField(world, width, height);
+        BattleField battleField = new BattleField(bodyHandler, width, height);
         battleField.addActor(plain);
 
         return battleField;
@@ -113,8 +113,8 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     }
 
     @Override
-    public World getBattleFieldWorld() {
-        return world;
+    public BodyHandler getBattleFieldBodyHandler() {
+        return bodyHandler;
     }
 
 

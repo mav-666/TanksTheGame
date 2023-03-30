@@ -1,13 +1,13 @@
 package com.game.code.Tank;
 
-import com.badlogic.gdx.physics.box2d.World;
+import com.game.code.BodyHandler;
 import com.game.code.Tank.Head.Canon;
 import com.game.code.Tank.Head.CanonData;
 import com.game.code.Tank.Head.Head;
 import com.game.code.Tank.Head.HeadData;
 
 public enum Heads {
-    Canon((world, tank, data) -> new Canon(world, tank, tank.getWidth(), tank.getHeight(), (CanonData) data));
+    Canon((bodyHandler, tank, data) -> new Canon(bodyHandler, tank, tank.getWidth(), tank.getHeight(), (CanonData) data));
 
     Creator creator;
 
@@ -16,6 +16,6 @@ public enum Heads {
     }
 
     interface Creator {
-        Head create(World world, Tank tank, HeadData headData);
+        Head create(BodyHandler bodyHandler, Tank tank, HeadData headData);
     }
 }

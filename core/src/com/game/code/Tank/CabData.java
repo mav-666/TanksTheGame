@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.JsonValue;
 public class CabData implements Json.Serializable {
     public String type;
 
-    public long invincibilityTime;
+    public float invincibilityTime;
 
     public float health;
     public float speed;
@@ -26,7 +26,7 @@ public class CabData implements Json.Serializable {
     public void read(Json json, JsonValue jsonData) {
         type = jsonData.getString("type");
 
-        invincibilityTime = jsonData.getLong("invincibilityTime");
+        invincibilityTime = jsonData.getFloat("invincibilityTime");
         health = jsonData.getFloat("health");
         speed = jsonData.getFloat("speed");
         mobility = jsonData.getFloat("mobility");

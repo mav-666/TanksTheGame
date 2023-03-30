@@ -8,13 +8,14 @@ import com.badlogic.gdx.utils.Pool;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticleEffectActorPool;
+import com.game.code.BodyHandler;
 import com.game.code.Entity.Entity;
 
 import java.util.HashMap;
 
 
 public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePools {
-    private final World world;
+
     private final Entity owner;
 
     private TextureRegion bulletTexture;
@@ -25,13 +26,7 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     private float bulletSpeed;
 
 
-    BulletPool(
-               World world,
-               Entity owner,
-               float width, float damage,
-               float speed)
-    {
-        this.world = world;
+    BulletPool(Entity owner, float width, float damage, float speed) {
         this.owner = owner;
 
         this.bulletWidth = width;
@@ -58,7 +53,7 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
 
     @Override
     protected Bullet newObject() {
-        return new Bullet(world, shards.obtain(), this, owner, bulletTexture, bulletWidth, bulletDamage, bulletSpeed);
+        return new Bullet(shards.obtain(), this, owner, bulletTexture, bulletWidth, bulletDamage, bulletSpeed);
     }
 
     public void setBulletDamage(float bulletDamage) {

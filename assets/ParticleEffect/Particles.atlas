@@ -1,29 +1,104 @@
+
 Particles.png
-	size: 30, 29
-	repeat: none
+size: 30, 30
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+explosion1
+  rotate: false
+  xy: 0, 6
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
 shard1
-	bounds: 0, 21, 6, 4
+  rotate: false
+  xy: 0, 22
+  size: 6, 4
+  orig: 6, 4
+  offset: 0, 0
+  index: -1
 shard2
-	bounds: 0, 9, 5, 4
+  rotate: false
+  xy: 0, 10
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
 shard3
-	bounds: 0, 17, 6, 4
+  rotate: false
+  xy: 0, 18
+  size: 6, 4
+  orig: 6, 4
+  offset: 0, 0
+  index: -1
 shard4
-	bounds: 0, 25, 7, 4
+  rotate: false
+  xy: 0, 26
+  size: 7, 4
+  orig: 7, 4
+  offset: 0, 0
+  index: -1
 shard5
-	bounds: 0, 13, 5, 4
+  rotate: false
+  xy: 0, 14
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
 shard6
-	bounds: 7, 26, 7, 3
+  rotate: false
+  xy: 7, 27
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
 shard7
-	bounds: 14, 26, 7, 3
+  rotate: false
+  xy: 14, 27
+  size: 7, 3
+  orig: 7, 3
+  offset: 0, 0
+  index: -1
 trace1
-	bounds: 0, 6, 3, 3
+  rotate: false
+  xy: 0, 3
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 trace2
-	bounds: 0, 0, 3, 3
+  rotate: false
+  xy: 6, 23
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 trace3
-	bounds: 27, 26, 3, 3
+  rotate: false
+  xy: 24, 27
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 trace4
-	bounds: 21, 26, 3, 3
+  rotate: false
+  xy: 21, 27
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 trace5
-	bounds: 0, 3, 3, 3
+  rotate: false
+  xy: 27, 27
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 trace6
-	bounds: 24, 26, 3, 3
+  rotate: false
+  xy: 0, 0
+  size: 3, 3
+  orig: 3, 3
+  offset: 0, 0
+  index: -1

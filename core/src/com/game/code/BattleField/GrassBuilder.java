@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.BodyBuilder;
+import com.game.code.BodyHandler;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Entity;
 import com.game.code.Player;
@@ -44,7 +44,7 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     protected void buildObstacles() {
         Vector2 pos = new Vector2(0,0);
         grassGroup =  createObstacle(pos, getBattleFieldWidth(), getBattleFieldHeight());
-        grassGroup.setBody(BodyBuilder.createBody(getBattleFieldWorld(), grassGroup, pos, BodyDef.BodyType.StaticBody, 1));
+        grassGroup.setBody(getBattleFieldBodyHandler().requestCreation(grassGroup, pos, BodyDef.BodyType.StaticBody));
 
         super.buildObstacles();
     }
@@ -58,9 +58,8 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     protected Obstacle createObstacle(Vector2 pos, float width, float height) {
-        return new Obstacle(BitCategories.AREA,
-                pos, width, height)
-        {
+        return new Obstacle( BitCategories.AREA, pos, width, height) {
+
             private final HashMap<Actor, Integer> faded = new HashMap<>();
 
             @Override
@@ -98,7 +97,7 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
 
                 Actor actor = (Actor) participant;
 
-                if(faded.get(actor) != 0) {
+                if(faded.get(actor) != null && faded.get(actor) != 0) {
                     faded.put(actor, faded.get(actor) - 1);
                     return;
                 }
@@ -115,16 +114,15 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
 
     private Obstacle createGrassPiece(Vector2 pos, float width, float height) {
         Obstacle grass = new Obstacle(BitCategories.AREA, pos, width, height);
-        grass.setScale(1.25f);
 
-        float shapeW = width/8, shapeH = height/8;
+        grass.setBody(getBattleFieldBodyHandler().requestCreation(grass, pos.add(width/2, height/2), BodyDef.BodyType.StaticBody));
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(shapeW, shapeH, pos.add(width/2, height/2), 0);
+        shape.setAsBox(width/8, height/8);
 
+        getBattleFieldBodyHandler().createFixture(grass.getBody(), grassGroup, shape, BitCategories.AREA.bit(), BitCategories.ALL.bit(), true, 0.1f, 0);
 
-        Fixture fixture = BodyBuilder.createFixture(grassGroup.getBody(), grassGroup, shape, BitCategories.AREA.bit(), BitCategories.ALL.bit(), 0.1f, 0);
-        fixture.setSensor(true);
+        grass.setScale(1.25f);
 
         return grass;
     }

@@ -3,8 +3,6 @@ package com.game.code.BattleField;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.Tank.Tank;
@@ -13,15 +11,13 @@ import com.game.code.Tank.TankFactory;
 import com.game.code.TextureActor;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class TankBuilder extends BattleFiledBuilderDecorator implements AssetRequest {
+    private final TankFactory tankFactory;
+    private final HashMap<String, TankData> tanksData;
+    private final Group tanks;
 
-    private TankFactory tankFactory;
-    private HashMap<String, TankData> tanksData;
-    private Group tanks;
-
-    private Group spawns;
+    private final Group spawns;
 
 
     public TankBuilder(HashMap<String, TankData> tanksData, BattleFieldBuilder battleFieldBuilder) {
@@ -31,7 +27,12 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
         tankFactory = new TankFactory();
         tanks = new Group();
 
-        spawns = new Group();
+        spawns = new Group() {
+            @Override
+            public String toString() {
+                return "spawns";
+            }
+        };
     }
 
     @Override
@@ -82,7 +83,7 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
     }
 
     private Tank createTank(String id, Vector2 pos) {
-        Tank tank = tankFactory.createTank(getBattleFieldWorld(),
+        Tank tank = tankFactory.createTank(getBattleFieldBodyHandler(),
                 pos, getBattleFieldTileWidth(), getBattleFieldTileHeight(),
                 tanksData.get(id).headData, tanksData.get(id).cabData);
         tank.setId(id);
@@ -91,7 +92,7 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
 
     public BattleField createBattleField() {
         BattleField battleField = super.createBattleField();
-        battleField.addActor(spawns);
+        battleField.addActorAfter(battleField.getChildren().first(), spawns);
         battleField.addActor(tanks);
 
         return battleField;

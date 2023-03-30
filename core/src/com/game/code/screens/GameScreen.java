@@ -35,32 +35,32 @@ public class GameScreen implements Screen {
     private final Stage stage, stageUI;
     private final AssetRequestProcessor assetRequestProcessor;
 
-//    private final TmxMapLoader tmxMapLoader;
-
     final static float MAP_WIDTH = 50f, MAP_HEIGHT = 50f;
 
     private final BoundedCamera camera;
 
     private final World world;
-    private final BodyDisposal bodyDisposal;
 
-//    private final Box2DDebugRenderer box2DDebugRenderer;
+    private final BodyHandler bodyHandler;
+
+    //private final Box2DDebugRenderer box2DDebugRenderer;
 
     public GameScreen(Application application) {
 
         camera = new BoundedCamera(MAP_WIDTH, MAP_HEIGHT);
 
         stage = new Stage(new FillViewport(9, 6, camera), application.batch);
-        stageUI = new Stage(new FillViewport(18, 12, camera), application.batch);
+        stageUI = new Stage(new FillViewport(9, 6, camera), application.batch);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage, stageUI));
 
         world = new World(new Vector2(0,0), false);
-        DisposeAfterContact disposeAfterContact = new DisposeAfterContact(new ShareInfoContactListener(), world);
-        bodyDisposal = disposeAfterContact;
-        world.setContactListener(disposeAfterContact);
+        world.setContactListener(new ShareInfoContactListener());
+
+        bodyHandler = new BodyHandler(world);
+
         //debug
-//        box2DDebugRenderer = new Box2DDebugRenderer();
+        //box2DDebugRenderer = new Box2DDebugRenderer();
         //stage.setDebugAll(true);
         //stage.setDebugInvisible(true);
         //debug
@@ -89,13 +89,22 @@ public class GameScreen implements Screen {
         tankDataHashMap.put("2", tankData);
         tankDataHashMap.put("3", tankData);
         tankDataHashMap.put("4", tankData);
+        tankDataHashMap.put("5", tankData);
+        tankDataHashMap.put("6", tankData);
+        tankDataHashMap.put("7", tankData);
+        tankDataHashMap.put("8", tankData);
+        tankDataHashMap.put("9", tankData);
+        tankDataHashMap.put("10", tankData);
+        tankDataHashMap.put("11", tankData);
+        tankDataHashMap.put("12", tankData);
 
         TankBuilder tankBuilder = new TankBuilder(tankDataHashMap,
-                new BoxBuilder( 0.20f,
-                        new GrassBuilder( 0.005f,
-                                new BorderBuilder(
-                                        new PlainBuilder(190, world, MAP_WIDTH, MAP_HEIGHT, 1, 1, "sand")
-                                ))));
+                new GasolineBuilder(0.025f,
+                    new BoxBuilder( 0.20f,
+                            new GrassBuilder( 0.005f,
+                                    new BorderBuilder(
+                                            new PlainBuilder(1, bodyHandler, MAP_WIDTH, MAP_HEIGHT, 1, 1, "sand")
+                                )))));
 
 
         tankBuilder.buildBattleField();
@@ -146,9 +155,9 @@ public class GameScreen implements Screen {
         stageUI.draw();
 
 
-//        System.out.println(Gdx.graphics.getFramesPerSecond());
+      //  System.out.println(Gdx.graphics.getFramesPerSecond());
 
-//        box2DDebugRenderer.render(world, camera.combined);
+        //box2DDebugRenderer.render(world, camera.combined);
 
         camera.update();
 
@@ -158,8 +167,12 @@ public class GameScreen implements Screen {
         stage.act(delta);
         stageUI.act(delta);
 
+        bodyHandler.createDelayed();
+        bodyHandler.activateBodies();
+
         world.step(delta, 6,2);
-        bodyDisposal.destroyAllBodies();
+
+        bodyHandler.disposeBodies();
     }
 
     @Override

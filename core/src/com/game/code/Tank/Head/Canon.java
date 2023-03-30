@@ -2,16 +2,16 @@ package com.game.code.Tank.Head;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.game.code.Animations;
-import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.BodyHandler;
 import com.game.code.Entity.Entity;
 
 import java.util.*;
 
 public class Canon extends Head {
+    private final BodyHandler bodyHandler;
     private final BulletPool bulletPool;
 
     protected float recoil;
@@ -19,17 +19,17 @@ public class Canon extends Head {
 
     private boolean isRecharging;
 
-    public Canon(
-                 World world,
+    public Canon(BodyHandler bodyHandler,
                  Entity owner,
                  float width, float height,
                  CanonData canonData)
     {
         super(width, height, owner, canonData);
+        this.bodyHandler = bodyHandler;
 
         setWidth(width);
 
-        bulletPool = new BulletPool(world, owner, width, canonData.damage, canonData.projectileSpeed);
+        bulletPool = new BulletPool(owner, width, canonData.damage, canonData.projectileSpeed);
 
         this.recoil = canonData.recoil;
         this.recharge = canonData.recharge;
@@ -61,7 +61,7 @@ public class Canon extends Head {
         head.addAction(Actions.delay(0.1f, Animations.recoil((head.getHeight()/5 * recoilStrength()))));
 
         Bullet bullet = bulletPool.obtain();
-        bullet.init(calculateBulletPosition(), getParent().getRotation() + getRotation());
+        bullet.init(bodyHandler, calculateBulletPosition(), getParent().getRotation() + getRotation());
 
         getStage().getRoot().addActor(bullet);
         recoil(bullet);

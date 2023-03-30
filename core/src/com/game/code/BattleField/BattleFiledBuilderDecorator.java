@@ -1,9 +1,9 @@
 package com.game.code.BattleField;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
+import com.game.code.BodyHandler;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -64,7 +64,7 @@ public class BattleFiledBuilderDecorator implements BattleFieldBuilder, AssetReq
     }
 
     @Override
-    public World getBattleFieldWorld() {
-        return battleFieldBuilder.getBattleFieldWorld();
+    public BodyHandler getBattleFieldBodyHandler() {
+        return battleFieldBuilder.getBattleFieldBodyHandler();
     }
 }

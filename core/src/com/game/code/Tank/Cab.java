@@ -1,22 +1,22 @@
 package com.game.code.Tank;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
-import com.game.code.Animations;
+import com.game.code.*;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticleEffectActorPool;
 import com.game.code.Entity.BitCategories;
-import com.game.code.BodyBuilder;
 import com.game.code.Entity.Breakable;
-import com.game.code.TextureActor;
 
 import java.util.*;
 
@@ -24,15 +24,16 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     private final Body body;
 
     private ParticleEffectActorPool traces;
+    private ParticleEffectActorPool explosions;
 
-    private long invincibilityTime;
+    private float invincibilityTime;
 
     private float health;
     private float speed;
     private float mobility;
 
     protected Cab(
-                  World world,
+                  BodyHandler bodyHandler,
                   Vector2 pos,
                   float width, float height,
                   CabData cabData)
@@ -44,23 +45,27 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
         
         setSize(width, height);
 
-        PolygonShape polygonShape = new PolygonShape();
-        polygonShape.setAsBox(width/2, height/2);
+        body = bodyHandler.requestCreation(this, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody);
 
-        body = BodyBuilder.createBody(world, this, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody, 250);
-        BodyBuilder.createFixture(body, this, polygonShape, this.getCategory(), BitCategories.ALL.bit(),0.5f, 0.1f);
+
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(getWidth()/2, getHeight()/2);
+
+        bodyHandler.createFixture(body, this, shape, this.getCategory(), BitCategories.ALL.bit(), false, 0.5f, 0.1f);
+
+        body.getMassData().mass = 250;
 
         body.setLinearDamping(4f);
         body.setAngularDamping(2.5f);
-
     }
 
     @Override
     public void request(AssetRequestProcessor assetRequestProcessor) {
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
         assetRequestProcessor.receiveRequest("trace", ParticleEffect.class, this);
+        assetRequestProcessor.receiveRequest("explosion", ParticleEffect.class, this);
     }
-
 
     @Override
     public void passAssets(AssetRequestProcessor assets) {
@@ -70,6 +75,7 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     @Override
     public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
         traces = getParticlePool(particlePools, assets.get("trace", ParticleEffect.class));
+        explosions = getParticlePool(particlePools, assets.get("explosion", ParticleEffect.class));
     }
 
 
@@ -77,36 +83,12 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     public void act(float delta) {
         super.act(delta);
 
+        if(body == null) return;
+
         this.getParent().setPosition(body.getPosition().x - getWidth()/2,
                 body.getPosition().y - getHeight()/2);
         this.getParent().setRotation((float) Math.toDegrees(body.getAngle()));
     }
-
-    //тест повреждений
-//    private void processInput(float delta) {
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.G)) {
-//            body.setLinearDamping(1.5f);
-//            speed /= 4;
-//            speed *= 1.5;
-//        }
-//
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
-//            body.setLinearDamping(4f);
-//            speed *= 4;
-//            speed /= 1.5;
-//        }
-//
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.B)) {
-//            body.setAngularDamping(0.625f);
-//            mobility /= 4;
-//        }
-//
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.N)) {
-//            body.setAngularDamping(2.5f);
-//            mobility *= 4;
-//        }
-//
-//    }
 
     public void move(float delta, MoveDirection direction) {
         body.setLinearVelocity(body.getLinearVelocity().add(
@@ -164,20 +146,19 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
         if(health <= 0 ) {
             return true;
         }
+
         health -= damage;
-        getParent().addAction(Animations.damaged(invincibilityTime));
+
+        ((Actor) ((BodyData) body.getUserData()).owner).addAction(Animations.damaged(invincibilityTime));
 
         body.getFixtureList().first().getFilterData().maskBits = (short) ~BitCategories.PROJECTILE.bit();
 
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                body.getFixtureList().first().getFilterData().maskBits = BitCategories.ALL.bit();
-                if(health <= 0) {
-                    die();
-                }
-            }
-        },  invincibilityTime);
+        addAction(Actions.delay(invincibilityTime, Actions.run(() -> {
+            body.getFixtureList().first().getFilterData().maskBits = BitCategories.ALL.bit();
+            if(health <= 0)
+                die();
+        })));
+
         return true;
     }
 
@@ -185,12 +166,10 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
     public void die() {
 
         //Anim
-
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                getParent().setTouchable(Touchable.disabled);
-            }
-        },  100);
+        ((Actor) ((BodyData) body.getUserData()).owner).addAction(Actions.delay(invincibilityTime/1000f, Actions.color(Color.valueOf("#646464"), 0.5f)));
+        getBody().setFixedRotation(false);
+        getBody().setAngularDamping(12f);
+        getParent().setTouchable(Touchable.disabled);
+        getStage().addActor(new Explosion(((BodyData) body.getUserData()).bodyHandler, explosions.obtain(), getBody().getPosition(), getWidth(), 50));
     }
 }

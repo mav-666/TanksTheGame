@@ -3,13 +3,15 @@ package com.game.code;
 import com.game.code.Entity.Entity;
 
 public class BodyData {
+    public final BodyHandler bodyHandler;
     public Entity owner;
-    public final long index;
     public boolean flaggedForDispose;
+    public final int index;
 
-    BodyData(Entity owner, short index) {
+    BodyData(BodyHandler bodyHandler, Entity owner, int index) {
+        this.bodyHandler = bodyHandler;
         this.owner = owner;
         this.index = index;
-        this.flaggedForDispose = false;
+        flaggedForDispose = false;
     }
 }

@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 public class Animations {
 
     //milliseconds
-    public static RepeatAction damaged(long invincibilityTime) {
-        return Actions.repeat( (int) invincibilityTime/100, Actions.sequence(Actions.color(Color.valueOf("781f2c"), 0.05f), Actions.color(Color.WHITE, 0.05f)));
+    public static RepeatAction damaged(float invincibilityTime) {
+        return Actions.repeat( (int) (invincibilityTime / 0.1f), Actions.sequence(Actions.color(Color.valueOf("781f2c"), 0.05f), Actions.color(Color.WHITE, 0.05f)));
     }
 
     //amount of recoil applied

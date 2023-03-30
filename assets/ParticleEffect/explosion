@@ -2,8 +2,8 @@ Untitled
 - Delay -
 active: false
 - Duration - 
-lowMin: 4000.0
-lowMax: 4000.0
+lowMin: 250.0
+lowMax: 250.0
 - Count - 
 min: 250
 max: 250
@@ -31,16 +31,7 @@ timelineCount: 1
 timeline0: 0.0
 independent: false
 - Life Offset - 
-active: true
-lowMin: 0.0
-lowMax: 0.0
-highMin: 100.0
-highMax: 100.0
-relative: true
-scalingCount: 1
-scaling0: 1.0
-timelineCount: 1
-timeline0: 0.0
+active: false
 independent: false
 - X Offset - 
 active: true
@@ -186,5 +177,5 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-/D:/all_projects/book/Pixel Dawings/Tanks/a/111.png
+explosion1.png
 
