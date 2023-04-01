@@ -6,12 +6,14 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.Group;
+
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+
 import com.game.code.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -22,11 +24,11 @@ import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticlePoolApplier;
 import com.game.code.BattleField.*;
+import com.game.code.Entity.Breakable;
 import com.game.code.Tank.CabData;
 import com.game.code.Tank.Head.HeadData;
 import com.game.code.Tank.Tank;
 import com.game.code.Tank.TankData;
-
 import java.util.HashMap;
 
 
@@ -40,8 +42,9 @@ public class GameScreen implements Screen {
     private final BoundedCamera camera;
 
     private final World world;
-
     private final BodyHandler bodyHandler;
+
+    private final Group tanks;
 
     //private final Box2DDebugRenderer box2DDebugRenderer;
 
@@ -49,8 +52,8 @@ public class GameScreen implements Screen {
 
         camera = new BoundedCamera(MAP_WIDTH, MAP_HEIGHT);
 
-        stage = new Stage(new FillViewport(9, 6, camera), application.batch);
-        stageUI = new Stage(new FillViewport(9, 6, camera), application.batch);
+        stage = new Stage(new FillViewport(18, 12, camera), application.batch);
+        stageUI = new Stage(new FillViewport(0,0, camera), application.batch);
 
         Gdx.input.setInputProcessor(new InputMultiplexer(stage, stageUI));
 
@@ -99,7 +102,7 @@ public class GameScreen implements Screen {
         tankDataHashMap.put("12", tankData);
 
         TankBuilder tankBuilder = new TankBuilder(tankDataHashMap,
-                new GasolineBuilder(0.025f,
+                new GasolineBuilder(0.0125f,
                     new BoxBuilder( 0.20f,
                             new GrassBuilder( 0.005f,
                                     new BorderBuilder(
@@ -111,26 +114,34 @@ public class GameScreen implements Screen {
 
         ((AssetRequest) tankBuilder).request(assetRequestProcessor);
 
-        Tank playerTank = (Tank) tankBuilder.getTanks().getChildren().get(tankBuilder.getRandom().nextInt(tankBuilder.getTanks().getChildren().size));
+
+        tanks = tankBuilder.getTanks();
+        Tank playerTank = (Tank) tanks.getChildren().get(tankBuilder.getRandom().nextInt(tanks.getChildren().size));
+
+
+        playerTank.remove();
+
+        Player player = new Player(playerTank);
+
+        tankBuilder.getTanks().addActor(player);
 
         camera.attach(playerTank);
-        playerTank.remove();
-        tankBuilder.getTanks().addActor(new Player(playerTank));
-
-
 
         stage.addActor(((BattleFieldBuilder) tankBuilder).createBattleField());
 
-
+        initUIStage();
 
         assetRequestProcessor.load();
+
     }
 
     void initUIStage() {
-        Table table = new Table();
-        table.setFillParent(true);
+        HealthBarApplier healthBarApplier = new HealthBarApplier();
+        tanks.getChildren().forEach((tank -> healthBarApplier.applyHealthBar((Breakable) tank)));
 
-        stageUI.addActor(table);
+        stageUI.addActor(healthBarApplier);
+
+        healthBarApplier.request(assetRequestProcessor);
     }
 
     @Override
@@ -152,6 +163,8 @@ public class GameScreen implements Screen {
         update(delta);
 
         stage.draw();
+
+        stageUI.getRoot().setScale(PPM.RATIO);
         stageUI.draw();
 
 
@@ -178,7 +191,6 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, false);
-        stageUI.getViewport().update(width, height, false);
         camera.update();
     }
 

@@ -1,6 +1,8 @@
 package com.game.code.AssetManagment;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.SkinLoader;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
@@ -76,6 +78,10 @@ public class AssetRequestProcessor implements Disposable {
         if(foundStrategy.isPresent()) {
             loadWithParameters(fileName, foundStrategy.get());
             return;
+        }
+
+        if(clazz == Skin.class) {
+            assetManager.load(fileName, Skin.class, new SkinLoader.SkinParameter("Skin/skin.atlas"));
         }
         assetManager.load(fileName, clazz);
 

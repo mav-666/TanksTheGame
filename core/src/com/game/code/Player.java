@@ -13,8 +13,13 @@ public class Player extends ColoredGroup implements Breakable {
 
     public Player(Tank tank) {
         this.tank = tank;
+
+        setSize(tank.getWidth(), tank.getHeight());
+
         ((BodyData) tank.getBody().getUserData()).owner = this;
         addActor(tank);
+
+        setName("Player");
     }
 
     @Override
@@ -56,12 +61,20 @@ public class Player extends ColoredGroup implements Breakable {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             tank.shoot();
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.H))
+            tank.takeDamage(50);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Y))
+            tank.takeDamage(25);
     }
 
     public void setTank(Tank tank) {
         this.tank = tank;
     }
 
+    public Tank getTank() {
+        return tank;
+    }
 
     @Override
     public float getHealth() {

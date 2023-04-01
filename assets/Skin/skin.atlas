@@ -1,0 +1,34 @@
+
+skin.png
+size: 512, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+HealthBar
+  rotate: false
+  xy: 1, 465
+  size: 33, 11
+  orig: 33, 11
+  offset: 0, 0
+  index: -1
+HealthBarBg
+  rotate: false
+  xy: 1, 457
+  size: 1, 6
+  orig: 1, 6
+  offset: 0, 0
+  index: -1
+HealthBarKnob
+  rotate: false
+  xy: 508, 501
+  size: 1, 6
+  orig: 1, 6
+  offset: 0, 0
+  index: -1
+Lozavy
+  rotate: false
+  xy: 1, 478
+  size: 505, 29
+  orig: 505, 29
+  offset: 0, 0
+  index: -1

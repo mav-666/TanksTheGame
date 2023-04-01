@@ -1,0 +1,55 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	Lozavy: {
+		file: Lozavy.fnt
+		scaledSize: -1
+		markupEnabled: false
+		flip: false
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	DarkPurple: {
+		r: 0.20784314
+		g: 0.078431375
+		b: 0.15686275
+		a: 1
+	}
+}
+com.ray3k.tenpatch.TenPatchDrawable: {
+	HealthBar: {
+		region: HealthBar
+		horizontalStretchAreas: [ 6, 9, 23, 26 ]
+		verticalStretchAreas: [ 4, 4 ]
+		tiling: false
+		minWidth: 33
+		minHeight: 11
+		rightWidth: 2
+		leftWidth: 2
+		bottomHeight: 2
+		topHeight: 4
+		offsetX: 0
+		offsetY: 0
+		offsetXspeed: 0
+		offsetYspeed: 0
+		frameDuration: 0.03
+		regions: []
+		playMode: 2
+		crushMode: 0
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: HealthBarBg
+		knob: HealthBarKnob
+		knobBefore: HealthBarKnob
+	}
+	default-vertical: {
+		background: HealthBarBg
+	}
+	default: {
+		background: HealthBarBg
+		knob: HealthBarKnob
+		knobBefore: HealthBarKnob
+	}
+}
+}
