@@ -2,7 +2,8 @@ package com.game.code;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.game.code.Application;
+import com.game.code.screens.Application;
+import com.game.code.screens.ApplicationImpl;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -11,6 +12,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("Tanks");
         config.setWindowedMode( 842, 480);
-		new Lwjgl3Application(new Application(), config);
+		new Lwjgl3Application(new ApplicationImpl(), config);
 	}
 }

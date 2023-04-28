@@ -1,103 +1,91 @@
 package com.game.code.AssetManagment;
 
+import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.SkinLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
+import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.utils.Disposable;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Optional;
 
-//Handles assetRequests and loads required assets via assetManager
-public class AssetRequestProcessor implements Disposable {
+//Handles assetRequests like a proxy for assetManager
+public class AssetRequestProcessor extends AssetProcessor implements Disposable {
     protected final AssetManager assetManager;
     //All requests to be loaded
     private final  HashMap<String, Class<?>> requests;
 
     protected final HashSet<AssetRequest> clients;
 
-    protected HashSet<AssetStrategy<?>> assetStrategies;
-
     public AssetRequestProcessor(AssetManager assetManager) {
         this.assetManager = assetManager;
         this.requests = new HashMap<>();
         this.clients = new HashSet<>();
-        this.assetStrategies = new HashSet<>();
     }
+
     //receive requests
     public void receiveRequest(String fileName, Class<?> fileClass, AssetRequest client) {
         if(!requests.containsKey(fileName))
             requests.put(fileName, fileClass);
-        clients.add(client);
+        if(client != null) clients.add(client);
     }
 
-    //load after all requests are obtained
-    public void load() {
-        String[] fileNames = requests.keySet().toArray(new String[]{});
-
-        for (String fileName : fileNames) {
-            Class<?> clazz= requests.get(fileName);
-            loadAsset(applyDirectory(fileName, clazz), clazz);
-        }
+    @Override
+    public <T> void loadAsset(String fileName, Class<T> clazz) {
+        assetManager.load(fileName, clazz);
     }
 
-    private String applyDirectory(String fileName, Class<?> clazz) {
-        return clazz.getSimpleName() +"/"+ fileName;
+    @Override
+    public <T> void loadAsset(String fileName, Class<T> clazz, AssetLoaderParameters<T> parameters) {
+        assetManager.load(fileName, clazz, parameters);
     }
 
+    @Override
     public void update() {
         assetManager.update();
-
-        if(assetManager.isFinished()) {
-            assetManager.finishLoading();
-            sendAllAssets();
-        }
     }
 
+    @Override
+    public float getPercent() {
+        return assetManager.getProgress();
+    }
+
+    @Override
     public boolean isFinished() {
         return assetManager.isFinished();
-
-    }
-    //give assets to clients//give assets to clients
-    protected void sendAllAssets() {
-        clients.forEach(client -> {
-            assetStrategies.forEach((strategy) -> strategy.respondOnRequest(this, client));
-            client.passAssets(this);
-        });
     }
 
+    @Override
+    protected void sendAsset(AssetRequest assetRequest) {
+        assetRequest.passAssets(this);
+    }
+
+    @Override
+    public HashMap<String, Class<?>> getRequests() {
+        return requests;
+    }
+
+    @Override
+    protected HashSet<AssetRequest> getClients() {
+        return clients;
+    }
+
+    @Override
     public <T> T get(String fileName, Class<T> clazz) {
         return assetManager.get(applyDirectory(fileName, clazz), clazz);
     }
 
-    //load single asset
-    protected void loadAsset(String fileName, Class<?> clazz) {
-        Optional<AssetStrategy<?>> foundStrategy = assetStrategies.stream().filter(((strategy) -> strategy.getType() == clazz)).findFirst();
-
-        if(foundStrategy.isPresent()) {
-            loadWithParameters(fileName, foundStrategy.get());
-            return;
-        }
-
-        if(clazz == Skin.class) {
-            assetManager.load(fileName, Skin.class, new SkinLoader.SkinParameter("Skin/skin.atlas"));
-        }
-        assetManager.load(fileName, clazz);
-
-
-    }
-    private <T> void loadWithParameters(String fileName, AssetStrategy<T> assetStrategy) {
-        assetManager.load(fileName, assetStrategy.getType(), assetStrategy.getParameter());
+    protected <T> void setLoader(Class<T> clazz, AssetLoader<T, ?> loader) {
+        assetManager.setLoader(clazz, loader);
     }
 
-    public void addAssetStrategy(AssetStrategy<?> assetStrategy) {
-        assetStrategies.add(assetStrategy);
+    @Override
+    protected FileHandleResolver getResolver() {
+        return assetManager.getFileHandleResolver();
     }
 
     @Override
     public void dispose() {
-        assetStrategies.forEach(Disposable::dispose);
         assetManager.dispose();
     }
 }

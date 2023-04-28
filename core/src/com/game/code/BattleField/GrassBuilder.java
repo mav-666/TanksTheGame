@@ -7,37 +7,36 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.BodyHandler;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Entity;
-import com.game.code.Player;
-import com.game.code.TextureActor;
+import com.game.code.Tank.PlayableTank;
+import com.game.code.utils.scene2d.TextureActor;
 
 import java.util.HashMap;
 
 public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     Obstacle grassGroup;
 
-    public GrassBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
-        super(density, battleFieldBuilder);
+    public GrassBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
+        super(obstacleBuilderData, battleFieldBuilder);
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         super.request(assetRequestProcessor);
 
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         Array<TextureAtlas.AtlasRegion> tileTextures =
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("grass");
 
         obstacles.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture((tileTextures.get((int)(Math.random() * tileTextures.size)))));
+                ((TextureActor) actor).setTexture((tileTextures.get(getRandom().nextInt(tileTextures.size)))));
     }
 
     @Override
@@ -80,7 +79,7 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
 
                 Color fadedColor = new Color(actor.getColor());
 
-                if(participant instanceof Player)
+                if(participant instanceof PlayableTank)
                     fadedColor.a = 0.5f;
                 else
                     fadedColor.a = 0f;

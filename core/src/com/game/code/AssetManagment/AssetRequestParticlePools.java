@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public interface AssetRequestParticlePools extends AssetRequest {
 
-    void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools);
+    void passParticleAssets(AssetProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools);
 
     default ParticleEffectActorPool getParticlePool(HashMap<ParticleEffect, ParticleEffectActorPool> particlePools,
                                                     ParticleEffect particleEffect) {

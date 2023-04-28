@@ -3,12 +3,10 @@ package com.game.code.Tank.Head;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequestParticlePools;
-import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.AssetManagment.ParticleEffectActorPool;
-import com.game.code.BodyHandler;
 import com.game.code.Entity.Entity;
 
 import java.util.HashMap;
@@ -35,18 +33,18 @@ public class BulletPool extends Pool<Bullet> implements AssetRequestParticlePool
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
         assetRequestProcessor.receiveRequest("shards", ParticleEffect.class, this);
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         bulletTexture = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegion("bullet");
     }
 
     @Override
-    public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
+    public void passParticleAssets(AssetProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
         shards = getParticlePool(particlePools, assets.get("shards", ParticleEffect.class));
     }
 

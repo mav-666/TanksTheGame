@@ -1,7 +1,7 @@
 package com.game.code.BattleField;
 
 import com.badlogic.gdx.math.Vector2;
-import com.game.code.BodyHandler;
+import com.game.code.utils.box2d.BodyHandler;
 
 
 import java.util.HashSet;

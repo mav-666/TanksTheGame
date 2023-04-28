@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.game.code.BodyHandler;
+import com.game.code.utils.box2d.BodyHandler;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Wall;
 

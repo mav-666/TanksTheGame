@@ -1,7 +1,9 @@
 {
   "default" : {
+    "class" : "com.game.code.Tank.TankData",
+    "id" : "-1",
     "cab" : {
-      "class" : "com.game.code.Tank.CabData",
+      "class" : "com.game.code.Tank.Cab.CabData",
       "type" : "Cab",
       "invincibilityTime" : 0.5,
       "health" : 150,
@@ -9,7 +11,7 @@
       "mobility" : 1.5
     },
     "head" : {
-      "class": "com.game.code.Tank.Head.CanonData",
+      "class": "com.game.code.Tank.Head.HeadData",
       "type" : "Canon",
       "damage" : 50,
       "projectileSpeed" : 6,

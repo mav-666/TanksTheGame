@@ -1,0 +1,33 @@
+{
+  "class": "com.game.code.BattleField.PlainBuilderData",
+  "type": "plain",
+
+  "seed": 1,
+  "width": 50,
+  "height": 50,
+  "tileWidth": 1,
+  "tileHeight": 1,
+  "plainTileName": "sand",
+
+  "decorators": [
+    {
+      "class": "com.game.code.BattleField.BattleFieldBuilderDecoratorJsonData",
+      "type": "border"
+    },
+    {
+      "class": "com.game.code.BattleField.ObstacleBuilderData",
+      "type": "grass",
+      "density": 0.005
+    },
+    {
+      "class": "com.game.code.BattleField.ObstacleBuilderData",
+      "type": "box",
+      "density": 0.2
+    },
+    {
+      "class": "com.game.code.BattleField.ObstacleBuilderData",
+      "type": "gasoline",
+      "density": 0.0125
+    }
+  ]
+}

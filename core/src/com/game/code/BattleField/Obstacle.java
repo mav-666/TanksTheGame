@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Entity;
-import com.game.code.TextureActor;
+import com.game.code.utils.scene2d.TextureActor;
 
 public class Obstacle extends TextureActor implements Entity {
     protected Body body;

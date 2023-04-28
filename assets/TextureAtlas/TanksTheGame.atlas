@@ -4,30 +4,37 @@ size: 256, 64
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-MovementKey
+PowerUpProjectileSpeed
   rotate: false
-  xy: 48, 26
-  size: 52, 38
-  orig: 52, 38
+  xy: 220, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-RotationKey
+PowerUpRecharge
   rotate: false
-  xy: 100, 33
-  size: 46, 31
-  orig: 46, 31
+  xy: 236, 48
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
-ShootKey
+PowerUpSpeed
   rotate: false
-  xy: 174, 41
-  size: 29, 23
-  orig: 29, 23
+  xy: 108, 30
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+PowerUpStrength
+  rotate: false
+  xy: 92, 30
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
 barrel
   rotate: false
-  xy: 174, 13
+  xy: 66, 8
   size: 8, 28
   orig: 8, 28
   offset: 0, 0
@@ -41,42 +48,42 @@ cab
   index: -1
 box
   rotate: false
-  xy: 239, 49
+  xy: 76, 31
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: 1
 box
   rotate: false
-  xy: 102, 0
+  xy: 124, 31
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: 3
 box
   rotate: false
-  xy: 118, 0
+  xy: 140, 31
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 2
 box
   rotate: false
-  xy: 133, 0
+  xy: 155, 31
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 4
 box
   rotate: false
-  xy: 148, 0
+  xy: 170, 31
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
   index: 6
 box
   rotate: false
-  xy: 182, 26
+  xy: 185, 31
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
@@ -90,84 +97,84 @@ bullet
   index: -1
 gasoline
   rotate: false
-  xy: 182, 12
+  xy: 200, 32
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: 2
-gasoline
+gasolinel
   rotate: false
-  xy: 163, 0
+  xy: 74, 18
   size: 13, 13
   orig: 13, 13
   offset: 0, 0
   index: 1
 grass
   rotate: false
-  xy: 84, 8
+  xy: 130, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 2
 grass
   rotate: false
-  xy: 156, 18
+  xy: 202, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 1
 canon
   rotate: false
-  xy: 203, 45
+  xy: 48, 17
   size: 18, 19
   orig: 18, 19
   offset: 0, 0
   index: -1
 sand
   rotate: false
-  xy: 221, 46
+  xy: 76, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 5
 sand
   rotate: false
-  xy: 48, 8
+  xy: 94, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 2
 sand
   rotate: false
-  xy: 66, 8
+  xy: 112, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 4
 sand
   rotate: false
-  xy: 102, 15
+  xy: 148, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 1
 sand
   rotate: false
-  xy: 120, 15
+  xy: 166, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 6
 sand
   rotate: false
-  xy: 138, 15
+  xy: 184, 46
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: 3
 spawn
   rotate: false
-  xy: 146, 36
+  xy: 48, 36
   size: 28, 28
   orig: 28, 28
   offset: 0, 0

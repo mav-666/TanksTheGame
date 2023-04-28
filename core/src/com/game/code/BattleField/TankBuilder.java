@@ -3,27 +3,27 @@ package com.game.code.BattleField;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.utils.Array;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestProcessor;
 import com.game.code.Tank.Tank;
 import com.game.code.Tank.TankData;
 import com.game.code.Tank.TankFactory;
-import com.game.code.TextureActor;
+import com.game.code.utils.scene2d.TextureActor;
 
-import java.util.HashMap;
 
-public class TankBuilder extends BattleFiledBuilderDecorator implements AssetRequest {
+public class TankBuilder extends BattleFieldBuilderDecorator implements AssetRequest {
     private final TankFactory tankFactory;
-    private final HashMap<String, TankData> tanksData;
+    private final Array<TankData> tanksData;
     private final Group tanks;
 
     private final Group spawns;
 
 
-    public TankBuilder(HashMap<String, TankData> tanksData, BattleFieldBuilder battleFieldBuilder) {
+    public TankBuilder(TankBuilderData tankBuilderData, BattleFieldBuilder battleFieldBuilder) {
         super(battleFieldBuilder);
 
-        this.tanksData = tanksData;
+        this.tanksData = tankBuilderData.tanksData;
         tankFactory = new TankFactory();
         tanks = new Group();
 
@@ -36,7 +36,7 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         super.request(assetRequestProcessor);
 
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
@@ -46,7 +46,7 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
 
         TextureAtlas.AtlasRegion tileTexture =
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegion("spawn");
@@ -61,14 +61,14 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
     }
 
     private void buildTanks() {
-        for(String id : tanksData.keySet()) {
+        tanksData.forEach((tankData -> {
             Vector2 space = getFreeSpace().stream().toList().get(getRandom().nextInt(getFreeSpace().size()));
             getFreeSpace().remove(space);
 
             spawns.addActor(createSpawn(space));
-            tanks.addActor(createTank(id, space));
+            tanks.addActor(createTank(tankData, space));
+        }));
 
-        }
     }
 
     private TextureActor createSpawn(Vector2 pos) {
@@ -82,11 +82,11 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
         return spawn;
     }
 
-    private Tank createTank(String id, Vector2 pos) {
+    private Tank createTank(TankData tankData, Vector2 pos) {
         Tank tank = tankFactory.createTank(getBattleFieldBodyHandler(),
                 pos, getBattleFieldTileWidth(), getBattleFieldTileHeight(),
-                tanksData.get(id).headData, tanksData.get(id).cabData);
-        tank.setId(id);
+                tankData.headData, tankData.cabData);
+        tank.setName(tankData.id);
         return tank;
     }
 
@@ -101,4 +101,5 @@ public class TankBuilder extends BattleFiledBuilderDecorator implements AssetReq
     public Group getTanks() {
         return tanks;
     }
+
 }

@@ -1,10 +1,10 @@
 package com.game.code.Tank.Head;
 
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.ColoredGroup;
+import com.game.code.utils.scene2d.ColoredGroup;
 import com.game.code.Entity.Entity;
-import com.game.code.Tank.TurnDirection;
-import com.game.code.TextureActor;
+import com.game.code.Tank.Cab.TurnDirection;
+import com.game.code.utils.scene2d.TextureActor;
 
 public abstract class Head extends ColoredGroup implements AssetRequest {
     protected final Entity owner;
@@ -12,11 +12,11 @@ public abstract class Head extends ColoredGroup implements AssetRequest {
     protected TextureActor head;
     protected TextureActor barrel;
 
-    protected float rotationSpeed;
+    protected final HeadData headData;
 
     protected Head(float width, float height, Entity owner, HeadData headData) {
         this.owner = owner;
-        this.rotationSpeed= headData.rotationSpeed;
+        this.headData = headData;
 
         setOrigin(width/2, height/2);
 
@@ -35,9 +35,14 @@ public abstract class Head extends ColoredGroup implements AssetRequest {
     }
 
     public void rotateHead(float delta, TurnDirection direction) {
-        rotateBy(rotationSpeed * delta * direction.mult);
+        rotateBy(headData.rotationSpeed * delta * direction.mult);
     }
 
     public abstract void shoot();
+
+    public HeadData getHeadData() {
+        return headData;
+    }
+
 
 }

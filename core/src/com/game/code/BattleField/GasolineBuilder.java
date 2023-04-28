@@ -2,30 +2,31 @@ package com.game.code.BattleField;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.badlogic.gdx.utils.Array;
-import com.game.code.*;
-import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestParticlePools;
-import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.AssetManagment.ParticleEffectActorPool;
+import com.game.code.AssetManagment.*;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Breakable;
+import com.game.code.utils.Effects.Explosion;
+import com.game.code.utils.box2d.BodyData;
+import com.game.code.utils.box2d.BodyHandler;
+import com.game.code.utils.scene2d.Animations;
+import com.game.code.utils.scene2d.TextureActor;
 
 import java.util.HashMap;
 
 public class GasolineBuilder extends ObstacleBuilder implements AssetRequest {
-    public GasolineBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
-        super(density, battleFieldBuilder);
+
+    public GasolineBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
+        super(obstacleBuilderData, battleFieldBuilder);
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         super.request(assetRequestProcessor);
 
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
@@ -34,7 +35,7 @@ public class GasolineBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         super.passAssets(assets);
 
         Array<TextureAtlas.AtlasRegion> tileTextures = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("gasoline");
@@ -84,15 +85,15 @@ public class GasolineBuilder extends ObstacleBuilder implements AssetRequest {
         }
 
         @Override
-        public void request(AssetRequestProcessor assetRequestProcessor) {
+        public void request(AssetProcessor assetRequestProcessor) {
             assetRequestProcessor.receiveRequest("explosion", ParticleEffect.class, this);
         }
 
         @Override
-        public void passAssets(AssetRequestProcessor assets) {}
+        public void passAssets(AssetProcessor assets) {}
 
         @Override
-        public void passParticleAssets(AssetRequestProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
+        public void passParticleAssets(AssetProcessor assets, HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
             explosionEffect = getParticlePool(particlePools, assets.get("explosion", ParticleEffect.class)).obtain();
         }
 

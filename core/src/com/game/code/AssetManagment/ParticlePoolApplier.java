@@ -2,36 +2,41 @@ package com.game.code.AssetManagment;
 
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 
 import java.util.HashMap;
 
-public class ParticlePoolApplier implements AssetStrategy<ParticleEffect> {
+public class ParticlePoolApplier extends AssetProcessorDecorator implements Disposable {
+
     private final ParticleEffectLoader.ParticleEffectParameter parameter;
 
     private final HashMap<ParticleEffect, ParticleEffectActorPool> particlePools;
 
-    public ParticlePoolApplier(HashMap<ParticleEffect, ParticleEffectActorPool> particlePools) {
-        this.particlePools = particlePools;
+    public ParticlePoolApplier(AssetProcessor assetProcessor) {
+        super(assetProcessor);
 
-        this.parameter = new ParticleEffectLoader.ParticleEffectParameter();
+        this.particlePools = new HashMap<>();
+
+        parameter = new ParticleEffectLoader.ParticleEffectParameter();
         parameter.atlasFile = "ParticleEffect/Particles.atlas";
     }
 
     @Override
-    public Class<ParticleEffect> getType() {
-        return ParticleEffect.class;
+    public <T> void loadAsset(String fileName, Class<T> clazz) {
+        if(clazz == ParticleEffect.class) {
+            loadAsset(fileName, ParticleEffect.class, parameter);
+            return;
+        }
+
+        super.loadAsset(fileName, clazz);
     }
 
     @Override
-    public ParticleEffectLoader.ParticleEffectParameter getParameter() {
-        return parameter;
-    }
-
-    @Override
-    public void respondOnRequest(AssetRequestProcessor assetRequestProcessor, AssetRequest client) {
-        if(client instanceof AssetRequestParticlePools)
-            ((AssetRequestParticlePools) client).passParticleAssets(assetRequestProcessor, particlePools);
+    public void sendAsset(AssetRequest assetRequest) {
+        if(assetRequest instanceof AssetRequestParticlePools)
+            ((AssetRequestParticlePools) assetRequest).passParticleAssets(this, particlePools);
+        super.sendAsset(assetRequest);
     }
 
     @Override

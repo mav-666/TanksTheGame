@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.BodyHandler;
-import com.game.code.TextureActor;
+import com.game.code.utils.box2d.BodyHandler;
+import com.game.code.utils.scene2d.TextureActor;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -22,16 +22,16 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     private final String plainTileName;
     private Group plain;
 
-    public PlainBuilder(int seed, BodyHandler bodyHandler, float width, float height,  float tileWidth, float tileHeight, String plainTileName) {
-        random = new Random(seed);
+    public PlainBuilder(BodyHandler bodyHandler, PlainBuilderData plainData) {
+        random = new Random(plainData.seed);
 
         this.bodyHandler = bodyHandler;
-        this.width = width;
-        this.height = height;
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
+        this.width = plainData.width;
+        this.height = plainData.height;
+        this.tileWidth = plainData.tileWidth;
+        this.tileHeight = plainData.tileHeight;
 
-        this.plainTileName = plainTileName;
+        this.plainTileName = plainData.plainTileName;
 
 
         freeSpace = new HashSet<>();
@@ -39,12 +39,12 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         Array<TextureAtlas.AtlasRegion> tileTextures = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions(plainTileName);
 
         plain.getChildren().forEach((actor) ->

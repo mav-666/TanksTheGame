@@ -1,22 +1,103 @@
 {
-com.badlogic.gdx.graphics.g2d.BitmapFont: {
-	Lozavy: {
-		file: Lozavy.fnt
-		scaledSize: -1
-		markupEnabled: false
-		flip: false
+Color: {
+	darkGreen: {
+		hex: 2e6a42ff
+	}
+	darkGrey: {
+		hex: 393a56ff
+	}
+	darkPurple: {
+		hex: 351428ff
+	}
+	green: {
+		hex: 509b4bff
+	}
+	grey: {
+		hex: 4e5371ff
+	}
+	lightGrey: {
+		hex: 67708bff
+	}
+	red: {
+		hex: c42c36ff
+	}
+	white: {
+		hex: ffffffff
 	}
 }
-com.badlogic.gdx.graphics.Color: {
-	DarkPurple: {
-		r: 0.20784314
-		g: 0.078431375
-		b: 0.15686275
-		a: 1
+com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator: {
+	Pixel: {
+		font: PublicPixel.ttf
+		size: 8
+		mono: false
+		color: white
+		gamma: 1.8
+		renderCount: 2
+		borderWidth: 0
+		borderStraight: false
+		borderGamma: 1.8
+		shadowOffsetX: 0
+		shadowOffsetY: 0
+		spaceX: 0
+		spaceY: 0
+		kerning: true
+		flip: false
+		genMipMaps: false
+		incremental: false
+		hinting: AutoMedium
+		minFilter: Nearest
+		magFilter: Nearest
+		characters: "ABCDEFG\r\nHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯІЇЄабвгдеёжзийклмнопрстуфхцчшщъыьэюяіїє.,:;/?!-+*`#$%&'\"^[\\](){|}~∎<=>_@1234567890"
+	}
+	Pixel-16pt: {
+		font: PublicPixel.ttf
+		size: 16
+		mono: false
+		color: white
+		gamma: 1.8
+		renderCount: 2
+		borderWidth: 0
+		borderStraight: false
+		borderGamma: 1.8
+		shadowOffsetX: 0
+		shadowOffsetY: 0
+		spaceX: 0
+		spaceY: 0
+		kerning: true
+		flip: false
+		genMipMaps: false
+		incremental: false
+		hinting: AutoMedium
+		minFilter: Nearest
+		magFilter: Nearest
+		characters: "ABCDEFG\r\nHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯІЇЄабвгдеёжзийклмнопрстуфхцчшщъыьэюяіїє.,:;/?!-+*`#$%&'\"^[\\](){|}~∎<=>_@1234567890"
+	}
+	Pixel-24pt: {
+		font: PublicPixel.ttf
+		size: 24
+		mono: false
+		color: white
+		gamma: 1.8
+		renderCount: 2
+		borderWidth: 0
+		borderStraight: false
+		borderGamma: 1.8
+		shadowOffsetX: 0
+		shadowOffsetY: 0
+		spaceX: 0
+		spaceY: 0
+		kerning: true
+		flip: false
+		genMipMaps: false
+		incremental: false
+		hinting: AutoMedium
+		minFilter: Nearest
+		magFilter: Nearest
+		characters: "ABCDEFG\r\nHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯІЇЄабвгдеёжзийклмнопрстуфхцчшщъыьэюяіїє.,:;/?!-+*`#$%&'\"^[\\](){|}~∎<=>_@1234567890"
 	}
 }
 com.ray3k.tenpatch.TenPatchDrawable: {
-	HealthBar: {
+	HealthBar-T: {
 		region: HealthBar
 		horizontalStretchAreas: [ 6, 9, 23, 26 ]
 		verticalStretchAreas: [ 4, 4 ]
@@ -36,8 +117,72 @@ com.ray3k.tenpatch.TenPatchDrawable: {
 		playMode: 2
 		crushMode: 0
 	}
+	LoadingBar-T: {
+		region: LoadingBar
+		horizontalStretchAreas: [ 9, 27 ]
+		verticalStretchAreas: [ 4, 4 ]
+		tiling: false
+		minWidth: 37
+		minHeight: 10
+		rightWidth: 2
+		leftWidth: 2
+		bottomHeight: 2
+		topHeight: 2
+		offsetX: 0
+		offsetY: 0
+		offsetXspeed: 0
+		offsetYspeed: 0
+		frameDuration: 0.03
+		regions: []
+		playMode: 2
+		crushMode: 0
+	}
 }
-com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+ButtonStyle: {
+	default: {
+		up: defaultButton
+		down: defaultButtonActive
+		over: defaultButtonHover
+	}
+	play: {
+		up: playButton
+		down: playButtonActive
+		over: playButtonHover
+	}
+	scroll: {
+		up: scrollButton
+		down: scrollButtonActive
+		over: scrollButtonHover
+	}
+}
+LabelStyle: {
+	default: {
+		font: Pixel-16pt
+	}
+	small: {
+		font: Pixel
+	}
+	big: {
+		font: Pixel-24pt
+	}
+	medium: {
+		font: Pixel-16pt
+	}
+}
+ProgressBarStyle: {
+	default-horizontal: {
+		background: HealthBarBg
+		knob: LoadingBarKnob
+		knobBefore: LoadingBarKnob
+	}
+}
+ScrollPaneStyle: {
+	default: {
+		vScroll: scrolll
+		vScrollKnob: scrollKnob
+	}
+}
+SliderStyle: {
 	default-horizontal: {
 		background: HealthBarBg
 		knob: HealthBarKnob
@@ -46,10 +191,49 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-vertical: {
 		background: HealthBarBg
 	}
-	default: {
+	healthBar: {
 		background: HealthBarBg
 		knob: HealthBarKnob
 		knobBefore: HealthBarKnob
+	}
+	loadingBar: {
+		background: HealthBarBg
+		knob: LoadingBarKnob
+		knobBefore: LoadingBarKnob
+	}
+}
+TextButtonStyle: {
+	default: {
+		parent: default
+		font: Pixel
+		fontColor: darkGrey
+		downFontColor: darkGrey
+		overFontColor: grey
+	}
+	play: {
+		parent: play
+		font: Pixel-24pt
+		fontColor: darkGreen
+		downFontColor: darkGreen
+		overFontColor: green
+	}
+}
+TextFieldStyle: {
+	default: {
+		font: Pixel-24pt
+		fontColor: lightGrey
+		focusedFontColor: lightGrey
+		background: textField
+		focusedBackground: textFieldActive
+		cursor: textFieldCursor
+		selection: textFieldCursor
+		messageFont: Pixel-24pt
+		messageFontColor: grey
+	}
+}
+TextTooltipStyle: {
+	default: {
+		label: default
 	}
 }
 }

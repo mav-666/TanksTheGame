@@ -5,27 +5,27 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.BodyHandler;
+import com.game.code.utils.box2d.BodyHandler;
 import com.game.code.Entity.BitCategories;
-import com.game.code.TextureActor;
+import com.game.code.utils.scene2d.TextureActor;
 
 public class BoxBuilder extends ObstacleBuilder implements AssetRequest {
 
-    public BoxBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
-        super(density, battleFieldBuilder);
+    public BoxBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
+        super(obstacleBuilderData, battleFieldBuilder);
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         super.request(assetRequestProcessor);
 
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         Array<TextureAtlas.AtlasRegion> tileTextures =
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("box");
 

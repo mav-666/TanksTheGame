@@ -1,34 +1,188 @@
 
 skin.png
-size: 512, 512
+size: 256, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 HealthBar
   rotate: false
-  xy: 1, 465
+  xy: 129, 175
   size: 33, 11
   orig: 33, 11
   offset: 0, 0
   index: -1
 HealthBarBg
   rotate: false
-  xy: 1, 457
+  xy: 227, 220
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
 HealthBarKnob
   rotate: false
-  xy: 508, 501
+  xy: 205, 195
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
-Lozavy
+LoadingBar
   rotate: false
-  xy: 1, 478
-  size: 505, 29
-  orig: 505, 29
+  xy: 57, 142
+  size: 37, 10
+  orig: 37, 10
+  offset: 0, 0
+  index: -1
+LoadingBarKnob
+  rotate: false
+  xy: 1, 67
+  size: 1, 6
+  orig: 1, 6
+  offset: 0, 0
+  index: -1
+RotationKey
+  rotate: false
+  xy: 1, 98
+  size: 46, 31
+  orig: 46, 31
+  offset: 0, 0
+  index: -1
+ShootKey
+  rotate: false
+  xy: 183, 203
+  size: 29, 23
+  orig: 29, 23
+  offset: 0, 0
+  index: -1
+TitleBg
+  rotate: false
+  xy: 1, 154
+  size: 126, 72
+  orig: 126, 72
+  offset: 0, 0
+  index: -1
+TitleText
+  rotate: false
+  xy: 1, 131
+  size: 54, 21
+  orig: 54, 21
+  offset: 0, 0
+  index: -1
+connectIcon
+  rotate: false
+  xy: 214, 203
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+defaultButton
+  rotate: false
+  xy: 27, 88
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+defaultButtonActive
+  rotate: false
+  xy: 83, 132
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+defaultButtonHover
+  rotate: false
+  xy: 118, 144
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+hostIcon
+  rotate: false
+  xy: 129, 154
+  size: 11, 9
+  orig: 11, 9
+  offset: 0, 0
+  index: -1
+movenetKeys
+  rotate: false
+  xy: 129, 188
+  size: 52, 38
+  orig: 52, 38
+  offset: 0, 0
+  index: -1
+playButton
+  rotate: false
+  xy: 96, 144
+  size: 20, 8
+  orig: 20, 8
+  offset: 0, 0
+  index: -1
+playButtonActive
+  rotate: false
+  xy: 129, 165
+  size: 20, 8
+  orig: 20, 8
+  offset: 0, 0
+  index: -1
+playButtonHover
+  rotate: false
+  xy: 183, 193
+  size: 20, 8
+  orig: 20, 8
+  offset: 0, 0
+  index: -1
+scrollButton
+  rotate: false
+  xy: 164, 175
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+scrollButtonActive
+  rotate: false
+  xy: 1, 75
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+scrollButtonHover
+  rotate: false
+  xy: 214, 215
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+scrollKnob
+  rotate: false
+  xy: 49, 125
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+scrolll
+  rotate: false
+  xy: 151, 169
+  size: 5, 4
+  orig: 5, 4
+  offset: 0, 0
+  index: -1
+textField
+  rotate: false
+  xy: 1, 88
+  size: 24, 8
+  orig: 24, 8
+  offset: 0, 0
+  index: -1
+textFieldActive
+  rotate: false
+  xy: 57, 132
+  size: 24, 8
+  orig: 24, 8
+  offset: 0, 0
+  index: -1
+textFieldCursor
+  rotate: false
+  xy: 177, 176
+  size: 2, 10
+  orig: 2, 10
   offset: 0, 0
   index: -1

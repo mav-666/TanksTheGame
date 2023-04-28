@@ -3,11 +3,11 @@ package com.game.code.BattleField;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
+import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.AssetManagment.AssetRequestProcessor;
-import com.game.code.TextureActor;
+import com.game.code.utils.scene2d.TextureActor;
 
-public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetRequest {
+public class BorderBuilder extends BattleFieldBuilderDecorator implements AssetRequest {
     private final Group border;
 
     public BorderBuilder(BattleFieldBuilder battleFieldBuilder) {
@@ -16,14 +16,14 @@ public class BorderBuilder extends BattleFiledBuilderDecorator implements AssetR
     }
 
     @Override
-    public void request(AssetRequestProcessor assetRequestProcessor) {
+    public void request(AssetProcessor assetRequestProcessor) {
         super.request(assetRequestProcessor);
 
         assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
     }
 
     @Override
-    public void passAssets(AssetRequestProcessor assets) {
+    public void passAssets(AssetProcessor assets) {
         Array<TextureAtlas.AtlasRegion> tileTextures =
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("box");
 

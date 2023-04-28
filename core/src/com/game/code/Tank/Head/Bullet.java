@@ -5,13 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ParticleEffectActor;
 import com.badlogic.gdx.utils.Pool;
-import com.game.code.BodyData;
-import com.game.code.BodyHandler;
+import com.game.code.utils.box2d.BodyData;
+import com.game.code.utils.box2d.BodyHandler;
 import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Entity.Projectile;
-import com.game.code.TextureActor;
+import com.game.code.utils.scene2d.TextureActor;
 
 public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
     private Body body;
