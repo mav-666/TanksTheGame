@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.utils.scene2d.TexturedActor;
 
 public class BorderBuilder extends BattleFieldBuilderDecorator implements AssetRequest {
     private final Group border;
@@ -28,7 +28,7 @@ public class BorderBuilder extends BattleFieldBuilderDecorator implements AssetR
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("box");
 
         border.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture(tileTextures.get(getRandom().nextInt(tileTextures.size))));
+                ((TexturedActor) actor).setTexture(tileTextures.get(getRandom().nextInt(tileTextures.size))));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BorderBuilder extends BattleFieldBuilderDecorator implements AssetR
                 (cord) -> cord.x == 0 || cord.y == 0 || cord.x == getBattleFieldWidth()-1 || cord.y == getBattleFieldHeight()-1
         ).toList().forEach( (vector2) -> {
             getFreeSpace().remove(vector2);
-            TextureActor actor = new TextureActor();
+            TexturedActor actor = new TexturedActor();
             actor.setPosition(vector2.x, vector2.y);
             actor.setSize(getBattleFieldTileWidth(), getBattleFieldTileHeight());
             border.addActor(actor);

@@ -4,7 +4,7 @@ import com.game.code.utils.box2d.BodyHandler;
 
 public class BattleFieldBuilderFromJsonData {
 
-    public BattleFieldBuilder createBattlerFieldBuilder(BodyHandler bodyHandler, BattleFieldBuilderJsonData jsonData) {
+    public BattleFieldBuilder createBattleFieldBuilder(BodyHandler bodyHandler, BattleFieldBuilderJsonData jsonData) {
         BattleFieldBuilder battleFieldBuilder = BattleFieldBuilders.valueOf(jsonData.type).creator.create(bodyHandler, jsonData);
 
         for(var decorator : jsonData.decorators) {

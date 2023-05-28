@@ -7,9 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.Tank.Tank;
-import com.game.code.Tank.TankData;
 import com.game.code.Tank.TankFactory;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.utils.scene2d.TexturedActor;
 
 
 public class TankBuilder extends BattleFieldBuilderDecorator implements AssetRequest {
@@ -51,7 +50,7 @@ public class TankBuilder extends BattleFieldBuilderDecorator implements AssetReq
         TextureAtlas.AtlasRegion tileTexture =
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegion("spawn");
 
-        spawns.getChildren().forEach((actor) -> ((TextureActor) actor).setTexture(tileTexture));
+        spawns.getChildren().forEach((actor) -> ((TexturedActor) actor).setTexture(tileTexture));
     }
 
     @Override
@@ -71,8 +70,8 @@ public class TankBuilder extends BattleFieldBuilderDecorator implements AssetReq
 
     }
 
-    private TextureActor createSpawn(Vector2 pos) {
-        TextureActor spawn = new TextureActor();
+    private TexturedActor createSpawn(Vector2 pos) {
+        TexturedActor spawn = new TexturedActor();
         spawn.setSize(getBattleFieldTileWidth(), getBattleFieldTileHeight());
         spawn.setPosition(pos.x, pos.y);
         spawn.setOrigin(spawn.getWidth()/2, spawn.getHeight()/2);

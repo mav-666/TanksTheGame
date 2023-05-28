@@ -19,11 +19,11 @@ import com.game.code.utils.Effects.*;
 import com.game.code.utils.box2d.BodyData;
 import com.game.code.utils.box2d.BodyHandler;
 import com.game.code.utils.scene2d.Animations;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.utils.scene2d.TexturedActor;
 
 import java.util.*;
 
-public class Cab extends TextureActor implements Breakable, AssetRequestParticlePools {
+public class Cab extends TexturedActor implements Breakable, AssetRequestParticlePools {
     private final Body body;
 
     private final TracePool traces;
@@ -53,6 +53,8 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
         body.setLinearDamping(4f);
         body.setAngularDamping(2.5f);
 
+        Vector2.Zero.setAngleDeg(body.getAngle());
+
         traces = new TracePool();
     }
 
@@ -80,9 +82,7 @@ public class Cab extends TextureActor implements Breakable, AssetRequestParticle
 
         if (body == null) return;
 
-        this.getParent().setPosition(body.getPosition().x - getWidth() / 2,
-                body.getPosition().y - getHeight() / 2);
-        this.getParent().setRotation((float) Math.toDegrees(body.getAngle()));
+
     }
 
     public void move(float delta, MoveDirection direction) {

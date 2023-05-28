@@ -16,7 +16,6 @@ import com.game.code.BattleField.*;
 import com.game.code.Entity.Breakable;
 import com.game.code.Tank.PlayableTank;
 import com.game.code.Tank.Tank;
-import com.game.code.Tank.TankData;
 import com.game.code.UI.HealthBarApplier;
 import com.game.code.UI.PPM;
 import com.game.code.utils.BoundedCamera;
@@ -59,7 +58,7 @@ public class GameScreen implements LoadableScreen {
         stage = new Stage(new FillViewport(18, 12, camera), application.getBatch());
         stageUI = new Stage(new FillViewport(0,0, camera), application.getBatch());
 
-        world = new World(new Vector2(0,0), false);
+        world = new World(Vector2.Zero, false);
         world.setContactListener(new ShareInfoContactListener());
 
         bodyHandler = new BodyHandler(world);
@@ -94,8 +93,6 @@ public class GameScreen implements LoadableScreen {
         Json json = new Json();
         JsonReader jsonReader = new JsonReader();
         TankData tankData = json.fromJson(TankData.class, jsonReader.parse(Gdx.files.internal("Json/Tanks.json")).get("default").toJson(JsonWriter.OutputType.json));
-        BattleFieldBuilderJsonData battlefieldData = json.fromJson(BattleFieldBuilderJsonData.class, jsonReader.parse(Gdx.files.internal("Json/BattleField.json")).toJson(JsonWriter.OutputType.json));
-
 
         TankBuilderData tankBuilderData = new TankBuilderData();
         tankBuilderData.type = "tank";
@@ -110,7 +107,7 @@ public class GameScreen implements LoadableScreen {
         BattleFieldBuilderFromJsonData builderFromJsonData = new BattleFieldBuilderFromJsonData();
 
         TankBuilder tankBuilder = (TankBuilder) builderFromJsonData.applyDecorator(
-                builderFromJsonData.createBattlerFieldBuilder(bodyHandler, battlefieldData), tankBuilderData);
+                builderFromJsonData.createBattleFieldBuilder(bodyHandler, app.getConnectionFactory().getSettings()), tankBuilderData);
 
         tankBuilder.buildBattleField();
 

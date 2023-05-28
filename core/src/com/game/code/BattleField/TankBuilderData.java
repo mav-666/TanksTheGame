@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.game.code.Tank.TankData;
 
 public class TankBuilderData extends BattleFieldBuilderDecoratorJsonData {
     public Array<TankData> tanksData;

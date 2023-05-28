@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
 import com.game.code.utils.box2d.BodyHandler;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.utils.scene2d.TexturedActor;
 
 import java.util.HashSet;
 import java.util.Random;
@@ -48,7 +48,7 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
         Array<TextureAtlas.AtlasRegion> tileTextures = assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions(plainTileName);
 
         plain.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture((tileTextures.get((getRandom().nextInt(tileTextures.size))))));
+                ((TexturedActor) actor).setTexture((tileTextures.get((getRandom().nextInt(tileTextures.size))))));
     }
 
     @Override
@@ -60,10 +60,10 @@ public class PlainBuilder implements BattleFieldBuilder, AssetRequest {
     private void buildPlain() {
         plain = new Group();
 
-        TextureActor plainTile;
+        TexturedActor plainTile;
         for(int i = 0; i < getBattleFieldWidth(); i++) {
             for(int j = 0; j < getBattleFieldHeight(); j++) {
-                plainTile = new TextureActor();
+                plainTile = new TexturedActor();
                 plainTile.setSize(getBattleFieldTileWidth(), getBattleFieldTileHeight());
                 plainTile.setPosition(i * getBattleFieldTileWidth(), j * getBattleFieldTileHeight());
                 plainTile.setScale(1.0001f);

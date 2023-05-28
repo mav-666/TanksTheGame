@@ -17,22 +17,22 @@ public class ConnectionChoiceScreen extends UIScreenImpl implements LoadableScre
     protected void initStage() {
         Stack tableStack = new Stack();
         tableStack.setFillParent(true);
-        getStage().addActor(tableStack);
 
-        tableStack.add(new Container<>(new Image(getSkin(), "TitleBg")).fill());
+        getStage().addActor(tableStack);
 
         Table table = new Table();
         table.setFillParent(true);
+        table.setBackground(getSkin().getDrawable("TitleBg"));
+
         tableStack.add(table);
 
         table.add(createChoicePane()).fill();
 
-        tableStack.add(new Container<>(createBackButton()).size(getStage().getWidth()/20f).right().top().pad(20,0, 0, 20));
+        tableStack.add(new Container<>(createBackButton()).size(getStage().getWidth()/12).align(Align.bottomLeft).pad(0, 10, 20, 0));
     }
 
     private Button createBackButton() {
         TextButton backBtn = new TextButton("back", getSkin());
-        backBtn.getLabel().setFontScale(.8f);
 
         backBtn.addListener(new InputListener() {
             @Override

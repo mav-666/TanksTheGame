@@ -16,15 +16,14 @@ public class TitleScreen extends UIScreenImpl {
 
     @Override
     protected void initStage() {
-        Stack tableStack = new Stack();
-        tableStack.setFillParent(true);
-        getStage().addActor(tableStack);
-
-        tableStack.add(new Container<>(new Image(getSkin(), "TitleBg")).fill());
-
         Table table = new Table();
         table.setFillParent(true);
-        tableStack.add(table);
+
+        table.setBackground("TitleBg");
+
+        table.setDebug(true);
+
+        getStage().addActor(table);
 
         table.add(new Image(getSkin().get("TitleText", Drawable.class)))
                 .size(getStage().getWidth()/1.5f, getStage().getHeight()/3).padBottom(getStage().getHeight()/8);
@@ -42,7 +41,6 @@ public class TitleScreen extends UIScreenImpl {
 
     private Button createPlayButton() {
         TextButton playBtn= new TextButton("PLAY", getSkin(), "play");
-
         playBtn.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -52,7 +50,7 @@ public class TitleScreen extends UIScreenImpl {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 getStage().addAction(Actions.sequence(Actions.fadeOut(0.2f),
-                        Actions.run(() -> app.loadScreen(new ConnectionChoiceScreen(app)))));
+                        Actions.run(() -> app.loadScreen(new LoginScreen(app)))));
 
             }
         });
@@ -83,15 +81,5 @@ public class TitleScreen extends UIScreenImpl {
     public void show() {
         getStage().addAction(Actions.fadeIn(0.1f));
         super.show();
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
     }
 }

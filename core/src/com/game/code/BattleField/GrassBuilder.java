@@ -1,26 +1,19 @@
 package com.game.code.BattleField;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.Entity.BitCategories;
-import com.game.code.Entity.Entity;
-import com.game.code.Tank.PlayableTank;
-import com.game.code.utils.scene2d.TextureActor;
-
-import java.util.HashMap;
+import com.game.code.BattleFieldFineVersion.Obstacle;
+import com.game.code.utils.scene2d.TexturedActor;
 
 public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     Obstacle grassGroup;
 
-    public GrassBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
-        super(obstacleBuilderData, battleFieldBuilder);
+    public GrassBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
+        super(density, battleFieldBuilder);
     }
 
     @Override
@@ -36,12 +29,12 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("grass");
 
         obstacles.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture((tileTextures.get(getRandom().nextInt(tileTextures.size)))));
+                ((TexturedActor) actor).setTexture((tileTextures.get(getRandom().nextInt(tileTextures.size)))));
     }
 
     @Override
     protected void buildObstacles() {
-        Vector2 pos = new Vector2(0,0);
+        Vector2 pos = Vector2.Zero;
         grassGroup =  createObstacle(pos, getBattleFieldWidth(), getBattleFieldHeight());
         grassGroup.setBody(getBattleFieldBodyHandler().requestCreation(grassGroup, pos, BodyDef.BodyType.StaticBody));
 
@@ -57,72 +50,10 @@ public class GrassBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     protected Obstacle createObstacle(Vector2 pos, float width, float height) {
-        return new Obstacle( BitCategories.AREA, pos, width, height) {
 
-            private final HashMap<Actor, Integer> faded = new HashMap<>();
-
-            @Override
-            public void collusionRespond(Entity participant) {
-                super.collusionRespond(participant);
-
-                if(!(participant instanceof Actor))
-                    return;
-
-                Actor actor = (Actor) participant;
-
-                if(faded.containsKey(actor)){
-                    faded.put(actor, faded.get(actor) + 1);
-                    return;
-                }
-                else
-                    faded.put(actor, 0);
-
-                Color fadedColor = new Color(actor.getColor());
-
-                if(participant instanceof PlayableTank)
-                    fadedColor.a = 0.5f;
-                else
-                    fadedColor.a = 0f;
-                actor.addAction(Actions.color(fadedColor, 0.3f));
-            }
-
-            @Override
-            public void endContactRespond(Entity participant) {
-                super.endContactRespond(participant);
-                super.collusionRespond(participant);
-
-                if(!(participant instanceof Actor))
-                    return;
-
-                Actor actor = (Actor) participant;
-
-                if(faded.get(actor) != null && faded.get(actor) != 0) {
-                    faded.put(actor, faded.get(actor) - 1);
-                    return;
-                }
-
-                faded.remove(actor);
-
-                Color fadedColor = new Color(actor.getColor());
-                fadedColor.a = 1f;
-
-                actor.addAction(Actions.color(fadedColor, 0.3f));
-            }
-        };
     }
 
     private Obstacle createGrassPiece(Vector2 pos, float width, float height) {
-        Obstacle grass = new Obstacle(BitCategories.AREA, pos, width, height);
 
-        grass.setBody(getBattleFieldBodyHandler().requestCreation(grass, pos.add(width/2, height/2), BodyDef.BodyType.StaticBody));
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width/8, height/8);
-
-        getBattleFieldBodyHandler().createFixture(grass.getBody(), grassGroup, shape, BitCategories.AREA.bit(), BitCategories.ALL.bit(), true, 0.1f, 0);
-
-        grass.setScale(1.25f);
-
-        return grass;
     }
 }

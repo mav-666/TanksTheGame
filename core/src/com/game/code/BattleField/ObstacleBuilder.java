@@ -2,6 +2,7 @@ package com.game.code.BattleField;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.game.code.BattleFieldFineVersion.Obstacle;
 
 public abstract class ObstacleBuilder extends BattleFieldBuilderDecorator {
     //от 0 до 1, процент плотности относительно текущего свободного места
@@ -9,10 +10,10 @@ public abstract class ObstacleBuilder extends BattleFieldBuilderDecorator {
 
     protected Group obstacles;
 
-    ObstacleBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
+    ObstacleBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
         super(battleFieldBuilder);
 
-        this.density = obstacleBuilderData.density;
+        this.density = density;
 
         obstacles = new Group();
     }

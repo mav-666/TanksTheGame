@@ -2,19 +2,16 @@ package com.game.code.BattleField;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.game.code.AssetManagment.AssetProcessor;
 import com.game.code.AssetManagment.AssetRequest;
-import com.game.code.utils.box2d.BodyHandler;
-import com.game.code.Entity.BitCategories;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.BattleFieldFineVersion.Obstacle;
+import com.game.code.utils.scene2d.TexturedActor;
 
 public class BoxBuilder extends ObstacleBuilder implements AssetRequest {
 
-    public BoxBuilder(ObstacleBuilderData obstacleBuilderData, BattleFieldBuilder battleFieldBuilder) {
-        super(obstacleBuilderData, battleFieldBuilder);
+    public BoxBuilder(float density, BattleFieldBuilder battleFieldBuilder) {
+        super(density, battleFieldBuilder);
     }
 
     @Override
@@ -30,7 +27,7 @@ public class BoxBuilder extends ObstacleBuilder implements AssetRequest {
                 assets.get("TanksTheGame.atlas", TextureAtlas.class).findRegions("box");
 
         obstacles.getChildren().forEach((actor) ->
-                ((TextureActor) actor).setTexture((tileTextures.get(getRandom().nextInt(tileTextures.size)))));
+                ((TexturedActor) actor).setTexture((tileTextures.get(getRandom().nextInt(tileTextures.size)))));
     }
 
     @Override
@@ -47,30 +44,6 @@ public class BoxBuilder extends ObstacleBuilder implements AssetRequest {
     }
 
     protected Obstacle createObstacle(Vector2 pos, float width, float height) {
-        return new Box(getBattleFieldBodyHandler(), pos, width, height);
-    }
-
-     private class Box extends Obstacle {
-
-        private Box(BodyHandler bodyHandler, Vector2 pos, float width, float height) {
-            super(BitCategories.WALL, pos, width, height);
-            setSize(width, height);
-
-            body = bodyHandler.requestCreation(this, pos.add(width/2, height/2), BodyDef.BodyType.DynamicBody);
-
-            PolygonShape shape = new PolygonShape();
-            shape.setAsBox(getWidth()/2, getHeight()/2);
-
-            bodyHandler.createFixture(body, this, shape, this.getCategory(), BitCategories.ALL.bit(), false, 0.5f, 0.1f);
-
-            body.setFixedRotation(false);
-
-            body.getMassData().mass = 75;
-
-            body.setTransform(body.getPosition(), (float) Math.toRadians(30f * (getRandom().nextInt(12))));
-
-            body.setAngularDamping(6);
-            body.setLinearDamping(6);
-        }
+        return null;
     }
 }

@@ -6,19 +6,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class TextureActor extends Actor {
-    private TextureRegion texture;
+public class TexturedActor extends Actor {
+    private final TextureRegion texture;
 
-    public TextureActor() {}
-
-    public TextureActor(TextureRegion texture) {
-        this.texture= texture;
+    public TexturedActor(TextureRegion texture) {
+        this.texture = texture;
     }
 
+    @Override
     public void draw(Batch batch, float parentAlpha) {
-        if(texture == null)
-            return;
-
         batch.setColor(getColor());
         batch.draw(
                 texture,
@@ -30,8 +26,5 @@ public class TextureActor extends Actor {
         );
         batch.setColor(Color.WHITE);
 
-    }
-    public void setTexture(TextureRegion texture) {
-        this.texture = texture;
     }
 }

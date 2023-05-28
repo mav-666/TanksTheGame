@@ -1,48 +1,42 @@
 package com.game.code.Tank.Head;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.game.code.AssetManagment.AssetProcessor;
+import com.game.code.Tank.ProjectileSupplier;
 import com.game.code.utils.scene2d.Animations;
-import com.game.code.utils.box2d.BodyHandler;
-import com.game.code.Entity.Entity;
+import com.game.code.utils.scene2d.TexturedActor;
 
 import java.util.*;
 
-public class Canon extends Head {
-    private final BodyHandler bodyHandler;
-    private final BulletPool bulletPool;
+public class Canon extends Group implements Head {
+    private final ProjectileSupplier projectile;
 
     private boolean isRecharging;
 
-    public Canon(BodyHandler bodyHandler,
-                 Entity owner,
-                 float width, float height,
-                 HeadData headData)
-    {
-        super(width, height, owner, headData);
-        this.bodyHandler = bodyHandler;
+    private float rotationSpeed;
+    private float rechargeTime;
 
-        setWidth(width);
+    protected TexturedActor head;
+    protected TexturedActor barrel;
 
-        bulletPool = new BulletPool(owner, width, headData.damage, headData.projectileSpeed);
-        
-        this.isRecharging= false;
+    public Canon(ProjectileSupplier projectile, float rotationSpeed, float rechargeTime,
+                 TextureRegion headTexture, TextureRegion barrelTexture) {
+        this.projectile = projectile;
+
+        head = new TexturedActor(headTexture);
+        barrel = new TexturedActor(barrelTexture);
+
+                //new BulletPool(owner, width, headData.damage, headData.projectileSpeed);
+
+        addActor(barrel);
+        addActor(head);
     }
 
     @Override
-    public void request(AssetProcessor assetRequestProcessor) {
-        assetRequestProcessor.receiveRequest("TanksTheGame.atlas", TextureAtlas.class, this);
+    public void aim(float delta, Vector2 aimPosition) {
 
-        bulletPool.request(assetRequestProcessor);
-    }
-
-    @Override
-    public void passAssets(AssetProcessor assets) {
-        TextureAtlas atlas = assets.get("TanksTheGame.atlas", TextureAtlas.class);
-        barrel.setTexture(atlas.findRegion("barrel"));
-        head.setTexture(atlas.findRegion("canon"));
     }
 
     @Override
@@ -54,13 +48,16 @@ public class Canon extends Head {
         barrel.addAction(Animations.recoil((barrel.getHeight()/3)));
         head.addAction(Actions.delay(0.1f, Animations.recoil((head.getHeight()/5 * recoilStrength()))));
 
-        Bullet bullet = bulletPool.obtain();
-        bullet.init(bodyHandler, calculateBulletPosition(), getParent().getRotation() + getRotation());
+        projectile.spawnProjectile(calculateBulletPosition(), getRotation() + getRotation());
 
         getStage().getRoot().addActor(bullet);
+
         recoil(bullet);
+
         recharge();
     }
+
+    //rotateBy(headData.rotationSpeed * delta * direction.mult);
 
     private void recoil(Bullet bullet) {
         Vector2 impulse = new Vector2(0, -headData.recoil);
@@ -99,5 +96,16 @@ public class Canon extends Head {
         return new Vector2(getParent().getX() + getParent().getWidth()/2 - getParent().getWidth()/16,
                 getParent().getY() + getParent().getHeight()/2 - getParent().getWidth()/16).add(barrelVector);
 
+    }
+
+    @Override
+    public void sizeChanged() {
+        head.setSize(getWidth()/2, getHeight()/2);
+        head.setPosition(getWidth()/2 - head.getWidth()/2, getHeight()/2 - head.getHeight()/2);
+
+
+        barrel.setSize(head.getWidth()/3, head.getHeight()*1.25f);
+        barrel.setPosition(getWidth()/2 - barrel.getWidth()/2, getHeight()/2);
+        barrel.setOrigin(barrel.getX() + barrel.getWidth()/2, 0);
     }
 }

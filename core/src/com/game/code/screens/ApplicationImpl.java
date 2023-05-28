@@ -1,6 +1,7 @@
 package com.game.code.screens;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;	
 import com.badlogic.gdx.utils.Disposable;
@@ -8,6 +9,8 @@ import com.game.code.AssetManagment.*;
 import com.badlogic.gdx.Game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.game.code.screens.Connection.ConnectionFactory;
+import com.game.code.screens.Connection.InternalConnectionFactory;
 
 public class ApplicationImpl extends Game implements Application {
 	private SpriteBatch batch;
@@ -15,6 +18,8 @@ public class ApplicationImpl extends Game implements Application {
 
 	private ScreenHistory screenHistory;
 	private ScreenLoader screenLoader;
+
+	private ConnectionFactory connectionFactory;
 
 	@Override
 	public void create() {
@@ -27,7 +32,9 @@ public class ApplicationImpl extends Game implements Application {
 
 		assetProcessor = new ParticlePoolApplier(new SkinApplier(new AssetRequestProcessor(new AssetManager())));
 
-		loadScreen(new TitleScreen(this));
+		loadScreen(new HostScreen(this));
+
+		connectionFactory = new InternalConnectionFactory();
 	}
 
 	@Override
@@ -63,6 +70,16 @@ public class ApplicationImpl extends Game implements Application {
 	@Override
 	public AssetProcessor getAssetProcessor() {
 		return assetProcessor;
+	}
+
+	@Override
+	public ConnectionFactory getConnectionFactory() {
+		return connectionFactory;
+	}
+
+	@Override
+	public void setConnectionFactory(ConnectionFactory connectionFactory) {
+		this.connectionFactory = connectionFactory;
 	}
 }
 

@@ -11,9 +11,9 @@ import com.game.code.Entity.BitCategories;
 import com.game.code.Entity.Breakable;
 import com.game.code.Entity.Entity;
 import com.game.code.Entity.Projectile;
-import com.game.code.utils.scene2d.TextureActor;
+import com.game.code.utils.scene2d.TexturedActor;
 
-public class Bullet extends TextureActor implements Projectile, Pool.Poolable {
+public class Bullet extends TexturedActor implements Projectile, Pool.Poolable {
     private Body body;
 
     private final short ownersGroupIndex;

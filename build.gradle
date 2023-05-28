@@ -65,6 +65,10 @@ project(":core") {
         implementation "com.github.raeleus.stripe:stripe:1.4.5"
         implementation "com.github.raeleus.stripe:freetype:1.4.5"
         implementation "io.socket:socket.io-client:2.1.0"
-        
+
+    }
+
+    test {
+        useJUnitPlatform ()
     }
 }
