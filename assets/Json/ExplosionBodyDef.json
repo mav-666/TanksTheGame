@@ -1,0 +1,18 @@
+{
+  bodyDef: {
+    type: 0
+  }
+  fixtureDefs: {
+    1: {
+      isSensor: true
+      shape: {
+        type: "Circle"
+        coordinates: {
+          1:0
+          2:0
+          3:1f
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  bodyDef: {
+    type: 0
+    fixedRotation: false
+    angularDamping: 4
+    linearDamping: 6
+  }
+  mass: 150
+  fixtureDefs: {
+    1: {
+      density: 0.1f
+      shape: {
+        type: "Circle"
+        coordinates: {
+          1: 0f
+          2: 0f
+          3: 0.5f
+        }
+      }
+    }
+  }
+}

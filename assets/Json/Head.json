@@ -1,0 +1,23 @@
+{
+  1: {
+    name: "TransformComponent"
+    init: {
+      zIndex: -2f
+    }
+  }
+  2: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "head.png"
+    }
+  }
+  3: {
+    name: "CanonComponent"
+    init: {
+      rotationSpeed: 2f
+    }
+  }
+  5: {
+    name: "PlayerComponent"
+  }
+}

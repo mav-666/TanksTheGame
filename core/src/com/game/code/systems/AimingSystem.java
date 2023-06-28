@@ -1,0 +1,45 @@
+package com.game.code.systems;
+;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.math.Vector2;
+import com.game.code.components.*;
+import com.game.code.components.AimsComponent;
+import com.game.code.utils.Mappers;
+
+public class AimingSystem extends IteratingSystem {
+
+    private final Mappers mappers;
+
+    public AimingSystem() {
+        super(Family.all(TransformComponent.class, AimsComponent.class).one(CanonComponent.class).get());
+
+        mappers = Mappers.getInstance();
+    }
+
+    @Override
+    protected void processEntity(Entity entity, float deltaTime) {
+        if(mappers.get(CanonComponent.class).has(entity)) processCanon(entity, deltaTime);
+    }
+
+    private void processCanon(Entity entity, float deltaTime) {
+        Vector2 aimPoint = mappers.get(AimsComponent.class).get(entity).target;
+
+        TransformComponent transform = mappers.get(TransformComponent.class).get(entity);
+
+        CanonComponent canon = mappers.get(CanonComponent.class).get(entity);
+
+        Vector2 originToAim = new Vector2(aimPoint.x, aimPoint.y)
+                .sub(transform.position.x, transform.position.y).nor();
+
+        Vector2 barrel =  new Vector2(transform.position.x, transform.position.y + 1)
+                .sub(transform.position.x, transform.position.y).nor().rotateDeg(transform.degAngle);
+
+        if(Math.abs(originToAim.angleDeg(barrel)) < 5) return;
+
+        transform.degAngle += Math.toDegrees(canon.rotationSpeed/barrel.len() * deltaTime * (originToAim.angleDeg(barrel)>180? -1: 1));
+
+        entity.remove(AimsComponent.class);
+    }
+}

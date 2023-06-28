@@ -1,0 +1,32 @@
+{
+  1: {
+    name: "TransformComponent"
+  }
+  2: {
+    name: "SummonsParticleComponent"
+    init: {
+      particleName: "explosion"
+    }
+  }
+  3: {
+    name: "BodyComponent"
+    init: {
+      body: "ExplosionBodyDef"
+    }
+  }
+  6: {
+    name: "CollusionComponent"
+  }
+  4: {
+    name: "ContactDamageComponent"
+    init: {
+      damage: 50f
+    }
+  }
+  5: {
+    name: "LifeSpanComponent"
+    init: {
+      seconds: 0.1f
+    }
+  }
+}

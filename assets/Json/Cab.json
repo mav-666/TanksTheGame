@@ -1,0 +1,53 @@
+{
+  1: {
+    name: "TransformComponent"
+    init: {
+      position: [1f, 0f]
+    }
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "cab.png"
+      width: 1f
+      height: 1f
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "CabBodyDef"
+    }
+  }
+  8: {
+    name: "HasFriendsComponent"
+  }
+  5: {
+    name: "MobilityComponent"
+    init: {
+      movementSpeed: 10f
+      agility: 2f
+    }
+  }
+  6: {
+    name: "PlayerComponent"
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  8: {
+    name: "SummonsAfterDeathComponent"
+    init: {
+      entityName: "Explosion"
+    }
+  }
+  7: {
+    name: "HealthComponent"
+    init: {
+      health: 100f
+    }
+  }
+}

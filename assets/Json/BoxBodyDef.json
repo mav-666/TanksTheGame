@@ -1,0 +1,21 @@
+{
+  bodyDef: {
+    type: 2
+    fixedRotation: false
+    angularDamping: 4
+    linearDamping: 6
+  }
+  mass: 200
+  fixtureDefs: {
+    1: {
+      density: 0.1f
+      shape: {
+        type: "Polygon"
+        coordinates: {
+          1: 0.5f
+          2: 0.45f
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  1: {
+    name: "TransformComponent"
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "cab.png"
+      width: 1
+      height: 1
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "BoxBodyDef"
+    }
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  6: {
+    name: "HealthComponent"
+    init: {
+      health: 100f
+    }
+  }
+}

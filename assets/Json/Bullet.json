@@ -1,0 +1,32 @@
+{
+  1: {
+    name: "TransformComponent"
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "bullet.png"
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "BulletBodyDef"
+    }
+  }
+  5: {
+    name: "ContactDamageComponent"
+  }
+  6: {
+    name: "CollusionComponent"
+  }
+  7: {
+    name: "ContactBreakComponent"
+  }
+  8: {
+    name: "FragileParticleComponent"
+    init: {
+      particleName: "shards"
+    }
+  }
+}

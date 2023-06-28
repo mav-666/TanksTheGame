@@ -1,0 +1,37 @@
+{
+  1: {
+    name: "TransformComponent"
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "gasoline.png"
+      width: 1
+      height: 1
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "GasolineBodyDef"
+    }
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  7: {
+    name: "SummonsAfterDeathComponent"
+    init: {
+      entityName: "Explosion"
+    }
+  }
+  6: {
+    name: "HealthComponent"
+    init: {
+      health: 100f
+    }
+  }
+}

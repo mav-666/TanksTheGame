@@ -1,0 +1,20 @@
+{
+  bodyDef: {
+    type: 2
+    bullet: true
+  }
+  mass: 1
+  fixtureDefs: {
+    1: {
+      density: 0.1f
+      shape: {
+        type: "Circle"
+        coordinates: {
+          1: 0
+          2: 0
+          3: 0.1f
+        }
+      }
+    }
+  }
+}
