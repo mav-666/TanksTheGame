@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
+import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.FieldInitializers.ArrayFieldInitializer;
 import com.game.code.EntityBuilding.FieldInitializers.FieldInitializer;
@@ -16,21 +17,23 @@ public class JsonEntityBuilder extends EntityBuilder {
     private final Json json;
     private final JsonSupplier jsonSupplier;
 
-    public JsonEntityBuilder(Engine engine, JsonSupplier jsonSupplier) {
+    private final ComponentInitializer componentInitializer;
+
+    public JsonEntityBuilder(Engine engine, ComponentInitializer componentInitializer, JsonSupplier jsonSupplier) {
         super(engine);
         this.json = new Json();
 
         this.jsonSupplier = jsonSupplier;
+        this.componentInitializer = componentInitializer;
     }
 
     @Override
     public void build(String entityName) {
-        entity = engine.createEntity();
+        super.build(entityName);
 
         var json = jsonSupplier.findJson(entityName);
 
         json.ifPresent(this::createByJson);
-
     }
 
     private void createByJson(JsonValue entityJson) {
@@ -38,12 +41,10 @@ public class JsonEntityBuilder extends EntityBuilder {
     }
 
     private void parseComponentJson(JsonValue componentJson) {
-        Component component = engine.createComponent(createComponentClass(componentJson.getString("name")));
+        Component component = getComponent(createComponentClass(componentJson.getString("name")));
 
         if(componentJson.has("init"))
             initComponent(component, componentJson.get("init"));
-
-        entity.add(component);
     }
 
     private Class<? extends Component> createComponentClass(String componentName) {
@@ -65,12 +66,12 @@ public class JsonEntityBuilder extends EntityBuilder {
             try {
                 Field field = component.getClass().getField(jsonField.name);
 
-                var fieldInit = findInitializer(getTypeOf(field));
+                var fieldInit = componentInitializer.findInitializer(componentInitializer.getTypeOf(field));
                 if(fieldInit.isEmpty()) return;
 
-                initField(component, jsonField.name, getConfigFrom(jsonField, fieldInit.get()));
+                componentInitializer.initField(component, jsonField.name, getConfigFrom(jsonField, fieldInit.get()));
             } catch (NoSuchFieldException e) {
-                Gdx.app.log("Error", "json reading failed due to non inappropriate field");
+                Gdx.app.log("Error", "json reading failed due to inappropriate field");
                 e.printStackTrace();
             }
         });

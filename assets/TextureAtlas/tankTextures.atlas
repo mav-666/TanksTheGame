@@ -1,0 +1,76 @@
+
+tankTextures.png
+size: 512, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+barrel
+  rotate: false
+  xy: 352, 2
+  size: 8, 28
+  orig: 8, 28
+  offset: 0, 0
+  index: -1
+box
+  rotate: false
+  xy: 2, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+box
+  rotate: false
+  xy: 152, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+box
+  rotate: false
+  xy: 202, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+bullet
+  rotate: false
+  xy: 372, 35
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+cab
+  rotate: false
+  xy: 52, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+gasoline
+  rotate: false
+  xy: 102, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+gasolinel
+  rotate: false
+  xy: 252, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+grass
+  rotate: false
+  xy: 302, 3
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+head
+  rotate: false
+  xy: 352, 32
+  size: 18, 19
+  orig: 18, 19
+  offset: 0, 0
+  index: -1

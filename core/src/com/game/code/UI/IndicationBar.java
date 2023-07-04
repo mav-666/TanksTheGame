@@ -8,8 +8,6 @@ public abstract class IndicationBar extends Stack {
     protected Slider slider;
     protected Image foreground;
 
-    public abstract void init(Skin skin);
-
     public Slider getSlider() {
         return slider;
     }

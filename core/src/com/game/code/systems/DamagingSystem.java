@@ -33,8 +33,6 @@ public class DamagingSystem extends IteratingSystem {
             return;
         }
 
-        System.out.println(mappers.get(HealthComponent.class).get(entity).health);
-
         dealDamageTo(entity);
 
         makeInvincible(entity);

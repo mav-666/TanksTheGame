@@ -8,7 +8,7 @@
   3: {
     name: "TextureComponent"
     init: {
-      textureRegion: "cab.png"
+      textureRegion: "cab"
       width: 1f
       height: 1f
     }
@@ -41,7 +41,7 @@
   8: {
     name: "SummonsAfterDeathComponent"
     init: {
-      entityName: "Explosion"
+     entityName: "Explosion"
     }
   }
   7: {

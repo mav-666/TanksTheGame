@@ -61,10 +61,10 @@ public class CollusionRegister implements ContactListener {
         ComponentMapper<CollusionComponent> collusionM = mappers.get(CollusionComponent.class);
 
         if(collusionM.has(A))
-            collusionM.get(A).involved = null;
+            collusionM.get(A).involved.removeValue(B, true);
 
         if(collusionM.has(B))
-            collusionM.get(B).involved = null;
+            collusionM.get(B).involved.removeValue(A, true);
 
         A.remove(CollidesComponent.class);
         B.remove(CollidesComponent.class);

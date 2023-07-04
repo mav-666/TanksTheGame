@@ -14,7 +14,7 @@ import com.game.code.components.PlayerComponent;
 public class AimingInputSystem extends IteratingSystem {
 
     private final Viewport viewport;
-    private Vector2 aimingPoint;
+    private Vector2 aimingPoint = new Vector2();
 
     public AimingInputSystem(Viewport viewport) {
         super(Family.all(PlayerComponent.class).one(CanonComponent.class).exclude(DeadComponent.class).get());
@@ -30,13 +30,15 @@ public class AimingInputSystem extends IteratingSystem {
     }
 
     private void processInput() {
-        aimingPoint = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+        aimingPoint.set(Gdx.input.getX(), Gdx.input.getY());
+
+        viewport.unproject(aimingPoint);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         AimsComponent aimsC = getEngine().createComponent(AimsComponent.class);
-        aimsC.target = aimingPoint;
+        aimsC.target.set(aimingPoint);
 
         entity.add(aimsC);
     }

@@ -8,7 +8,7 @@ public abstract class JsonConfigFactory<T extends Config> implements ConfigFacto
 
     private final JsonSupplier jsonSupplier;
 
-    JsonConfigFactory(JsonSupplier jsonSupplier) {
+    public JsonConfigFactory(JsonSupplier jsonSupplier) {
         this.jsonSupplier = jsonSupplier;
     }
 

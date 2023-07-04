@@ -8,7 +8,7 @@
   2: {
     name: "TextureComponent"
     init: {
-      textureRegion: "barrel.png"
+      textureRegion: "barrel"
     }
   }
   5: {
@@ -30,7 +30,7 @@
   11: {
     name: "RechargingComponent"
     init: {
-      seconds: 0f
+      seconds: 0.75f
     }
   }
   12: {

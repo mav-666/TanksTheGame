@@ -8,7 +8,7 @@
   2: {
     name: "TextureComponent"
     init: {
-      textureRegion: "head.png"
+      textureRegion: "head"
     }
   }
   3: {

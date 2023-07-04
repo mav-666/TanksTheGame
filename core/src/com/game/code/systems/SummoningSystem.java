@@ -19,7 +19,7 @@ public class SummoningSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        getEngine().addEntity(summoningDirector.summonBy(entity));
+        summoningDirector.summonBy(entity);
         entity.remove(SummonsComponent.class);
     }
 }

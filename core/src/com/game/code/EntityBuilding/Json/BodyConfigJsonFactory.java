@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
-import com.game.code.EntityBuilding.BodyConfig;
-import com.game.code.EntityBuilding.Shape.ShapeFactoryProvider;
+import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.BodyConfig;
+import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.ShapeFactoryProvider;
 import com.game.code.EntityBuilding.ShapeFactory;
 
 

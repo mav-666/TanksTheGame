@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		config.setForegroundFPS(60);
 		config.setTitle("Tanks");
         config.setWindowedMode( 842, 480);
-		new Lwjgl3Application(new PlayerMovementTests(), config);
+		new Lwjgl3Application(new Application(), config);
 	}
 }

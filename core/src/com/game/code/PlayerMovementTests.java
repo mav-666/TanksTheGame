@@ -3,9 +3,7 @@ package com.game.code;
 import aurelienribon.tweenengine.Tween;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -15,43 +13,51 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.game.code.EntityBuilding.*;
+import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.BodyConfig;
 import com.game.code.EntityBuilding.FieldInitializers.*;
+import com.game.code.EntityBuilding.FieldInitializers.BodyInitializer;
 import com.game.code.EntityBuilding.Json.BodyConfigJsonFactory;
 import com.game.code.EntityBuilding.Json.JsonEntityBuilder;
 import com.game.code.EntityBuilding.Json.JsonSupplier;
+import com.game.code.EntityBuilding.Summoners.EntitySummoner;
+import com.game.code.EntityBuilding.Summoners.ParticleSummoner;
+import com.game.code.EntityBuilding.Summoners.ProjectileSummoner;
+import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
+import com.game.code.EntityBuilding.battlefiled.*;
 import com.game.code.FileManagment.InternalJsonSupplier;
+import com.game.code.UI.screens.AbstractScreen;
+import com.game.code.UI.screens.Loading.LoadableScreen;
+import com.game.code.UI.screens.Loading.TaskLoader;
 import com.game.code.components.*;
-import com.game.code.components.ConnectedComponent;
-import com.game.code.components.InheritAngleComponent;
-import com.game.code.components.InheritColorComponent;
 import com.game.code.systems.*;
+import com.game.code.utils.BoundedCamera;
 import com.game.code.utils.CollusionRegister;
-import com.game.code.utils.Mappers;
 import com.game.code.utils.TweenUtils.ColorAccessor;
 import com.game.code.utils.TweenUtils.TweenM;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
 
 import java.util.Random;
 
-public class PlayerMovementTests extends ApplicationAdapter {
-    private Engine engine;
-    private TweenM tween;
+public class PlayerMovementTests extends AbstractScreen implements LoadableScreen {
+    private final Engine engine;
+    private final TweenM tween;
 
-    private FitViewport viewport;
+    private final FitViewport viewport;
+    private final BoundedCamera boundedCamera;
+    private final World world;
 
-    private World world;
+    private ComponentInitializer componentInitializer;
+    private final EntitySummonerProvider entityBuilderProvider;
+    private final EntityBuilder entityBuilder;
 
-    private Box2DDebugRenderer debugRenderer;
+    private final JsonSupplier jsonSupplier;
 
-    EntityBuilder entityBuilder;
+    private final Bounds bounds = new Bounds(2, 2);
 
-    JsonSupplier jsonSupplier;
+    public PlayerMovementTests(Application app) {
+        super(app);
 
-    Random random;
-
-    @Override
-    public void create() {
-        random = new Random(1);
+        Random random = new Random(1);
 
         tween = TweenM.getInstance();
         Tween.registerAccessor(Color.class, new ColorAccessor());
@@ -59,28 +65,24 @@ public class PlayerMovementTests extends ApplicationAdapter {
 
         engine = new PooledEngine();
 
-        viewport = new FitViewport(9, 6);
+        boundedCamera = new BoundedCamera(bounds);
+        viewport = new FitViewport(9, 6, boundedCamera);
 
         world = new World(Vector2.Zero, false);
         world.setContactListener(new CollusionRegister(engine));
-        debugRenderer = new Box2DDebugRenderer();
 
         jsonSupplier = new InternalJsonSupplier();
 
-        entityBuilder = new JsonEntityBuilder(engine, jsonSupplier);
+        initComponentInitializer();
 
-        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(jsonSupplier));
+        entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonSupplier);
 
-        entityBuilder.addInitializer(new FloatInitializer());
-        entityBuilder.addInitializer(new StringInitializer());
-        entityBuilder.addInitializer(new IntegerInitializer());
-        entityBuilder.addInitializer(new BooleanInitializer());
-        entityBuilder.addInitializer(new Vector2Initializer());
-        entityBuilder.addInitializer(new TextureRegionInitializer());
-        entityBuilder.addInitializer(new ParticleEffectInitializer());
-        entityBuilder.addInitializer(new BodyInitializer(world, bodyConfigFactory));
+        entityBuilderProvider = new EntitySummonerProvider(engine, entityBuilder);
 
+        initEngine();
+    }
 
+    private void initEngine() {
         engine.addEntityListener(Family.all(BodyComponent.class).get(), new EntityUserDataSetter());
         engine.addEntityListener(Family.all(BodyComponent.class, HasFriendsComponent.class).get(), new HasFriendsComponentSetter());
 
@@ -91,6 +93,7 @@ public class PlayerMovementTests extends ApplicationAdapter {
 
         engine.addSystem(new MovementInputSystem());
         engine.addSystem(new MovementSystem());
+        engine.addSystem(new CameraFollowingSystem(boundedCamera));
 
         engine.addSystem(new AimingInputSystem(viewport));
         engine.addSystem(new AimingSystem());
@@ -100,138 +103,85 @@ public class PlayerMovementTests extends ApplicationAdapter {
         engine.addSystem(new InheritDeathSystem());
 
         engine.addSystem(new ShootingInputSystem());
-        engine.addSystem(new ShootingSystem(new ProjectileSummoner(entityBuilder)));
+        engine.addSystem(new ShootingSystem(new ProjectileSummoner(entityBuilder, engine)));
 
         engine.addSystem(new SummoningAfterDeathSystem());
-        engine.addSystem(new SummoningSystem(new EntitySummoner(entityBuilder)));
+        engine.addSystem(new SummoningSystem(new EntitySummoner(entityBuilder, engine)));
 
         engine.addSystem(new ContactDamageSystem());
         engine.addSystem(new ContactBreakSystem());
         engine.addSystem(new LifeSpanSystem());
 
-     //   engine.addSystem(new HealthColoredSystem());
+        //   engine.addSystem(new HealthColoredSystem());
         engine.addSystem(new LowHealthDeathSystem());
 
         engine.addSystem(new FragileParticleSystem());
-        engine.addSystem(new ParticleSummoningSystem(new ParticleSummoner(entityBuilder)));
+        engine.addSystem(new ParticleSummoningSystem(new ParticleSummoner(entityBuilder, engine, componentInitializer)));
 
         engine.addSystem(new DamagingSystem());
         engine.addSystem(new FadeAfterDeathSystem());
         engine.addSystem(new EndCollusionSystem());
 
         engine.addSystem(new RenderingSystem(viewport.getCamera()));
+        engine.addSystem(new Box2dDebugSystem(world, viewport));
+    }
 
-        createTank();
-        createTank();
+    private void initComponentInitializer() {
+        componentInitializer = new ComponentInitializer();
 
-        createObstacle();
-        createObstacle();
-        createObstacle();
-        createObstacle();
+        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(jsonSupplier));
 
-       // createFloor(4);
-
-        //createBox(1, 1.25f, new Vector3(0, 0, 4), 0);
-
-       // createBox(1.25f, 1, new Vector3(1.5f, 2, 4), 45);
+        componentInitializer.addInitializer(new FloatInitializer());
+        componentInitializer.addInitializer(new StringInitializer());
+        componentInitializer.addInitializer(new IntegerInitializer());
+        componentInitializer.addInitializer(new BooleanInitializer());
+        componentInitializer.addInitializer(new Vector2Initializer());
+        componentInitializer.addInitializer(new AssetTextureInitializer(app.assets));
+        componentInitializer.addInitializer(new AssetParticleInitializer(app.assets));
+        componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
     }
 
 
-    private void createTank() {
-        Entity cab = createCab();
+    private void createGrid() {
+        BattleFieldTemplate battleFieldTemplate = new GridTemplate();
 
-        Entity head = createHead();
+        Filler filler = new SingleFiller(new BorderPlacer(bounds), new EntityTemplate("Tank"));
+        filler.fill(battleFieldTemplate);
 
-        ConnectedComponent HeadConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        HeadConnectedC.target = Mappers.getInstance().get(BodyComponent.class).get(cab).body;
 
-        entityBuilder.getComponent(InheritColorComponent.class).target = cab;
-        entityBuilder.getComponent(InheritDeathComponent.class).target = cab;
+       BattlefieldFactory battlefieldFactory = new BattlefieldFactoryImpl(entityBuilderProvider);
 
-        createBarrel();
-
-        TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
-
-        ConnectedComponent BarrelConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        BarrelConnectedC.target = Mappers.getInstance().get(BodyComponent.class).get(cab).body;
-        BarrelConnectedC.connectionPoint.set(0, -textureC.height/2);
-
-        entityBuilder.getComponent(InheritAngleComponent.class).target = head;
-        entityBuilder.getComponent(InheritColorComponent.class).target = cab;
-        entityBuilder.getComponent(InheritDeathComponent.class).target = cab;
-    }
-
-    private Entity createCab() {
-        entityBuilder.build(Entities.Cab.name());
-        entityBuilder.getEntity().flags = 2;
-
-        engine.addEntity(entityBuilder.getEntity());
-
-        return entityBuilder.getEntity();
-    }
-
-    private Entity createHead() {
-        entityBuilder.build(Entities.Head.name());
-
-        Entity head = entityBuilder.getEntity();
-
-        TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
-
-        textureC.height = 0.5f;
-        textureC.width = 0.5f;
-
-        engine.addEntity(head);
-
-        entityBuilder.getEntity().flags = 3;
-
-        return head;
-    }
-
-    private void createBarrel() {
-        entityBuilder.build(Entities.Barrel.name());
-
-        TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
-        textureC.height = 0.75f;
-        textureC.width = 0.2f;
-        entityBuilder.getComponent(TransformComponent.class).origin.set(0, -textureC.height/2);
-
-        ProjectileTemplateComponent projectileC = entityBuilder.getComponent(ProjectileTemplateComponent.class);
-        projectileC.shootingPoint.set(0, 0.5f);
-
-        engine.addEntity(entityBuilder.getEntity());
-
-    }
-
-    private void createObstacle() {
-        String entityName = random.nextBoolean()? Entities.Box.name() : Entities.Gasoline.name();
-
-        entityBuilder.build(entityName);
-
-        BodyComponent bodyC = entityBuilder.getComponent(BodyComponent.class);
-        bodyC.body.setTransform(random.nextInt(-5, 5), random.nextInt(-5, 5), 0);
-
-        engine.addEntity(entityBuilder.getEntity());
+       battlefieldFactory.create(battleFieldTemplate);
     }
 
     @Override
-    public void render() {
+    public void loaded() {
+        createGrid();
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
         ScreenUtils.clear(0, 0, 0, 1);
         viewport.getCamera().update();
 
-        debugRenderer.render(world, viewport.getCamera().combined);
+        if(Gdx.input.isKeyJustPressed(Input.Keys.Y)) {
+            Box2dDebugSystem debug = engine.getSystem(Box2dDebugSystem.class);
+            debug.setProcessing(!debug.checkProcessing());
+        }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            entityBuilder.build(Entities.Explosion.name());
+            entityBuilder.build(CreatableEntity.Explosion.name());
             engine.addEntity(entityBuilder.getEntity());
         }
 
 
-
-        float deltaTime = Gdx.graphics.getDeltaTime();
-
-        tween.getManager().update(deltaTime);
-        engine.update(deltaTime);
-
+        tween.getManager().update(delta);
+        engine.update(delta);
     }
 
     @Override
@@ -242,5 +192,14 @@ public class PlayerMovementTests extends ApplicationAdapter {
     @Override
     public void dispose() {
         world.dispose();
+    }
+
+    @Override
+    public TaskLoader getLoadingTask() {
+        return TaskLoader.create()
+                .add(app.assets::loadParticles, "Particles")
+                .add(app.assets::loadTextures, "Textures")
+                .loadAssets(app.assets.getAssetManager())
+                .get();
     }
 }

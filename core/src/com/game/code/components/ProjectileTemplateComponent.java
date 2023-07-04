@@ -3,7 +3,7 @@ package com.game.code.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
-import com.game.code.EntityBuilding.Projectiles;
+import com.game.code.EntityBuilding.Summoners.Projectiles;
 
 public class ProjectileTemplateComponent implements Component, Pool.Poolable {
     public String entityName = Projectiles.Bullet.name();
@@ -13,7 +13,7 @@ public class ProjectileTemplateComponent implements Component, Pool.Poolable {
     public float contactDamage = 0;
     public float radius = 0;
 
-    public Vector2 shootingPoint = new Vector2();
+    public Vector2 shootingPoint = new Vector2(0,0);
 
     @Override
     public void reset() {

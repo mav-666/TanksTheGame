@@ -5,7 +5,7 @@
   3: {
     name: "TextureComponent"
     init: {
-      textureRegion: "cab.png"
+      textureRegion: "box"
       width: 1
       height: 1
     }

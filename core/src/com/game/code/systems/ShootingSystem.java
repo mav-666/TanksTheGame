@@ -39,8 +39,6 @@ public class ShootingSystem extends IteratingSystem {
 
         Entity projectile = summoningDirector.summonBy(entity);
 
-        getEngine().addEntity(projectile);
-
         addRecoil(entity, projectile);
         addRecharge(entity);
     }
@@ -94,8 +92,6 @@ public class ShootingSystem extends IteratingSystem {
 
         Vector2 offset = textureM.get(entity).offset;
         float height = textureM.get(entity).height;
-
-
 
         Timeline.createSequence()
                 .push(Tween.to(offset, Vector2Accessor.Y, 0.1f).target(-height/3f).ease(TweenEquations.easeOutQuad))

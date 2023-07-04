@@ -10,12 +10,9 @@ import com.ray3k.tenpatch.TenPatchDrawable;
 public class LoadingBar extends IndicationBar {
     float loadingTasksAmount;
 
-    public LoadingBar(float loadingTasksAmount) {
+    public LoadingBar(Skin skin, float loadingTasksAmount) {
         this.loadingTasksAmount = loadingTasksAmount;
-    }
 
-    @Override
-    public void init(Skin skin) {
         Image foreground = new Image(skin.get("LoadingBar-T", TenPatchDrawable.class));
 
         slider = new Slider(0, loadingTasksAmount, 1,false, skin, "loadingBar");
@@ -27,6 +24,4 @@ public class LoadingBar extends IndicationBar {
         addActor(new Container<>(slider).prefSize(getWidth() - 2, getHeight()).pad(0,2, 0, 2));
         addActor(new Container<>(foreground).width(getWidth()));
     }
-
-
 }

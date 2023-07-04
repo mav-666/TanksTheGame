@@ -30,10 +30,10 @@ public class AimingSystem extends IteratingSystem {
 
         CanonComponent canon = mappers.get(CanonComponent.class).get(entity);
 
-        Vector2 originToAim = new Vector2(aimPoint.x, aimPoint.y)
+        Vector2 originToAim = aimPoint.cpy()
                 .sub(transform.position.x, transform.position.y).nor();
 
-        Vector2 barrel =  new Vector2(transform.position.x, transform.position.y + 1)
+        Vector2 barrel =  transform.position.cpy().add(0,1)
                 .sub(transform.position.x, transform.position.y).nor().rotateDeg(transform.degAngle);
 
         if(Math.abs(originToAim.angleDeg(barrel)) < 5) return;
