@@ -13,6 +13,7 @@ public class Box2dDebugSystem extends EntitySystem {
     private Box2DDebugRenderer debugRenderer;
 
     public Box2dDebugSystem(World world, Viewport viewport) {
+        super( 41);
         this.world = world;
         this.viewport = viewport;
 

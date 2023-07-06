@@ -19,10 +19,10 @@
       body: "CabBodyDef"
     }
   }
-  8: {
+  10: {
     name: "HasFriendsComponent"
   }
-  5: {
+  11: {
     name: "MobilityComponent"
     init: {
       movementSpeed: 10f
@@ -32,6 +32,10 @@
   6: {
     name: "PlayerComponent"
   }
+  9: {
+    name: "CameraFollowedComponent"
+  }
+
   5: {
     name: "InvincibilityComponent"
     init: {

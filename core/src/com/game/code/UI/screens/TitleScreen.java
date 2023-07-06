@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.game.code.Application;
-import com.game.code.PlayerMovementTests;
+import com.game.code.GameScreen;
 
 
 public class TitleScreen extends AbstractUIScreen {
@@ -52,7 +52,7 @@ public class TitleScreen extends AbstractUIScreen {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 stage.addAction(Actions.sequence(Actions.fadeOut(0.2f),
-                        Actions.run(() -> app.loadScreen(new PlayerMovementTests(app)))));
+                        Actions.run(() -> app.loadScreen(new GameScreen(app)))));
 
             }
         });

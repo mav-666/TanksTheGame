@@ -2,7 +2,7 @@
   1: {
     name: "TransformComponent"
     inti: {
-      zIndex: -1.5f
+      zIndex: -2f
     }
   }
   2: {

@@ -7,12 +7,13 @@ import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
 import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.SummonsComponent;
 import com.game.code.components.TransformComponent;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Iterator;
 
 public class BattlefieldFactoryImpl implements BattlefieldFactory {
 
-    private EntitySummonerProvider provider;
+    private final EntitySummonerProvider provider;
 
     private BattleFieldTemplate battleFieldTemplate;
 
@@ -33,19 +34,28 @@ public class BattlefieldFactoryImpl implements BattlefieldFactory {
     }
 
     private void findOnSpot(Vector2 spot) {
-        Iterator<EntityTemplate> entityTemplates = battleFieldTemplate.getEntitiesOn(spot);
-        while (entityTemplates.hasNext())
-            createEntityOn(spot,  entityTemplates.next());
+        Iterator<Pair<Float, EntityTemplate>> entityTemplates = battleFieldTemplate.getEntitiesOn(spot);
+
+        while (entityTemplates.hasNext()) {
+            Pair<Float, EntityTemplate>  entityTemplate = entityTemplates.next();
+            createEntityOn(spot, entityTemplate.getLeft(), entityTemplate.getRight());
+        }
     }
 
-    private void createEntityOn(Vector2 spot, EntityTemplate entityTemplate) {
-        SummoningDirector summoningDirector = provider.provide(entityTemplate.getEntityName());
+    private void createEntityOn(Vector2 spot, float zIndex, EntityTemplate entityTemplate) {
+        SummoningDirector summoningDirector = provider.provide(entityTemplate.getSummonerType());
 
         EntityBuilder entityBuilder = provider.getEntityBuilder();
 
         entityBuilder.build("");
-        entityBuilder.getComponent(TransformComponent.class).position.set(spot);
-        entityBuilder.getComponent(SummonsComponent.class).entityName = entityTemplate.getEntityName();
+
+        TransformComponent transform = entityBuilder.getComponent(TransformComponent.class);
+        transform.position.set(spot.x, spot.y);
+        transform.zIndex = zIndex;
+
+        SummonsComponent summons = entityBuilder.getComponent(SummonsComponent.class);
+        summons.entityName = entityTemplate.getEntityName();
+        summons.summonerType = entityTemplate.getSummonerType().name();
 
         Entity summoner = entityBuilder.getEntity();
 

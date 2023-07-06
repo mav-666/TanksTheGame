@@ -1,0 +1,12 @@
+{
+  1: {
+    name: TransformComponent
+  }
+  2: {
+    name: TextureComponent
+    init: {
+      width: 1f
+      height: 1f
+    }
+  }
+}

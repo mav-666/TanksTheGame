@@ -2,14 +2,11 @@ package com.game.code.EntityBuilding.battlefiled;
 
 import com.badlogic.gdx.math.Vector2;
 
-public class BorderPlacer extends BoundedPlacer {
+public class BorderPlacer extends AbstractPlacer {
 
-    private Vector2 currentSpot = new Vector2(bounds.startX(), bounds.startY());
-
-    private float pastEntityWidth = 0;
-    private float pastEntityHeight = 0;
-
-    private Vector2 movingDirection = new Vector2(1, 0);
+    private final Vector2 currentSpot = new Vector2(bounds.startX(), bounds.startY());
+    
+    private final Vector2 movingDirection = new Vector2(1, 0);
 
     private boolean finished = false;
 
@@ -18,20 +15,15 @@ public class BorderPlacer extends BoundedPlacer {
     }
 
     @Override
-    public Vector2 nextSpotFor(EntityTemplate entitySpawn) {
-        pastEntityWidth = entitySpawn.getWidth();
-        pastEntityHeight = entitySpawn.getHeight();
-
+    public Vector2 nextSpot() {
         nextMovingDirection();
-
-        System.out.println(currentSpot);
 
         return currentSpot.cpy();
     }
 
     @Override
-    public boolean hasNextFor(EntityTemplate entitySpawn) {
-        currentSpot.add(pastEntityWidth * movingDirection.x, pastEntityHeight * movingDirection.y);
+    public boolean hasNext() {
+        currentSpot.add(movingDirection.x, movingDirection.y);
         return !finished;
     }
 
@@ -70,10 +62,7 @@ public class BorderPlacer extends BoundedPlacer {
         super.reset(bounds);
 
         currentSpot.set(bounds.startX(), bounds.startY());
-
-        pastEntityWidth = 0;
-        pastEntityHeight = 0;
-
+        
         movingDirection.set(1, 0);
 
         finished = false;

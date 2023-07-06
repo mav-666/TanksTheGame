@@ -50,7 +50,7 @@ public class ShootingSystem extends IteratingSystem {
 
         Timeline.createSequence()
                 .pushPause(seconds)
-                .push(Tween.call((type, source) -> entity.remove(RechargesComponent.class)))
+                .push(Tween.call((summonerType, source) -> entity.remove(RechargesComponent.class)))
                 .start(TweenM.getInstance().getManager());
     }
 

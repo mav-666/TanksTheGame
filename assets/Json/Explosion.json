@@ -3,9 +3,10 @@
     name: "TransformComponent"
   }
   2: {
-    name: "SummonsParticleComponent"
+    name: "SummonsComponent"
     init: {
-      particleName: "explosion"
+      summonerType: "Particle"
+      entityName: "explosion"
     }
   }
   3: {

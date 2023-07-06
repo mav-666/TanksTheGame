@@ -11,9 +11,9 @@ public class PercentageFiller {
     float height = 50;
 
     public void fillWith(Placer placer, BattleFieldTemplate battleFieldTemplate) {
-        if(!placer.hasNextFor(filling)) return;
+        if(!placer.hasNext()) return;
 
-        placer.nextSpotFor(filling);
+        placer.nextSpot();
 
     }
 

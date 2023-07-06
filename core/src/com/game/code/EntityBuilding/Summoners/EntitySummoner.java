@@ -2,7 +2,6 @@ package com.game.code.EntityBuilding.Summoners;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.BodyComponent;
@@ -25,19 +24,22 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
 
         entityBuilder.build(entityName);
 
-        initPosition(mappers.get(TransformComponent.class).get(summoner).position);
+        initTransformBy(summoner);
 
         engine.addEntity(entityBuilder.getEntity());
 
         return entityBuilder.getEntity();
     }
 
-    protected void initPosition(Vector2 pos) {
-        Vector2 entityPos = entityBuilder.getComponent(TransformComponent.class).position;
+    protected void initTransformBy(Entity summoner) {
+        TransformComponent entityTransform = entityBuilder.getComponent(TransformComponent.class);
+        TransformComponent summonerTransform = mappers.get(TransformComponent.class).get(summoner);
 
-        entityPos.set(pos);
+        entityTransform.position.set(summonerTransform.position);
+        entityTransform.degAngle = summonerTransform.degAngle;
+        entityTransform.zIndex = summonerTransform.zIndex;
 
         if(entityBuilder.hasComponent(BodyComponent.class))
-            entityBuilder.getComponent(BodyComponent.class).body.setTransform(pos, 0);
+            entityBuilder.getComponent(BodyComponent.class).body.setTransform(summonerTransform.position, summonerTransform.degAngle);
     }
 }

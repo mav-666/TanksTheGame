@@ -2,17 +2,18 @@ package com.game.code.utils;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.HashMap;
 
 public class Mappers {
 
-    HashMap<Class<? extends Component>, ComponentMapper<? extends Component>> mappers;
+    ObjectMap<Class<? extends Component>, ComponentMapper<? extends Component>> mappers;
 
     private static Mappers instance;
 
     private Mappers() {
-        mappers = new HashMap<>();
+        mappers = new ObjectMap<>();
     }
 
     public static Mappers getInstance() {

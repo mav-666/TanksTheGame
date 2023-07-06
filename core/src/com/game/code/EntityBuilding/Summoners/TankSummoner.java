@@ -2,13 +2,18 @@ package com.game.code.EntityBuilding.Summoners;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.game.code.EntityBuilding.CreatableEntity;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
 
 public class TankSummoner extends EntitySummoner {
     private float tankWidth;
     private float tankHeight;
+
+    private enum TankParts{
+        Cab,
+        Head,
+        Barrel,
+    }
 
     public TankSummoner(EntityBuilder entityBuilder, Engine engine) {
         super(entityBuilder, engine);
@@ -18,7 +23,7 @@ public class TankSummoner extends EntitySummoner {
     public Entity summonBy(Entity summoner) {
         Entity cab = createCab();
 
-        initPosition(mappers.get(TransformComponent.class).get(summoner).position);
+        initTransformBy(summoner);
 
         tankWidth = entityBuilder.getComponent(TextureComponent.class).width;
         tankHeight = entityBuilder.getComponent(TextureComponent.class).height;
@@ -47,7 +52,7 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private Entity createCab() {
-        entityBuilder.build(CreatableEntity.Cab.name());
+        entityBuilder.build(TankParts.Cab.name());
         entityBuilder.getEntity().flags = 2;
 
         engine.addEntity(entityBuilder.getEntity());
@@ -56,7 +61,7 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private Entity createHead() {
-        entityBuilder.build(CreatableEntity.Head.name());
+        entityBuilder.build(TankParts.Head.name());
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 
@@ -71,7 +76,7 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private void createBarrel() {
-        entityBuilder.build(CreatableEntity.Barrel.name());
+        entityBuilder.build(TankParts.Barrel.name());
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
         textureC.height = tankHeight / 1.3f;

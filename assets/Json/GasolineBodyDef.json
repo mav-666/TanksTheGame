@@ -1,6 +1,6 @@
 {
   bodyDef: {
-    type: 0
+    type: 2
     fixedRotation: false
     angularDamping: 4
     linearDamping: 6

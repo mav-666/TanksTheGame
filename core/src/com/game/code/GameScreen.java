@@ -1,6 +1,7 @@
 package com.game.code;
 
 import aurelienribon.tweenengine.Tween;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.core.Engine;
@@ -19,8 +20,6 @@ import com.game.code.EntityBuilding.FieldInitializers.BodyInitializer;
 import com.game.code.EntityBuilding.Json.BodyConfigJsonFactory;
 import com.game.code.EntityBuilding.Json.JsonEntityBuilder;
 import com.game.code.EntityBuilding.Json.JsonSupplier;
-import com.game.code.EntityBuilding.Summoners.EntitySummoner;
-import com.game.code.EntityBuilding.Summoners.ParticleSummoner;
 import com.game.code.EntityBuilding.Summoners.ProjectileSummoner;
 import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
 import com.game.code.EntityBuilding.battlefiled.*;
@@ -38,9 +37,10 @@ import com.game.code.utils.TweenUtils.Vector2Accessor;
 
 import java.util.Random;
 
-public class PlayerMovementTests extends AbstractScreen implements LoadableScreen {
+public class GameScreen extends AbstractScreen implements LoadableScreen {
     private final Engine engine;
     private final TweenM tween;
+    private final Random random;
 
     private final FitViewport viewport;
     private final BoundedCamera boundedCamera;
@@ -52,12 +52,12 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
 
     private final JsonSupplier jsonSupplier;
 
-    private final Bounds bounds = new Bounds(2, 2);
+    private final Bounds bounds = new Bounds(50, 50);
 
-    public PlayerMovementTests(Application app) {
+    public GameScreen(Application app) {
         super(app);
 
-        Random random = new Random(1);
+        random = new Random(1);
 
         tween = TweenM.getInstance();
         Tween.registerAccessor(Color.class, new ColorAccessor());
@@ -77,7 +77,7 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
 
         entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonSupplier);
 
-        entityBuilderProvider = new EntitySummonerProvider(engine, entityBuilder);
+        entityBuilderProvider = new EntitySummonerProvider(engine, entityBuilder, componentInitializer);
 
         initEngine();
     }
@@ -105,8 +105,6 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
         engine.addSystem(new ShootingInputSystem());
         engine.addSystem(new ShootingSystem(new ProjectileSummoner(entityBuilder, engine)));
 
-        engine.addSystem(new SummoningAfterDeathSystem());
-        engine.addSystem(new SummoningSystem(new EntitySummoner(entityBuilder, engine)));
 
         engine.addSystem(new ContactDamageSystem());
         engine.addSystem(new ContactBreakSystem());
@@ -115,15 +113,24 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
         //   engine.addSystem(new HealthColoredSystem());
         engine.addSystem(new LowHealthDeathSystem());
 
-        engine.addSystem(new FragileParticleSystem());
-        engine.addSystem(new ParticleSummoningSystem(new ParticleSummoner(entityBuilder, engine, componentInitializer)));
-
         engine.addSystem(new DamagingSystem());
         engine.addSystem(new FadeAfterDeathSystem());
         engine.addSystem(new EndCollusionSystem());
 
-        engine.addSystem(new RenderingSystem(viewport.getCamera()));
-        engine.addSystem(new Box2dDebugSystem(world, viewport));
+        engine.addSystem(new SummoningAfterDeathSystem());
+        engine.addSystem(new SummonsAfterRemoveSystem());
+
+        engine.addSystem(new SummoningSystem(entityBuilderProvider));
+        engine.addSystem(new InvisibleSystem(boundedCamera));
+        engine.addSystem(new RenderingSystem(viewport.getCamera(), app.batch));
+
+        EntitySystem debug = new Box2dDebugSystem(world, viewport);
+        engine.addSystem(new GLProfileSystem());
+        debug.setProcessing(false);
+        engine.addSystem(debug);
+
+
+
     }
 
     private void initComponentInitializer() {
@@ -145,8 +152,19 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
     private void createGrid() {
         BattleFieldTemplate battleFieldTemplate = new GridTemplate();
 
-        Filler filler = new SingleFiller(new BorderPlacer(bounds), new EntityTemplate("Tank"));
-        filler.fill(battleFieldTemplate);
+        AbstractFiller filler = new SingleFiller();
+        Placer randomPlacer = new RandomPlacer(new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width()-1, bounds.height()-1), random);
+
+        filler.addFilter(battleFieldTemplate::isOccupied);
+
+        filler.start(battleFieldTemplate);
+        filler.fillBy(new BorderPlacer(bounds), -1, new EntityTemplate(SummonerType.Default, "Border"));
+        filler.fillBy(new SquarePlacer(bounds),1, new EntityTemplate(SummonerType.Sprite, "plain"));
+        filler.setMaxPlaced(1000);
+        filler.fillBy(randomPlacer, -1, new EntityTemplate(SummonerType.Default, "Box"));
+        filler.fillBy(randomPlacer, -1, new EntityTemplate(SummonerType.Default, "Gasoline"));
+        filler.setMaxPlaced(1);
+        filler.fillBy(randomPlacer, 0, new EntityTemplate(SummonerType.Tank, ""));
 
 
        BattlefieldFactory battlefieldFactory = new BattlefieldFactoryImpl(entityBuilderProvider);
@@ -156,7 +174,7 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
 
     @Override
     public void loaded() {
-        createGrid();
+
     }
 
     @Override
@@ -173,12 +191,17 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
             Box2dDebugSystem debug = engine.getSystem(Box2dDebugSystem.class);
             debug.setProcessing(!debug.checkProcessing());
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
+            RenderingSystem render = engine.getSystem(RenderingSystem.class);
+            render.setProcessing(!render.checkProcessing());
+        }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            entityBuilder.build(CreatableEntity.Explosion.name());
+            entityBuilder.build("Explosion");
             engine.addEntity(entityBuilder.getEntity());
         }
 
+        Gdx.app.log("FPS", String.valueOf(Gdx.graphics.getFramesPerSecond()));
 
         tween.getManager().update(delta);
         engine.update(delta);
@@ -200,6 +223,7 @@ public class PlayerMovementTests extends AbstractScreen implements LoadableScree
                 .add(app.assets::loadParticles, "Particles")
                 .add(app.assets::loadTextures, "Textures")
                 .loadAssets(app.assets.getAssetManager())
+                .add(this::createGrid, "Battlefield")
                 .get();
     }
 }

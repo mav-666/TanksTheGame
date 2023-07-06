@@ -1,47 +1,26 @@
 package com.game.code.EntityBuilding.battlefiled;
 
+import com.game.code.EntityBuilding.SummonerType;
+
 public class EntityTemplate {
 
-    private String entityName;
-    private String id;
+    private final SummonerType summonerType;
+    private final String entityName;
 
-    private int width = 1;
-    private int height = 1;
-
-    public EntityTemplate(String entityName, String id) {
+    public EntityTemplate(SummonerType summonerType, String entityName) {
+        this.summonerType = summonerType;
         this.entityName = entityName;
-        this.id = id;
     }
 
-    public EntityTemplate(String entityName) {
-        this(entityName, "");
+    public EntityTemplate(SummonerType summonerType) {
+        this(summonerType, "");
+    }
+
+    public SummonerType getSummonerType() {
+        return summonerType;
     }
 
     public String getEntityName() {
         return entityName;
-    }
-
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
     }
 }

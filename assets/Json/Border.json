@@ -1,0 +1,19 @@
+{
+  1: {
+    name: "TransformComponent"
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "box"
+      width: 1
+      height: 1
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "BorderBodyDef"
+    }
+  }
+}

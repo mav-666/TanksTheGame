@@ -1,5 +1,6 @@
 package com.game.code.systems;
 
+import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
@@ -17,20 +18,21 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     private final static float PPM = 16f;
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     private final SpriteBatch batch;
     private final Camera camera;
 
-    public RenderingSystem(Camera camera) {
+    private final ComponentMapper<TextureComponent> textureM = mappers.get(TextureComponent.class);
+    private final ComponentMapper<ParticleComponent> particleM = mappers.get(ParticleComponent.class);
+    private final ComponentMapper<TransformComponent> transformM = mappers.get(TransformComponent.class);
+
+
+    public RenderingSystem(Camera camera, SpriteBatch batch) {
         super(Family.all(TransformComponent.class).one(TextureComponent.class, ParticleComponent.class).get(), new ZComparator(), 40);
 
         this.camera = camera;
-
-        mappers = Mappers.getInstance();
-
-        batch = new SpriteBatch();
-
+        this.batch = batch;
     }
 
     public static float toMeters(float pixels) {
@@ -51,16 +53,19 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if(mappers.get(TextureComponent.class).has(entity))
+        if(textureM.has(entity))
             processTexture(entity);
 
-        if(mappers.get(ParticleComponent.class).has(entity))
+        if(particleM.has(entity))
             processParticle(entity, deltaTime);
     }
 
     private void processTexture(Entity entity) {
-        TransformComponent transform = mappers.get(TransformComponent.class).get(entity);
-        TextureComponent texture = mappers.get(TextureComponent.class).get(entity);
+        if(textureM.get(entity).isHidden)
+            return;
+
+        TransformComponent transform = transformM.get(entity);
+        TextureComponent texture = textureM.get(entity);
 
         float width = texture.width;
         float height = texture.height;
@@ -86,9 +91,11 @@ public class RenderingSystem extends SortedIteratingSystem {
         texture.offset.rotateDeg(-transform.degAngle);
     }
 
+
+
     private void processParticle(Entity entity, float deltaTime) {
-        Vector2 position = mappers.get(TransformComponent.class).get(entity).position;
-        ParticleComponent particle = mappers.get(ParticleComponent.class).get(entity);
+        Vector2 position = transformM.get(entity).position;
+        ParticleComponent particle = particleM.get(entity);
 
         if(particle.particleEffect.isComplete())
             entity.add(getEngine().createComponent(DestroyedComponent.class));

@@ -24,9 +24,10 @@
     name: "ContactBreakComponent"
   }
   8: {
-    name: "FragileParticleComponent"
+    name: "SummonsAfterRemoveComponent"
     init: {
-      particleName: "shards"
+      summonerType: "Particle"
+      entityName: "shards"
     }
   }
 }

@@ -6,9 +6,9 @@ public interface Placer {
 
     void reset(Bounds bounds);
 
-    Vector2 nextSpotFor(EntityTemplate entitySpawn);
+    Vector2 nextSpot();
 
-    boolean hasNextFor(EntityTemplate entitySpawn);
+    boolean hasNext();
 
     Bounds getBounds();
 }

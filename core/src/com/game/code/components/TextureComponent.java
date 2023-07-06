@@ -13,6 +13,8 @@ public class TextureComponent implements Component, Pool.Poolable {
 
     public Vector2 offset = new Vector2(0, 0);
 
+    public boolean isHidden = false;
+
     public float width = 0;
     public float height = 0;
 
@@ -24,6 +26,7 @@ public class TextureComponent implements Component, Pool.Poolable {
         textureRegion = null;
         color.set(Color.WHITE);
         offset.set(0,0);
+        isHidden = false;
         width = 0;
         height = 0;
         scaleX = 1;

@@ -19,6 +19,8 @@ public abstract class AbstractLoadingScreen extends AbstractUIScreen {
 
     @Override
     public void render(float delta) {
+        super.render(delta);
+
         if(loadingTask.isDone()) {
             loadableScreen.loaded();
             app.setScreen(loadableScreen);

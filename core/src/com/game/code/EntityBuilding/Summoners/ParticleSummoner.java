@@ -5,22 +5,23 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.game.code.EntityBuilding.ComponentInitializer;
-import com.game.code.EntityBuilding.CreatableEntity;
+import com.game.code.EntityBuilding.SummonerType;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.ParticleComponent;
-import com.game.code.components.SummonsParticleComponent;
+import com.game.code.components.SummonsComponent;
 import com.game.code.components.TransformComponent;
 
 import java.util.Optional;
 
-public class ParticleSummoner extends EntityBuilderSummoner {
+public class ParticleSummoner extends EntitySummoner {
 
-    private final ComponentInitializer componentInitializer;
+    protected final ComponentInitializer componentInitializer;
 
     private Entity summoner;
 
-    public ParticleSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
+    ParticleSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
         super(entityBuilder, engine);
+
         this.componentInitializer = componentInitializer;
     }
 
@@ -28,9 +29,9 @@ public class ParticleSummoner extends EntityBuilderSummoner {
     public Entity summonBy(Entity summoner) {
         this.summoner = summoner;
 
-        entityBuilder.build(CreatableEntity.Particle.name());
+        entityBuilder.build(SummonerType.Particle.name());
 
-        initPosition();
+        initTransformBy(summoner);
 
         initParticleEffect();
 
@@ -58,17 +59,15 @@ public class ParticleSummoner extends EntityBuilderSummoner {
     }
 
     private Optional<String> getParticleName() {
-        ComponentMapper<SummonsParticleComponent> summonM = mappers.get(SummonsParticleComponent.class);
+        ComponentMapper<SummonsComponent> summonM = mappers.get(SummonsComponent.class);
         if(summonM.has(summoner))
-            return Optional.of(summonM.get(summoner).particleName);
+            return Optional.of(summonM.get(summoner).entityName);
         return Optional.empty();
     }
 
-    private void initPosition() {
-        TransformComponent particleTransform = entityBuilder.getComponent(TransformComponent.class);
-        TransformComponent summonerTransform = mappers.get(TransformComponent.class).get(summoner);
+    protected void initTransformBy(Entity summoner) {
+        super.initTransformBy(summoner);
 
-        particleTransform.position.set(summonerTransform.position);
-        particleTransform.zIndex = summonerTransform.zIndex - 1;
+        entityBuilder.getComponent(TransformComponent.class).zIndex--;
     }
 }

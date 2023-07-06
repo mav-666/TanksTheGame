@@ -33,7 +33,7 @@ public class Application extends Game {
 
         skin = assets.getSkin();
 
-        loadScreen(new PlayerMovementTests(this));
+        loadScreen(new GameScreen(this));
     }
 
     @Override
