@@ -13,11 +13,9 @@ import com.game.code.utils.Mappers;
 
 public class InvisibleSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     private final Camera camera;
-
-    private int algo = 1;
 
     private final Vector3 leftBottomPoint = new Vector3();
     private final Vector3 rightTopPoint = new Vector3();
@@ -26,18 +24,6 @@ public class InvisibleSystem extends IteratingSystem {
         super(Family.all(TransformComponent.class, TextureComponent.class).get());
 
         this.camera = camera;
-
-        mappers = Mappers.getInstance();
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) algo--;
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) algo++;
-
-        Gdx.app.log("algo", String.valueOf(algo));
-
-        super.update(deltaTime);
 
     }
 
@@ -64,22 +50,9 @@ public class InvisibleSystem extends IteratingSystem {
         Vector3 projectedLeft = camera.project(leftBottomPoint);
         Vector3 projectedRight = camera.project(rightTopPoint);
 
-        return switch(algo) {
-            case 1 -> projectedRight.x < -20
-                    || projectedRight.y < -20
-                    || projectedLeft.x > Gdx.graphics.getWidth() + 20
-                    || projectedLeft.y > Gdx.graphics.getHeight() + 20;
-
-            case 2 -> projectedRight.x > 20
-                    || projectedRight.y > 20
-                    || projectedLeft.x < Gdx.graphics.getWidth() - 20
-                    || projectedLeft.y < Gdx.graphics.getHeight() - 20;
-            case 3 -> projectedRight.x < 100
-                    || projectedRight.y < 100
-                    || projectedLeft.x > Gdx.graphics.getWidth() - 100
-                    || projectedLeft.y > Gdx.graphics.getHeight() - 100;
-
-            default -> false;
-        };
+        return projectedRight.x < -20
+            || projectedRight.y < -20
+            || projectedLeft.x > Gdx.graphics.getWidth() + 20
+            || projectedLeft.y > Gdx.graphics.getHeight() + 20;
     }
 }

@@ -2,6 +2,7 @@ package com.game.code.systems;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
@@ -14,10 +15,11 @@ import com.game.code.components.PlayerComponent;
 public class AimingInputSystem extends IteratingSystem {
 
     private final Viewport viewport;
-    private Vector2 aimingPoint = new Vector2();
+    protected final Vector2 aimingPoint = new Vector2();
 
     public AimingInputSystem(Viewport viewport) {
-        super(Family.all(PlayerComponent.class).one(CanonComponent.class).exclude(DeadComponent.class).get());
+        super(Family.all(PlayerComponent.class).one(CanonComponent.class)
+                .exclude(DeadComponent.class).get(), 10);
 
         this.viewport = viewport;
     }

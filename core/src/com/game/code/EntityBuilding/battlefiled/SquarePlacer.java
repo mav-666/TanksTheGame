@@ -1,8 +1,9 @@
 package com.game.code.EntityBuilding.battlefiled;
 
 import com.badlogic.gdx.math.Vector2;
+import com.game.code.utils.Bounds;
 
-public class SquarePlacer extends AbstractPlacer {
+public class SquarePlacer extends Placer {
 
     private final Vector2 currentSpot = new Vector2(bounds.startX(),bounds.startY());
     

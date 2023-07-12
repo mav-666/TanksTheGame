@@ -19,18 +19,21 @@ import com.game.code.utils.TweenUtils.Vector2Accessor;
 
 public class ShootingSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
     private final BodySearcher bodySearcher;
 
     private final SummoningDirector summoningDirector;
 
+    private final Vector2 impulse = new Vector2();
+
     public ShootingSystem(SummoningDirector summoningDirector) {
-        super(Family.all(ShootsComponent.class, ProjectileTemplateComponent.class, TransformComponent.class).exclude(RechargesComponent.class).get());
+        super(Family.all(ShootsComponent.class, ProjectileTemplateComponent.class, TransformComponent.class)
+                .exclude(RechargesComponent.class).get(), 12);
 
         this.summoningDirector = summoningDirector;
 
         this.bodySearcher = new BodySearcher();
-        mappers = Mappers.getInstance();
+
     }
 
     @Override
@@ -63,7 +66,7 @@ public class ShootingSystem extends IteratingSystem {
 
         float recoil = calculateRecoil(entity, optionalBody.get().getAngle());
 
-        Vector2 impulse = calculateImpulse(recoil, projectileTransform.degAngle);
+        calculateImpulse(recoil, projectileTransform.degAngle);
 
         optionalBody.get().applyLinearImpulse(impulse, projectileTransform.position, true);
         addRecoilAnimation(entity);
@@ -76,8 +79,8 @@ public class ShootingSystem extends IteratingSystem {
         return recoil * calculateRecoilStrength(degAngle, bodyAngle);
     }
 
-    private Vector2 calculateImpulse(float recoil, float angle) {
-        return new Vector2(0, -recoil).rotateDeg(angle);
+    private void calculateImpulse(float recoil, float angle) {
+        impulse.set(0, -recoil).rotateDeg(angle);
     }
 
     private float calculateRecoilStrength(float degAngle, float bodyAngle) {

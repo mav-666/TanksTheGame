@@ -10,18 +10,13 @@ import java.util.Comparator;
 
 public class ZComparator implements Comparator<Entity> {
 
-    private final Mappers mappers;
-
-    ZComparator() {
-        mappers = Mappers.getInstance();
-    }
+    private final ComponentMapper<TransformComponent> transformM = Mappers.getInstance().get(TransformComponent.class);
 
     @Override
     public int compare(Entity o1, Entity o2) {
-        ComponentMapper<TransformComponent> transformM= mappers.get(TransformComponent.class);
         float pos1 = transformM.get(o1).zIndex;
         float pos2 = transformM.get(o2).zIndex;
 
-        return (int) Math.signum(pos2 - pos1);
+        return (int) (Math.signum(pos2 - pos1));
     }
 }

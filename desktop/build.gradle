@@ -6,6 +6,8 @@ sourceSets.main.resources.srcDirs = ["../assets"]
 project.ext.mainClassName = "com.game.code.DesktopLauncher"
 project.ext.assetsDir = new File("../assets")
 
+def osName = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+
 import org.gradle.internal.os.OperatingSystem
 
 task run(dependsOn: classes, type: JavaExec) {

@@ -15,13 +15,13 @@ import com.game.code.utils.TweenUtils.TweenM;
 
 public class DamagingSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
     private final Color damaged;
 
     public DamagingSystem() {
         super(Family.all(HealthComponent.class, TakesDamageComponent.class).get(), 90);
 
-        mappers = Mappers.getInstance();
+
         damaged = Color.valueOf("781f2c");
     }
 

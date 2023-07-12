@@ -9,12 +9,12 @@ import com.game.code.utils.Mappers;
 
 public class LowHealthDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public LowHealthDeathSystem() {
         super(Family.all(HealthComponent.class).exclude(DeadComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

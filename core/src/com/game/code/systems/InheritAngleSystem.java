@@ -10,12 +10,12 @@ import com.game.code.utils.Mappers;
 
 public class InheritAngleSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public InheritAngleSystem() {
-        super(Family.all(TransformComponent.class, InheritAngleComponent.class).get());
+        super(Family.all(TransformComponent.class, InheritAngleComponent.class).get(), 13);
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

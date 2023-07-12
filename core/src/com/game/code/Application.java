@@ -5,18 +5,22 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.game.code.Socket.ClientSocket;
 import com.game.code.UI.screens.AbstractLoadingScreen;
 import com.game.code.UI.screens.Loading.ScreenHistory;
 import com.game.code.UI.screens.Loading.ScreenLoader;
 import com.game.code.utils.Assets;
+import io.socket.client.Socket;
 
 public class Application extends Game {
     public SpriteBatch batch;
     public Skin skin;
     public Assets assets;
 
+    private ClientSocket clientSocket;
     private ScreenHistory screenHistory;
     private ScreenLoader screenLoader;
+
 
     @Override
     public void create() {
@@ -33,7 +37,11 @@ public class Application extends Game {
 
         skin = assets.getSkin();
 
+        clientSocket = new ClientSocket();
+
         loadScreen(new GameScreen(this));
+
+
     }
 
     @Override
@@ -45,6 +53,7 @@ public class Application extends Game {
 
     @Override
     public void dispose(){
+        clientSocket.getSocket().disconnect();
         assets.dispose();
         getScreen().dispose();
         batch.dispose();
@@ -56,6 +65,10 @@ public class Application extends Game {
 
     public Screen getPreviousScreen() {
         return screenHistory.getPreviousScreen();
+    }
+
+    public ClientSocket getClientSocket() {
+        return clientSocket;
     }
 }
 

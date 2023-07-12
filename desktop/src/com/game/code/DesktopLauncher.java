@@ -8,6 +8,7 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
+		config.setIdleFPS(60);
 		config.setTitle("Tanks");
         config.setWindowedMode( 842, 480);
 		new Lwjgl3Application(new Application(), config);

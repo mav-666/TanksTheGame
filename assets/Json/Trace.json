@@ -1,0 +1,22 @@
+{
+  1: {
+    name: TransformComponent
+    init: {
+      zIndex: 0.5f
+    }
+  }
+  2: {
+    name: TextureComponent
+    init: {
+      textureRegion: trace
+      width: 1f
+      height: 1f
+    }
+  }
+  3: {
+    name: LifeSpanComponent
+    init: {
+      seconds: 7.5f
+    }
+  }
+}

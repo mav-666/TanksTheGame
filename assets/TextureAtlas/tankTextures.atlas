@@ -6,119 +6,126 @@ filter: Nearest, Nearest
 repeat: none
 barrel
   rotate: false
-  xy: 728, 14
+  xy: 778, 14
   size: 12, 36
   orig: 12, 36
   offset: 0, 0
   index: -1
 box
   rotate: false
-  xy: 52, 2
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 2
-box
-  rotate: false
-  xy: 302, 2
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 1
-box
-  rotate: false
-  xy: 552, 2
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
-  index: 3
-bullet
-  rotate: false
-  xy: 702, 8
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-cab
-  rotate: false
   xy: 102, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
-  index: -1
-gasoline
-  rotate: false
-  xy: 152, 2
-  size: 48, 48
-  orig: 48, 48
-  offset: 0, 0
   index: 2
-gasoline
+box
   rotate: false
   xy: 402, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
-grass
+box
   rotate: false
   xy: 652, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 3
+bullet
+  rotate: false
+  xy: 752, 8
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+bush
+  rotate: false
+  xy: 302, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 1
+cab
+  rotate: false
+  xy: 152, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+gasoline
+  rotate: false
+  xy: 202, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: 2
+gasoline
+  rotate: false
+  xy: 502, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 head
   rotate: false
-  xy: 702, 26
+  xy: 752, 26
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
 plain
   rotate: false
-  xy: 2, 2
+  xy: 52, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 plain
   rotate: false
-  xy: 202, 2
+  xy: 252, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
 plain
   rotate: false
-  xy: 252, 2
+  xy: 352, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 plain
   rotate: false
-  xy: 352, 2
+  xy: 452, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 6
 plain
   rotate: false
-  xy: 452, 2
+  xy: 552, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 plain
   rotate: false
-  xy: 602, 2
+  xy: 702, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 5
 spawn
   rotate: false
-  xy: 502, 2
+  xy: 602, 2
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+trace
+  rotate: false
+  xy: 2, 2
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

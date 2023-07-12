@@ -1,0 +1,32 @@
+{
+  1: {
+    name: "TransformComponent"
+    init: {
+      zIndex: -5f
+    }
+  }
+  3: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "bush"
+      width: 2f
+      height: 2f
+    }
+  }
+  4: {
+    name: "BodyComponent"
+    init: {
+      body: "BushBodyDef"
+    }
+  }
+  6: {
+    name: "StartCollusionComponent"
+  }
+  7: {
+    name: SummonsAfterCollusionComponent
+    init: {
+      summonerType: Particle
+      entityName: leaves
+    }
+  }
+}

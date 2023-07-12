@@ -1,7 +1,7 @@
 {
   1: {
     name: "TransformComponent"
-    inti: {
+    init: {
       zIndex: -2f
     }
   }
@@ -10,9 +10,6 @@
     init: {
       textureRegion: "barrel"
     }
-  }
-  5: {
-    name: "PlayerComponent"
   }
   7: {
     name: "ConnectedComponent"

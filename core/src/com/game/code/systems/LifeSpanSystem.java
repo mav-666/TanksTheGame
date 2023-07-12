@@ -12,12 +12,12 @@ import com.game.code.utils.TweenUtils.TweenM;
 
 public class LifeSpanSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public LifeSpanSystem() {
         super(Family.all(LifeSpanComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

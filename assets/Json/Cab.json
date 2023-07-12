@@ -1,9 +1,6 @@
 {
   1: {
     name: "TransformComponent"
-    init: {
-      position: [1f, 0f]
-    }
   }
   3: {
     name: "TextureComponent"
@@ -25,17 +22,10 @@
   11: {
     name: "MobilityComponent"
     init: {
-      movementSpeed: 10f
-      agility: 2f
+      movementSpeed: 18f
+      agility: 4f
     }
   }
-  6: {
-    name: "PlayerComponent"
-  }
-  9: {
-    name: "CameraFollowedComponent"
-  }
-
   5: {
     name: "InvincibilityComponent"
     init: {
@@ -52,6 +42,12 @@
     name: "HealthComponent"
     init: {
       health: 100f
+    }
+  }
+  14: {
+    name: "SummonsWhileMovingComponent"
+    init: {
+      entityName: "Trace"
     }
   }
 }

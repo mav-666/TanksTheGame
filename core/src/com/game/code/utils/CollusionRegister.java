@@ -4,18 +4,16 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
-import com.game.code.components.CollidesComponent;
-import com.game.code.components.CollusionComponent;
-import com.game.code.components.EndsCollusionComponent;
+import com.game.code.components.*;
 
 public class CollusionRegister implements ContactListener {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public CollusionRegister(Engine engine) {
         this.engine = engine;
-        mappers = Mappers.getInstance();
+
     }
 
     @Override
@@ -26,19 +24,36 @@ public class CollusionRegister implements ContactListener {
     if(A.getBody().getUserData() instanceof Entity Ae
         && B.getBody().getUserData() instanceof Entity Be) {
 
+            addStartCollusion(Ae, Be);
             addCollusionComponent(Ae, Be);
         }
+    }
+
+    private void addStartCollusion(Entity A, Entity B) {
+        ComponentMapper<StartCollusionComponent> startCollusionM = mappers.get(StartCollusionComponent.class);
+
+        if(startCollusionM.has(A)) {
+            startCollusionM.get(A).involved.add(B);
+        }
+
+        if(startCollusionM.has(B)) {
+            startCollusionM.get(B).involved.add(A);
+        }
+
+        A.add(engine.createComponent(StartsCollusionComponent.class));
+        B.add(engine.createComponent(StartsCollusionComponent.class));
     }
 
     private void addCollusionComponent(Entity A, Entity B) {
         ComponentMapper<CollusionComponent> collusionM = mappers.get(CollusionComponent.class);
 
-        if(collusionM.has(A))
+        if(collusionM.has(A)) {
             collusionM.get(A).involved.add(B);
+        }
 
-
-        if(collusionM.has(B))
+        if(collusionM.has(B)) {
             collusionM.get(B).involved.add(A);
+        }
 
         A.add(engine.createComponent(CollidesComponent.class));
         B.add(engine.createComponent(CollidesComponent.class));
@@ -71,13 +86,17 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addEndsCollusionComponent(Entity A, Entity B) {
-        ComponentMapper<EndsCollusionComponent> endsCollusionM = mappers.get(EndsCollusionComponent.class);
+        ComponentMapper<EndCollusionComponent> endsCollusionM = mappers.get(EndCollusionComponent.class);
 
         if(endsCollusionM.has(A))
-            endsCollusionM.get(A).involved = B;
+            endsCollusionM.get(A).involved.add(B);
 
         if(endsCollusionM.has(B))
-            endsCollusionM.get(B).involved = A;
+            endsCollusionM.get(B).involved.add(A);
+
+        A.add(engine.createComponent(EndsCollusionComponent.class));
+        B.add(engine.createComponent(EndsCollusionComponent.class));
+
     }
 
     @Override

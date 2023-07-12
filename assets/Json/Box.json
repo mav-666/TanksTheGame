@@ -25,7 +25,17 @@
   6: {
     name: "HealthComponent"
     init: {
-      health: 100f
+      health: 50f
     }
+  }
+  7: {
+    name: "SummonsAfterDeathComponent"
+    init: {
+      summonerType: Particle
+      entityName: "boxBits"
+    }
+  }
+  8: {
+    name: RemoveAfterDeathComponent
   }
 }

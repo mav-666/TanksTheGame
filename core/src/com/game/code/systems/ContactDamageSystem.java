@@ -12,12 +12,12 @@ import com.game.code.utils.Mappers;
 
 public class ContactDamageSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public ContactDamageSystem() {
         super(Family.all(ContactDamageComponent.class, CollusionComponent.class, CollidesComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

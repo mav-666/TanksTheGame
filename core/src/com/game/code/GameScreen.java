@@ -1,10 +1,7 @@
 package com.game.code;
 
 import aurelienribon.tweenengine.Tween;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -19,124 +16,100 @@ import com.game.code.EntityBuilding.FieldInitializers.*;
 import com.game.code.EntityBuilding.FieldInitializers.BodyInitializer;
 import com.game.code.EntityBuilding.Json.BodyConfigJsonFactory;
 import com.game.code.EntityBuilding.Json.JsonEntityBuilder;
-import com.game.code.EntityBuilding.Json.JsonSupplier;
-import com.game.code.EntityBuilding.Summoners.ProjectileSummoner;
+import com.game.code.EntityBuilding.Json.JsonLoader;
 import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
 import com.game.code.EntityBuilding.battlefiled.*;
-import com.game.code.FileManagment.InternalJsonSupplier;
+import com.game.code.FileManagment.InternalJsonLoader;
+import com.game.code.Socket.*;
 import com.game.code.UI.screens.AbstractScreen;
 import com.game.code.UI.screens.Loading.LoadableScreen;
 import com.game.code.UI.screens.Loading.TaskLoader;
-import com.game.code.components.*;
 import com.game.code.systems.*;
 import com.game.code.utils.BoundedCamera;
+import com.game.code.utils.Bounds;
 import com.game.code.utils.CollusionRegister;
 import com.game.code.utils.TweenUtils.ColorAccessor;
 import com.game.code.utils.TweenUtils.TweenM;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
+import io.socket.client.Socket;
 
 import java.util.Random;
 
 public class GameScreen extends AbstractScreen implements LoadableScreen {
-    private final Engine engine;
-    private final TweenM tween;
+    private final Engine engine = new PooledEngine();
     private final Random random;
 
     private final FitViewport viewport;
-    private final BoundedCamera boundedCamera;
-    private final World world;
+    private final World world = new World(Vector2.Zero, false);
 
-    private ComponentInitializer componentInitializer;
-    private final EntitySummonerProvider entityBuilderProvider;
-    private final EntityBuilder entityBuilder;
+    private EntitySummonerProvider entityBuilderProvider;
 
-    private final JsonSupplier jsonSupplier;
+    EntityCreator entityCreator;
 
-    private final Bounds bounds = new Bounds(50, 50);
+   // private final ObjectMap<String, Entity> connectedTanks;
+
+    private final Bounds bounds = new Bounds(30, 30);
 
     public GameScreen(Application app) {
         super(app);
 
         random = new Random(1);
 
-        tween = TweenM.getInstance();
-        Tween.registerAccessor(Color.class, new ColorAccessor());
-        Tween.registerAccessor(Vector2.class, new Vector2Accessor());
+        initTween();
 
-        engine = new PooledEngine();
+        viewport = new FitViewport(9, 6, new BoundedCamera(bounds));
 
-        boundedCamera = new BoundedCamera(bounds);
-        viewport = new FitViewport(9, 6, boundedCamera);
-
-        world = new World(Vector2.Zero, false);
         world.setContactListener(new CollusionRegister(engine));
 
-        jsonSupplier = new InternalJsonSupplier();
+        JsonLoader jsonLoader = new InternalJsonLoader();
 
-        initComponentInitializer();
-
-        entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonSupplier);
-
-        entityBuilderProvider = new EntitySummonerProvider(engine, entityBuilder, componentInitializer);
+        initEntityBuilder(jsonLoader);
 
         initEngine();
     }
 
-    private void initEngine() {
-        engine.addEntityListener(Family.all(BodyComponent.class).get(), new EntityUserDataSetter());
-        engine.addEntityListener(Family.all(BodyComponent.class, HasFriendsComponent.class).get(), new HasFriendsComponentSetter());
+    private void initSocket() {
+        Socket socket = app.getClientSocket().getSocket();
 
-        engine.addSystem(new PhysicsSystem(world));
-        engine.addSystem(new ConnectionSystem());
-        engine.addSystem(new DestroyingSystem(world));
+        OtherSocketShootingSystem otherSocketShootingSystem = new OtherSocketShootingSystem(socket);
+        engine.addEntityListener(OtherSocketShootingSystem.FAMILY, otherSocketShootingSystem);
+        engine.addSystem(otherSocketShootingSystem);
+        engine.addSystem(new SocketShootingInputSystem(socket));
 
+        OtherSocketAimingSystem otherSocketAimingSystem = new OtherSocketAimingSystem(socket);
+        engine.addEntityListener(OtherSocketAimingSystem.FAMILY, otherSocketAimingSystem);
+        engine.addSystem(otherSocketAimingSystem);
+        engine.addSystem(new SocketAimingSystem(socket));
 
-        engine.addSystem(new MovementInputSystem());
-        engine.addSystem(new MovementSystem());
-        engine.addSystem(new CameraFollowingSystem(boundedCamera));
+        OtherSocketMovementSystem otherSocketMovementSystem = new OtherSocketMovementSystem(socket);
+        engine.addEntityListener(OtherSocketMovementSystem.FAMILY, otherSocketMovementSystem);
+        engine.addSystem(otherSocketMovementSystem);
+        engine.addSystem(new SocketMovementSystem(socket));
 
-        engine.addSystem(new AimingInputSystem(viewport));
-        engine.addSystem(new AimingSystem());
+        engine.addSystem(new SocketPlayerCreationSystem(socket, this::createTank));
 
-        engine.addSystem(new InheritAngleSystem());
-        engine.addSystem(new InheritColorSystem());
-        engine.addSystem(new InheritDeathSystem());
-
-        engine.addSystem(new ShootingInputSystem());
-        engine.addSystem(new ShootingSystem(new ProjectileSummoner(entityBuilder, engine)));
-
-
-        engine.addSystem(new ContactDamageSystem());
-        engine.addSystem(new ContactBreakSystem());
-        engine.addSystem(new LifeSpanSystem());
-
-        //   engine.addSystem(new HealthColoredSystem());
-        engine.addSystem(new LowHealthDeathSystem());
-
-        engine.addSystem(new DamagingSystem());
-        engine.addSystem(new FadeAfterDeathSystem());
-        engine.addSystem(new EndCollusionSystem());
-
-        engine.addSystem(new SummoningAfterDeathSystem());
-        engine.addSystem(new SummonsAfterRemoveSystem());
-
-        engine.addSystem(new SummoningSystem(entityBuilderProvider));
-        engine.addSystem(new InvisibleSystem(boundedCamera));
-        engine.addSystem(new RenderingSystem(viewport.getCamera(), app.batch));
-
-        EntitySystem debug = new Box2dDebugSystem(world, viewport);
-        engine.addSystem(new GLProfileSystem());
-        debug.setProcessing(false);
-        engine.addSystem(debug);
-
-
-
+        socket.connect();
     }
 
-    private void initComponentInitializer() {
-        componentInitializer = new ComponentInitializer();
+    private void initTween() {
+        Tween.registerAccessor(Color.class, new ColorAccessor());
+        Tween.registerAccessor(Vector2.class, new Vector2Accessor());
+    }
 
-        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(jsonSupplier));
+    private void initEntityBuilder(JsonLoader jsonLoader) {
+        ComponentInitializer componentInitializer = initComponentInitializer(jsonLoader);
+
+        EntityBuilder entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonLoader);
+
+        entityBuilderProvider = new EntitySummonerProvider(engine, entityBuilder, componentInitializer);
+
+        entityCreator = new EntityCreatorImpl(entityBuilderProvider);
+    }
+
+    private ComponentInitializer initComponentInitializer(JsonLoader jsonLoader) {
+        ComponentInitializer componentInitializer = new ComponentInitializer();
+
+        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(jsonLoader));
 
         componentInitializer.addInitializer(new FloatInitializer());
         componentInitializer.addInitializer(new StringInitializer());
@@ -146,30 +119,92 @@ public class GameScreen extends AbstractScreen implements LoadableScreen {
         componentInitializer.addInitializer(new AssetTextureInitializer(app.assets));
         componentInitializer.addInitializer(new AssetParticleInitializer(app.assets));
         componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
+
+        return componentInitializer;
     }
 
+    private void initEngine() {
+        engine.addEntityListener(EntityUserDataSetter.FAMILY, new EntityUserDataSetter());
+        engine.addEntityListener(HasFriendsComponentSetter.FAMILY, new HasFriendsComponentSetter());
+
+        engine.addSystem(new PhysicsSystem(world));
+        engine.addSystem(new RemoveAfterDeathSystem());
+        engine.addSystem(new DestroyingSystem(world));
+
+        engine.addSystem(new MovementInputSystem());
+        engine.addSystem(new MovementSystem());
+        engine.addSystem(new CameraFollowingSystem(viewport.getCamera()));
+
+        engine.addSystem(new AimingInputSystem(viewport));
+        engine.addSystem(new AimingSystem());
+
+        engine.addSystem(new ConnectionSystem());
+        engine.addSystem(new InheritAngleSystem());
+        engine.addSystem(new InheritColorSystem());
+        engine.addSystem(new InheritDeathSystem());
+
+        engine.addSystem(new ShootingSystem(entityBuilderProvider.provide(SummonerType.Projectile)));
+
+        // engine.addSystem(new ContactMaskSystem());
+        engine.addSystem(new ContactDamageSystem());
+        engine.addSystem(new ContactBreakSystem());
+        engine.addSystem(new LifeSpanSystem());
+
+        //   engine.addSystem(new HealthColoredSystem());
+        engine.addSystem(new LowHealthDeathSystem());
+
+        engine.addSystem(new DamagingSystem());
+        engine.addSystem(new FadeAfterDeathSystem());
+        engine.addSystem(new CollusionSystem());
+
+        engine.addSystem(new SummoningAfterDeathSystem());
+        engine.addSystem(new SummonsAfterRemoveSystem());
+        engine.addSystem(new SummonsWhileMovingSystem());
+        engine.addSystem(new SummonsAfterCollusionSystem());
+
+        engine.addSystem(new SummoningSystem(entityBuilderProvider));
+        engine.addSystem(new InvisibleSystem(viewport.getCamera()));
+
+        engine.addSystem(new RenderingSystem(viewport.getCamera(), app.batch));
+        engine.addSystem(new DistinctZIndexSystem());
+
+        EntitySystem profile = new GLProfileSystem();
+        profile.setProcessing(false);
+        engine.addSystem(profile);
+
+        engine.addSystem(new DebugSummonSystem(entityBuilderProvider.getEntityBuilder(), viewport));
+
+        EntitySystem debug = new Box2dDebugSystem(world, viewport);
+        debug.setProcessing(false);
+        engine.addSystem(debug);
+
+    }
 
     private void createGrid() {
-        BattleFieldTemplate battleFieldTemplate = new GridTemplate();
+        Bounds innerBounds = new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width()-1, bounds.height()-1);
+        LimitedPlacer randomPlacer = new UniqueRandomPlacer(innerBounds, random);
 
-        AbstractFiller filler = new SingleFiller();
-        Placer randomPlacer = new RandomPlacer(new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width()-1, bounds.height()-1), random);
+        new BorderPlacer(bounds).iterate(spot -> entityCreator.createEntityOn(spot, "Border"));
 
-        filler.addFilter(battleFieldTemplate::isOccupied);
+        entityCreator.setSummonerType(SummonerType.Sprite);
+        new SquarePlacer(bounds).iterate(spot -> entityCreator.createEntityOn( spot, 2, "plain"));
+        entityCreator.setSummonerType(SummonerType.Default);
+        randomPlacer.setMaxPlaced(20);
+        randomPlacer.iterate( spot -> entityCreator.createEntityOn(spot, "Box"));
+        randomPlacer.iterate( spot -> entityCreator.createEntityOn(spot, "Gasoline"));
+        randomPlacer.setMaxPlaced(20);
+        randomPlacer.iterate( spot -> entityCreator.createEntityOn(spot, "Bush"));
+    }
 
-        filler.start(battleFieldTemplate);
-        filler.fillBy(new BorderPlacer(bounds), -1, new EntityTemplate(SummonerType.Default, "Border"));
-        filler.fillBy(new SquarePlacer(bounds),1, new EntityTemplate(SummonerType.Sprite, "plain"));
-        filler.setMaxPlaced(1000);
-        filler.fillBy(randomPlacer, -1, new EntityTemplate(SummonerType.Default, "Box"));
-        filler.fillBy(randomPlacer, -1, new EntityTemplate(SummonerType.Default, "Gasoline"));
-        filler.setMaxPlaced(1);
-        filler.fillBy(randomPlacer, 0, new EntityTemplate(SummonerType.Tank, ""));
+    private void createTank(String id) {
+        Bounds innerBounds = new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width()-1, bounds.height()-1);
+        LimitedPlacer repeatRandomPlacer = new RepeatRandomPlacer(innerBounds, random);
 
-
-       BattlefieldFactory battlefieldFactory = new BattlefieldFactoryImpl(entityBuilderProvider);
-
-       battlefieldFactory.create(battleFieldTemplate);
+        repeatRandomPlacer.setMaxPlaced(1);
+        entityCreator.setSummonerType(SummonerType.Tank);
+        repeatRandomPlacer.iterate(spot -> entityCreator.createEntityOn(spot, id));
+        entityCreator.setSummonerType(SummonerType.Sprite);
+        repeatRandomPlacer.iterate(spot -> entityCreator.createEntityOn(spot, 1, "spawn"));
     }
 
     @Override
@@ -195,15 +230,14 @@ public class GameScreen extends AbstractScreen implements LoadableScreen {
             RenderingSystem render = engine.getSystem(RenderingSystem.class);
             render.setProcessing(!render.checkProcessing());
         }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            entityBuilder.build("Explosion");
-            engine.addEntity(entityBuilder.getEntity());
+        if(Gdx.input.isKeyJustPressed(Input.Keys.H)) {
+            GLProfileSystem render = engine.getSystem(GLProfileSystem.class);
+            render.setProcessing(!render.checkProcessing());
         }
 
         Gdx.app.log("FPS", String.valueOf(Gdx.graphics.getFramesPerSecond()));
 
-        tween.getManager().update(delta);
+        TweenM.getInstance().getManager().update(delta);
         engine.update(delta);
     }
 
@@ -223,6 +257,7 @@ public class GameScreen extends AbstractScreen implements LoadableScreen {
                 .add(app.assets::loadParticles, "Particles")
                 .add(app.assets::loadTextures, "Textures")
                 .loadAssets(app.assets.getAssetManager())
+                .add(this::initSocket, "Socket")
                 .add(this::createGrid, "Battlefield")
                 .get();
     }

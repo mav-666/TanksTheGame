@@ -12,12 +12,12 @@ import com.game.code.utils.Mappers;
 
 public class InheritDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public InheritDeathSystem() {
-        super(Family.all(InheritDeathComponent.class).get());
+        super(Family.all(InheritDeathComponent.class).get(), 13);
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

@@ -6,6 +6,9 @@ import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
 
 public class TankSummoner extends EntitySummoner {
+    private boolean isPlayer;
+    private String id;
+
     private float tankWidth;
     private float tankHeight;
 
@@ -21,13 +24,16 @@ public class TankSummoner extends EntitySummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
+        id = mappers.get(SummonsNowComponent.class).get(summoner).entityName;
+        isPlayer = id.equals("player");
+
         Entity cab = createCab();
 
         initTransformBy(summoner);
 
         tankWidth = entityBuilder.getComponent(TextureComponent.class).width;
         tankHeight = entityBuilder.getComponent(TextureComponent.class).height;
-        
+
         Entity head = createHead();
 
         ConnectedComponent HeadConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
@@ -55,6 +61,13 @@ public class TankSummoner extends EntitySummoner {
         entityBuilder.build(TankParts.Cab.name());
         entityBuilder.getEntity().flags = 2;
 
+        if(isPlayer) {
+            entityBuilder.getComponent(PlayerComponent.class);
+            entityBuilder.getComponent(CameraFollowedComponent.class);
+        } else {
+            entityBuilder.getComponent(IdComponent.class).id = id;
+        }
+
         engine.addEntity(entityBuilder.getEntity());
 
         return entityBuilder.getEntity();
@@ -62,6 +75,12 @@ public class TankSummoner extends EntitySummoner {
 
     private Entity createHead() {
         entityBuilder.build(TankParts.Head.name());
+
+        if(isPlayer) {
+            entityBuilder.getComponent(PlayerComponent.class);
+        } else {
+            entityBuilder.getComponent(IdComponent.class).id = id;
+        }
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 
@@ -77,6 +96,12 @@ public class TankSummoner extends EntitySummoner {
 
     private void createBarrel() {
         entityBuilder.build(TankParts.Barrel.name());
+
+        if(isPlayer) {
+            entityBuilder.getComponent(PlayerComponent.class);
+        } else {
+            entityBuilder.getComponent(IdComponent.class).id = id;
+        }
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
         textureC.height = tankHeight / 1.3f;

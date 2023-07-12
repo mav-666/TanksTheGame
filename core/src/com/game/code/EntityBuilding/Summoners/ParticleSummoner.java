@@ -8,7 +8,7 @@ import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.SummonerType;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.ParticleComponent;
-import com.game.code.components.SummonsComponent;
+import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TransformComponent;
 
 import java.util.Optional;
@@ -59,7 +59,7 @@ public class ParticleSummoner extends EntitySummoner {
     }
 
     private Optional<String> getParticleName() {
-        ComponentMapper<SummonsComponent> summonM = mappers.get(SummonsComponent.class);
+        ComponentMapper<SummonsNowComponent> summonM = mappers.get(SummonsNowComponent.class);
         if(summonM.has(summoner))
             return Optional.of(summonM.get(summoner).entityName);
         return Optional.empty();

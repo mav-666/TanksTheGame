@@ -6,30 +6,30 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.game.code.EntityBuilding.SummonerType;
 import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
 import com.game.code.EntityBuilding.SummoningDirector;
-import com.game.code.components.SummonsComponent;
+import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TransformComponent;
 import com.game.code.utils.Mappers;
 
 public class SummoningSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     private final EntitySummonerProvider summonerProvider;
 
     public SummoningSystem(EntitySummonerProvider summonerProvider) {
-        super(Family.all(SummonsComponent.class, TransformComponent.class).get());
+        super(Family.all(SummonsNowComponent.class, TransformComponent.class).get());
 
         this.summonerProvider = summonerProvider;
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SummonerType summonerType = SummonerType.valueOf(mappers.get(SummonsComponent.class).get(entity).summonerType);
+        SummonerType summonerType = SummonerType.valueOf(mappers.get(SummonsNowComponent.class).get(entity).summonerType);
         SummoningDirector summoningDirector = summonerProvider.provide(summonerType);
 
         summoningDirector.summonBy(entity);
-        entity.remove(SummonsComponent.class);
+        entity.remove(SummonsNowComponent.class);
     }
 }

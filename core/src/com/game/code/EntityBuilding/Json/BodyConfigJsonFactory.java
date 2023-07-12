@@ -15,8 +15,8 @@ public class BodyConfigJsonFactory extends JsonConfigFactory<BodyConfig> {
 
     private final ShapeFactoryProvider shapeFactoryProvider;
 
-    public BodyConfigJsonFactory(JsonSupplier jsonSupplier) {
-        super(jsonSupplier);
+    public BodyConfigJsonFactory(JsonLoader jsonLoader) {
+        super(jsonLoader);
 
         shapeFactoryProvider = new ShapeFactoryProvider();
     }

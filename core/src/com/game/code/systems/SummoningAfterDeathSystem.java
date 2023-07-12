@@ -5,24 +5,27 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.game.code.components.DeadComponent;
 import com.game.code.components.SummonsAfterDeathComponent;
-import com.game.code.components.SummonsComponent;
+import com.game.code.components.SummonsNowComponent;
 import com.game.code.utils.Mappers;
 
 public class SummoningAfterDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public SummoningAfterDeathSystem() {
         super(Family.all(DeadComponent.class, SummonsAfterDeathComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SummonsComponent summons = getEngine().createComponent(SummonsComponent.class);
+        SummonsAfterDeathComponent afterDeath = mappers.get(SummonsAfterDeathComponent.class).get(entity);
+        SummonsNowComponent summons = getEngine().createComponent(SummonsNowComponent.class);
 
-        summons.entityName = mappers.get(SummonsAfterDeathComponent.class).get(entity).entityName;
+        summons.summonerType = afterDeath.summonerType;
+        summons.entityName = afterDeath.entityName;
+        summons.offset.set(afterDeath.offset);
 
         entity.add(summons);
         entity.remove(SummonsAfterDeathComponent.class);

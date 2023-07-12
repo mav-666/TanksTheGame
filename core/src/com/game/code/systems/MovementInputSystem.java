@@ -14,7 +14,7 @@ public class MovementInputSystem extends IteratingSystem {
     private int movementDirection = 0;
 
     public MovementInputSystem() {
-        super(Family.all(PlayerComponent.class, MobilityComponent.class).exclude(DeadComponent.class).get());
+        super(Family.all(PlayerComponent.class, MobilityComponent.class).exclude(DeadComponent.class).get(), 10);
     }
 
     @Override

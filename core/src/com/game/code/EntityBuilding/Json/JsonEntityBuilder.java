@@ -15,15 +15,15 @@ import java.lang.reflect.Field;
 
 public class JsonEntityBuilder extends EntityBuilder {
     private final Json json;
-    private final JsonSupplier jsonSupplier;
+    private final JsonLoader jsonLoader;
 
     private final ComponentInitializer componentInitializer;
 
-    public JsonEntityBuilder(Engine engine, ComponentInitializer componentInitializer, JsonSupplier jsonSupplier) {
+    public JsonEntityBuilder(Engine engine, ComponentInitializer componentInitializer, JsonLoader jsonLoader) {
         super(engine);
         this.json = new Json();
 
-        this.jsonSupplier = jsonSupplier;
+        this.jsonLoader = jsonLoader;
         this.componentInitializer = componentInitializer;
     }
 
@@ -31,7 +31,7 @@ public class JsonEntityBuilder extends EntityBuilder {
     public void build(String entityName) {
         super.build(entityName);
 
-        var json = jsonSupplier.findJson(entityName);
+        var json = jsonLoader.findJson(entityName);
 
         json.ifPresent(this::createByJson);
     }

@@ -9,11 +9,11 @@ import java.util.Optional;
 
 public class FriendsMaker {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
     private final BodySearcher bodySearcher;
 
     public FriendsMaker() {
-        mappers = Mappers.getInstance();
+
         bodySearcher = new BodySearcher();
     }
 

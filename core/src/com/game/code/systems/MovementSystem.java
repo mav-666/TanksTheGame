@@ -13,14 +13,13 @@ import com.game.code.utils.Mappers;
 
 public class MovementSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
+
+    private final Vector2 linearVelocity = new Vector2();
 
     public MovementSystem() {
-        super(Family.all(MovesComponent.class, MobilityComponent.class, BodyComponent.class).get(), 10);
-
-        mappers = Mappers.getInstance();
+        super(Family.all(MovesComponent.class, MobilityComponent.class, BodyComponent.class).get(), 12);
     }
-
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
@@ -28,13 +27,25 @@ public class MovementSystem extends IteratingSystem {
         MobilityComponent mobility = mappers.get(MobilityComponent.class).get(entity);
         Body body  = mappers.get(BodyComponent.class).get(entity).body;
 
-        float movementSpeed = moves.movementDirection == -1 ? mobility.movementSpeed * 0.75f : mobility.movementSpeed;
+        if(moves.movementDirection != 0)
+            setLinearVelocityFor(body, mobility.movementSpeed, moves.movementDirection, deltaTime);
 
-        body.setLinearVelocity(body.getLinearVelocity().add(
-                new Vector2(0, movementSpeed * deltaTime * moves.movementDirection).rotateRad(body.getAngle())));
-
-        body.setAngularVelocity(body.getAngularVelocity() + mobility.agility * deltaTime * moves.turingDirection);
+        if(moves.turingDirection != 0)
+            setAngilarVelocityFor(body, mobility.agility, moves.turingDirection, deltaTime);
 
         entity.remove(MovesComponent.class);
     }
+
+    private void setLinearVelocityFor(Body body, float speed, float direction, float deltaTime) {
+        float movementSpeed = direction == -1 ? speed * 0.75f : speed;
+
+        linearVelocity.set(0, movementSpeed * direction * deltaTime).rotateRad(body.getAngle());
+
+        body.setLinearVelocity(body.getLinearVelocity().add(linearVelocity));
+    }
+
+    private void setAngilarVelocityFor(Body body, float agility, float direction, float deltaTime) {
+        body.setAngularVelocity(body.getAngularVelocity() + agility * direction * deltaTime);
+    }
+
 }

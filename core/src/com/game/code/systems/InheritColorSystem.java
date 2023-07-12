@@ -10,12 +10,12 @@ import com.game.code.utils.Mappers;
 
 public class InheritColorSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public InheritColorSystem() {
-        super(Family.all(TextureComponent.class, InheritColorComponent.class).get());
+        super(Family.all(TextureComponent.class, InheritColorComponent.class).get(), 13);
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

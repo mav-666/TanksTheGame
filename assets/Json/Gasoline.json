@@ -22,6 +22,9 @@
       seconds: 0.5f
     }
   }
+  8: {
+    name: RemoveAfterDeathComponent
+  }
   7: {
     name: "SummonsAfterDeathComponent"
     init: {
@@ -31,7 +34,7 @@
   6: {
     name: "HealthComponent"
     init: {
-      health: 100f
+      health: 50f
     }
   }
 }

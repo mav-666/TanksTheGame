@@ -1,104 +1,146 @@
 
 Particles.png
-size: 30, 30
+size: 62, 46
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+boxBit1
+  rotate: false
+  xy: 0, 30
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+boxBit2
+  rotate: false
+  xy: 32, 30
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+boxBit3
+  rotate: false
+  xy: 16, 30
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+boxBit4
+  rotate: false
+  xy: 32, 14
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+boxBit5
+  rotate: false
+  xy: 16, 14
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+boxBit6
+  rotate: false
+  xy: 0, 14
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+bushBit1
+  rotate: false
+  xy: 12, 0
+  size: 10, 6
+  orig: 10, 6
+  offset: 0, 0
+  index: -1
+bushBit2
+  rotate: false
+  xy: 48, 18
+  size: 11, 9
+  orig: 11, 9
+  offset: 0, 0
+  index: -1
+bushBit3
+  rotate: false
+  xy: 48, 27
+  size: 12, 9
+  orig: 12, 9
+  offset: 0, 0
+  index: -1
+bushBit4
+  rotate: false
+  xy: 48, 36
+  size: 14, 10
+  orig: 14, 10
+  offset: 0, 0
+  index: -1
+bushBit5
+  rotate: false
+  xy: 12, 6
+  size: 13, 8
+  orig: 13, 8
+  offset: 0, 0
+  index: -1
+bushBit6
+  rotate: false
+  xy: 0, 5
+  size: 12, 9
+  orig: 12, 9
+  offset: 0, 0
+  index: -1
 explosion1
   rotate: false
-  xy: 0, 6
+  xy: 42, 10
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
   index: -1
 shard1
   rotate: false
-  xy: 0, 22
+  xy: 0, 1
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shard2
   rotate: false
-  xy: 0, 10
+  xy: 37, 10
   size: 5, 4
   orig: 5, 4
   offset: 0, 0
   index: -1
 shard3
   rotate: false
-  xy: 0, 18
+  xy: 6, 1
   size: 6, 4
   orig: 6, 4
   offset: 0, 0
   index: -1
 shard4
   rotate: false
-  xy: 0, 26
+  xy: 25, 10
   size: 7, 4
   orig: 7, 4
   offset: 0, 0
   index: -1
 shard5
   rotate: false
-  xy: 0, 14
+  xy: 32, 10
   size: 5, 4
   orig: 5, 4
   offset: 0, 0
   index: -1
 shard6
   rotate: false
-  xy: 7, 27
+  xy: 48, 15
   size: 7, 3
   orig: 7, 3
   offset: 0, 0
   index: -1
 shard7
   rotate: false
-  xy: 14, 27
+  xy: 25, 7
   size: 7, 3
   orig: 7, 3
-  offset: 0, 0
-  index: -1
-trace1
-  rotate: false
-  xy: 0, 3
-  size: 3, 3
-  orig: 3, 3
-  offset: 0, 0
-  index: -1
-trace2
-  rotate: false
-  xy: 6, 23
-  size: 3, 3
-  orig: 3, 3
-  offset: 0, 0
-  index: -1
-trace3
-  rotate: false
-  xy: 24, 27
-  size: 3, 3
-  orig: 3, 3
-  offset: 0, 0
-  index: -1
-trace4
-  rotate: false
-  xy: 21, 27
-  size: 3, 3
-  orig: 3, 3
-  offset: 0, 0
-  index: -1
-trace5
-  rotate: false
-  xy: 27, 27
-  size: 3, 3
-  orig: 3, 3
-  offset: 0, 0
-  index: -1
-trace6
-  rotate: false
-  xy: 0, 0
-  size: 3, 3
-  orig: 3, 3
   offset: 0, 0
   index: -1

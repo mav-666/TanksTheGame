@@ -5,8 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.SummonerType;
-import com.game.code.components.SummonsComponent;
+import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TextureComponent;
+import com.game.code.components.TransformComponent;
 
 public class SpriteSummoner extends EntitySummoner {
 
@@ -35,12 +36,18 @@ public class SpriteSummoner extends EntitySummoner {
     }
 
     private void initTexture() {
-        String entityName = mappers.get(SummonsComponent.class).get(summoner).entityName;
+        String entityName = mappers.get(SummonsNowComponent.class).get(summoner).entityName;
 
         try {
             componentInitializer.initField(entityBuilder.getComponent(TextureComponent.class), "textureRegion", entityName);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void initTransformBy(Entity summoner) {
+        super.initTransformBy(summoner);
+
+        entityBuilder.getComponent(TransformComponent.class).zIndex++;
     }
 }

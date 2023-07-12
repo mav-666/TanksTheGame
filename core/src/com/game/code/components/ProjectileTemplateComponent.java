@@ -13,7 +13,7 @@ public class ProjectileTemplateComponent implements Component, Pool.Poolable {
     public float contactDamage = 0;
     public float radius = 0;
 
-    public Vector2 shootingPoint = new Vector2(0,0);
+    public Vector2 shootingPoint = new Vector2();
 
     @Override
     public void reset() {

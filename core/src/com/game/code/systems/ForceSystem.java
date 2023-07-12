@@ -11,12 +11,12 @@ import com.game.code.utils.Mappers;
 
 public class ForceSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public ForceSystem() {
         super(Family.all(BodyComponent.class, ForcedComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

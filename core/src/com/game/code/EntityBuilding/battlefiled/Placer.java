@@ -1,14 +1,36 @@
 package com.game.code.EntityBuilding.battlefiled;
 
 import com.badlogic.gdx.math.Vector2;
+import com.game.code.utils.Bounds;
 
-public interface Placer {
+public abstract class Placer {
 
-    void reset(Bounds bounds);
+    protected Bounds bounds;
 
-    Vector2 nextSpot();
+    public Placer(Bounds bounds) {
+        this.bounds = bounds;
+    }
 
-    boolean hasNext();
+    public void iterate(Place place) {
+        reset();
+        do {
+            place.on(nextSpot());
+        } while (hasNext());
+    }
 
-    Bounds getBounds();
+    public abstract Vector2 nextSpot();
+
+    public abstract boolean hasNext();
+
+    public void reset(Bounds bounds) {
+        this.bounds = bounds;
+    }
+
+    public void reset() {
+        reset(this.bounds);
+    }
+
+    public Bounds getBounds() {
+        return bounds;
+    }
 }

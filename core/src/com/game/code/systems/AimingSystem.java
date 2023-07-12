@@ -10,20 +10,14 @@ import com.game.code.utils.Mappers;
 
 public class AimingSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public AimingSystem() {
-        super(Family.all(TransformComponent.class, AimsComponent.class).one(CanonComponent.class).get());
-
-        mappers = Mappers.getInstance();
+        super(Family.all(TransformComponent.class, AimsComponent.class, CanonComponent.class).get(), 11);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if(mappers.get(CanonComponent.class).has(entity)) processCanon(entity, deltaTime);
-    }
-
-    private void processCanon(Entity entity, float deltaTime) {
         Vector2 aimPoint = mappers.get(AimsComponent.class).get(entity).target;
 
         TransformComponent transform = mappers.get(TransformComponent.class).get(entity);

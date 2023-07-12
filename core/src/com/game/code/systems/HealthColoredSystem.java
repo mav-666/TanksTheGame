@@ -9,12 +9,12 @@ import com.game.code.utils.Mappers;
 
 public class HealthColoredSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public HealthColoredSystem() {
         super(Family.all(HealthComponent.class, TextureComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

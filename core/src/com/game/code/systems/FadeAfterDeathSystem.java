@@ -12,20 +12,20 @@ import com.game.code.utils.Mappers;
 
 public class FadeAfterDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     private final Color fadeColor;
 
     public FadeAfterDeathSystem() {
         super(Family.all(DeadComponent.class, TextureComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
 
         fadeColor = Color.valueOf("646464");
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mappers.get(TextureComponent.class).get(entity).color = fadeColor;
+        mappers.get(TextureComponent.class).get(entity).color.set(fadeColor);
     }
 }

@@ -1,8 +1,9 @@
 package com.game.code.EntityBuilding.battlefiled;
 
 import com.badlogic.gdx.math.Vector2;
+import com.game.code.utils.Bounds;
 
-public class TestPlacer extends AbstractPlacer {
+public class TestPlacer extends Placer {
 
     private boolean tested = false;
 

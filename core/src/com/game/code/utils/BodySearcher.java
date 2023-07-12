@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public class BodySearcher {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public BodySearcher() {
-        mappers = Mappers.getInstance();
+
     }
 
     public Optional<Body> searchForBodyIn(Entity entity) {

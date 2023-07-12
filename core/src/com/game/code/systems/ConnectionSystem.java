@@ -9,12 +9,12 @@ import com.game.code.utils.Mappers;
 
 public class ConnectionSystem extends IteratingSystem {
 
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public ConnectionSystem() {
         super(Family.all(TransformComponent.class, ConnectedComponent.class).get());
 
-        mappers = Mappers.getInstance();
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.game.code.EntityBuilding;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
+import com.badlogic.ashley.core.Family;
 import com.game.code.components.BodyComponent;
 import com.game.code.components.HasFriendsComponent;
 import com.game.code.utils.Mappers;
@@ -11,13 +12,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class HasFriendsComponentSetter implements EntityListener {
+    public final static Family FAMILY = Family.all(BodyComponent.class, HasFriendsComponent.class).get();
 
     private final Set<Short> usedIndexes;
-    private final Mappers mappers;
+    private final Mappers mappers = Mappers.getInstance();
 
     public HasFriendsComponentSetter() {
         usedIndexes = new HashSet<>();
-        mappers = Mappers.getInstance();
+
     }
 
     private short nextIndex() {
