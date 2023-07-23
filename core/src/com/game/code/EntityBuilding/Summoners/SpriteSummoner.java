@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.EntityBuilder;
-import com.game.code.EntityBuilding.SummonerType;
 import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TextureComponent;
 import com.game.code.components.TransformComponent;
@@ -13,8 +12,6 @@ public class SpriteSummoner extends EntitySummoner {
 
     protected final ComponentInitializer componentInitializer;
 
-    private Entity summoner;
-
     SpriteSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
         super(entityBuilder, engine);
 
@@ -22,24 +19,21 @@ public class SpriteSummoner extends EntitySummoner {
     }
 
     @Override
-    public Entity summonBy(Entity summoner) {
-        this.summoner = summoner;
-
+    protected void build() {
         entityBuilder.build(SummonerType.Sprite.name());
-
-        initTexture();
-        initTransformBy(summoner);
-
-        engine.addEntity(entityBuilder.getEntity());
-
-        return entityBuilder.getEntity();
     }
 
-    private void initTexture() {
-        String entityName = mappers.get(SummonsNowComponent.class).get(summoner).entityName;
+    @Override
+    protected void init(Entity summoner) {
+        initTexture(mappers.get(SummonsNowComponent.class, summoner).entityName);
+        super.init(summoner);
+    }
+
+    protected void initTexture(String entityName) {
+        TextureComponent textureC = mappers.get(TextureComponent.class, entityBuilder.getEntity());
 
         try {
-            componentInitializer.initField(entityBuilder.getComponent(TextureComponent.class), "textureRegion", entityName);
+            componentInitializer.initField(textureC, "textureRegion", entityName);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }

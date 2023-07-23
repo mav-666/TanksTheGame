@@ -18,11 +18,11 @@ public class AimingSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Vector2 aimPoint = mappers.get(AimsComponent.class).get(entity).target;
+        Vector2 aimPoint = mappers.get(AimsComponent.class, entity).target;
 
-        TransformComponent transform = mappers.get(TransformComponent.class).get(entity);
+        TransformComponent transform = mappers.get(TransformComponent.class, entity);
 
-        CanonComponent canon = mappers.get(CanonComponent.class).get(entity);
+        CanonComponent canon = mappers.get(CanonComponent.class, entity);
 
         Vector2 originToAim = aimPoint.cpy()
                 .sub(transform.position.x, transform.position.y).nor();

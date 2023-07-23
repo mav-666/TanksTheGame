@@ -18,7 +18,7 @@ public class FriendsMaker {
     }
 
     public void makeFriendsTo(Entity friend, Entity newFriend) {
-        ComponentMapper<HasFriendsComponent> friendlyM = mappers.get(HasFriendsComponent.class);
+        ComponentMapper<HasFriendsComponent> friendlyM = mappers.getMapper(HasFriendsComponent.class);
 
         Optional<Body> friendBody = bodySearcher.searchForBodyIn(friend);
         Optional<Body> newFriendBody = bodySearcher.searchForBodyIn(newFriend);

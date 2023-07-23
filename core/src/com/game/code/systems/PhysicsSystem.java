@@ -25,14 +25,14 @@ public class PhysicsSystem extends IntervalIteratingSystem {
 
     @Override
     public void updateInterval() {
-            world.step(TIME_STEP, 6, 2);
-            super.updateInterval();
+        super.updateInterval();
+        world.step(TIME_STEP, 6, 2);
     }
 
     @Override
     protected void processEntity(Entity entity) {
-        TransformComponent transform = mappers.get(TransformComponent.class).get(entity);
-        Body body  = mappers.get(BodyComponent.class).get(entity).body;
+        TransformComponent transform = mappers.get(TransformComponent.class, entity);
+        Body body  = mappers.get(BodyComponent.class, entity).body;
 
         transform.position.set(body.getPosition());
         transform.degAngle = (float) Math.toDegrees(body.getAngle());

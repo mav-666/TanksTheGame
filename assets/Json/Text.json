@@ -1,0 +1,14 @@
+{
+  1: {
+    name: TransformComponent
+    init: {
+      zIndex: 1
+    }
+  }
+  2: {
+    name: TextComponent
+    init: {
+      label: [Pixel, 6]
+    }
+  }
+}

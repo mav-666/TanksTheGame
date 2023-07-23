@@ -23,9 +23,10 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        MovesComponent moves = mappers.get(MovesComponent.class).get(entity);
-        MobilityComponent mobility = mappers.get(MobilityComponent.class).get(entity);
-        Body body  = mappers.get(BodyComponent.class).get(entity).body;
+        MovesComponent moves = mappers.get(MovesComponent.class, entity);
+        MobilityComponent mobility = mappers.get(MobilityComponent.class, entity);
+        Body body  = mappers.get(BodyComponent.class, entity).body;
+        body.setAwake(true);
 
         if(moves.movementDirection != 0)
             setLinearVelocityFor(body, mobility.movementSpeed, moves.movementDirection, deltaTime);

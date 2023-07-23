@@ -10,6 +10,6 @@ public class EndCollusionComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
-        involved = new Array<>();
+        involved.clear();
     }
 }

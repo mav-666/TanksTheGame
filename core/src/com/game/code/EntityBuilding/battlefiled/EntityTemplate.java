@@ -1,6 +1,6 @@
 package com.game.code.EntityBuilding.battlefiled;
 
-import com.game.code.EntityBuilding.SummonerType;
+import com.game.code.EntityBuilding.Summoners.SummonerType;
 
 public class EntityTemplate {
 

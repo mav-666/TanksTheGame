@@ -39,14 +39,14 @@ public class OtherSocketAimingSystem extends EntitySystem implements EntityListe
     }
 
     private void setAngleFor(Entity entity, float degAngle) {
-        TransformComponent transformC = mappers.get(TransformComponent.class).get(entity);
+        TransformComponent transformC = mappers.get(TransformComponent.class, entity);
 
         transformC.degAngle = degAngle;
     }
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class).get(entity).id;
+        String id = mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 

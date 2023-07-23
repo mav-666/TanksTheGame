@@ -6,6 +6,7 @@
   mass: 1
   fixtureDefs: {
     1: {
+      categoryBits: 2
       density: 0.1f
       shape: {
         type: "Circle"

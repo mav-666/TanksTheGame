@@ -2,8 +2,7 @@ package com.game.code.EntityBuilding.FieldInitializers;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.BodyConfig;
-import com.game.code.EntityBuilding.ConfigFactory;
-import com.game.code.EntityBuilding.FieldInitializers.FieldInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.Config.ConfigFactory;
 
 public class BodyInitializer extends FieldInitializer<Body, String> {
 

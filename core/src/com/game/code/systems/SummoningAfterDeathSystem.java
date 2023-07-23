@@ -20,7 +20,7 @@ public class SummoningAfterDeathSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SummonsAfterDeathComponent afterDeath = mappers.get(SummonsAfterDeathComponent.class).get(entity);
+        SummonsAfterDeathComponent afterDeath = mappers.get(SummonsAfterDeathComponent.class, entity);
         SummonsNowComponent summons = getEngine().createComponent(SummonsNowComponent.class);
 
         summons.summonerType = afterDeath.summonerType;

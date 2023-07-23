@@ -30,7 +30,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addStartCollusion(Entity A, Entity B) {
-        ComponentMapper<StartCollusionComponent> startCollusionM = mappers.get(StartCollusionComponent.class);
+        ComponentMapper<StartCollusionComponent> startCollusionM = mappers.getMapper(StartCollusionComponent.class);
 
         if(startCollusionM.has(A)) {
             startCollusionM.get(A).involved.add(B);
@@ -45,7 +45,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addCollusionComponent(Entity A, Entity B) {
-        ComponentMapper<CollusionComponent> collusionM = mappers.get(CollusionComponent.class);
+        ComponentMapper<CollusionComponent> collusionM = mappers.getMapper(CollusionComponent.class);
 
         if(collusionM.has(A)) {
             collusionM.get(A).involved.add(B);
@@ -73,7 +73,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void endCollusion(Entity A, Entity B) {
-        ComponentMapper<CollusionComponent> collusionM = mappers.get(CollusionComponent.class);
+        ComponentMapper<CollusionComponent> collusionM = mappers.getMapper(CollusionComponent.class);
 
         if(collusionM.has(A))
             collusionM.get(A).involved.removeValue(B, true);
@@ -86,13 +86,13 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addEndsCollusionComponent(Entity A, Entity B) {
-        ComponentMapper<EndCollusionComponent> endsCollusionM = mappers.get(EndCollusionComponent.class);
+        ComponentMapper<EndCollusionComponent> endCollusionM = mappers.getMapper(EndCollusionComponent.class);
 
-        if(endsCollusionM.has(A))
-            endsCollusionM.get(A).involved.add(B);
+        if(endCollusionM.has(A))
+            endCollusionM.get(A).involved.add(B);
 
-        if(endsCollusionM.has(B))
-            endsCollusionM.get(B).involved.add(A);
+        if(endCollusionM.has(B))
+            endCollusionM.get(B).involved.add(A);
 
         A.add(engine.createComponent(EndsCollusionComponent.class));
         B.add(engine.createComponent(EndsCollusionComponent.class));

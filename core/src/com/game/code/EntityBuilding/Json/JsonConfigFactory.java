@@ -1,8 +1,8 @@
 package com.game.code.EntityBuilding.Json;
 
 import com.badlogic.gdx.utils.JsonValue;
-import com.game.code.EntityBuilding.Config;
-import com.game.code.EntityBuilding.ConfigFactory;
+import com.game.code.EntityBuilding.FieldInitializers.Config.Config;
+import com.game.code.EntityBuilding.FieldInitializers.Config.ConfigFactory;
 
 public abstract class JsonConfigFactory<T extends Config> implements ConfigFactory<T> {
 

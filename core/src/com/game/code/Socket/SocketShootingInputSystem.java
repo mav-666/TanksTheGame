@@ -15,6 +15,5 @@ public class SocketShootingInputSystem extends ShootingInputSystem {
     @Override
     protected void updateAfterCheck() {
         socket.emit("playerShot");
-        super.updateAfterCheck();
     }
 }

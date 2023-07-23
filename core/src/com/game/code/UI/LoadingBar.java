@@ -15,7 +15,7 @@ public class LoadingBar extends IndicationBar {
 
         Image foreground = new Image(skin.get("LoadingBar-T", TenPatchDrawable.class));
 
-        slider = new Slider(0, loadingTasksAmount, 1,false, skin, "loadingBar");
+        slider = new Slider(0, loadingTasksAmount, 0.01f,false, skin, "loadingBar");
 
         slider.setValue(0);
         slider.setAnimateInterpolation(Interpolation.circle);

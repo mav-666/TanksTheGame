@@ -3,6 +3,7 @@ package com.game.code.Socket;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.game.code.EntityBuilding.battlefiled.PlayerCreator;
 import io.socket.client.Socket;
 import org.json.JSONArray;
@@ -11,10 +12,12 @@ import org.json.JSONObject;
 
 public class SocketPlayerCreationSystem extends EntitySystem {
 
+    private final ObjectMap<String, String> playerNames = new ObjectMap<>();
     private final Array<String> creationQueue = new Array<>();
     private final PlayerCreator playerCreator;
 
-    public SocketPlayerCreationSystem(Socket socket, PlayerCreator playerCreator) {
+    public SocketPlayerCreationSystem(Socket socket, String playerName, PlayerCreator playerCreator) {
+        playerNames.put("player", playerName);
         this.playerCreator = playerCreator;
 
         socket.on("playerJoined", args -> {
@@ -22,6 +25,8 @@ public class SocketPlayerCreationSystem extends EntitySystem {
 
             try {
                 String id = data.getString("id");
+                String name = data.getString("name");
+                playerNames.put(id, name);
                 creationQueue.add(id);
             } catch (JSONException e) {
                 Gdx.app.log("SocketCreation", "Failed reading id");
@@ -31,7 +36,12 @@ public class SocketPlayerCreationSystem extends EntitySystem {
             JSONArray dataArray = (JSONArray) args[0];
             for(int i = 0; i < dataArray.length(); i++) {
                 try {
-                    creationQueue.add(dataArray.getJSONObject(i).getString( "id"));
+                    JSONObject data = dataArray.getJSONObject(i);
+                    String id = data.getString("id");
+                    String name = data.getString("name");
+
+                    playerNames.put(id, name);
+                    creationQueue.add(id);
                 } catch (JSONException e) {
                     Gdx.app.log("SocketCreation", "Failed reading id");
                 }
@@ -49,7 +59,7 @@ public class SocketPlayerCreationSystem extends EntitySystem {
     }
 
     public void createPlayer(String id) {
-        playerCreator.create(id);
+        playerCreator.create(id + " " + playerNames.get(id));
         creationQueue.removeValue(id, false);
     }
 }

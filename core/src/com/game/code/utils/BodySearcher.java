@@ -28,7 +28,7 @@ public class BodySearcher {
     }
 
     private Body searchForBodyComponent(Entity entity) {
-        ComponentMapper<BodyComponent> bodyM = mappers.get(BodyComponent.class);
+        ComponentMapper<BodyComponent> bodyM = mappers.getMapper(BodyComponent.class);
 
         if(bodyM.has(entity))
             return bodyM.get(entity).body;
@@ -37,7 +37,7 @@ public class BodySearcher {
     }
 
     private Body searchForConnectionComponent(Entity entity) {
-        ComponentMapper<ConnectedComponent> connectedM = mappers.get(ConnectedComponent.class);
+        ComponentMapper<ConnectedComponent> connectedM = mappers.getMapper(ConnectedComponent.class);
 
         if(connectedM.has(entity)) {
             return connectedM.get(entity).target;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.JsonValue;
 import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.BodyConfig;
 import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.ShapeFactoryProvider;
-import com.game.code.EntityBuilding.ShapeFactory;
+import com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation.ShapeFactory;
 
 
 public class BodyConfigJsonFactory extends JsonConfigFactory<BodyConfig> {

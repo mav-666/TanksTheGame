@@ -1,0 +1,14 @@
+{
+  1:{
+    name: TransformComponent
+    init: {
+      zIndex: -10
+    }
+  }
+  2: {
+    name: WidgetComponent
+  }
+  3: {
+    name: FollowsCameraComponent
+  }
+}

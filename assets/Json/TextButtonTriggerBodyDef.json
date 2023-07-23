@@ -1,0 +1,19 @@
+{
+  bodyDef: {
+    type: 2
+  }
+  fixtureDefs: {
+    1: {
+      maskBits: 2
+      density: 0.1f
+      isSensor: true
+      shape: {
+        type: "Polygon"
+        coordinates: {
+          1: 0.1f
+          2: 0.1f
+        }
+      }
+    }
+  }
+}

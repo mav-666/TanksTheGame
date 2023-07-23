@@ -1,131 +1,180 @@
 
 tankTextures.png
-size: 1024, 64
+size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+MoveKeys
+  rotate: false
+  xy: 2, 20
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+ShootKey
+  rotate: false
+  xy: 100, 20
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+aim
+  rotate: false
+  xy: 548, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 barrel
   rotate: false
-  xy: 778, 14
+  xy: 398, 30
   size: 12, 36
   orig: 12, 36
   offset: 0, 0
   index: -1
 box
   rotate: false
-  xy: 102, 2
+  xy: 298, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 box
   rotate: false
-  xy: 402, 2
+  xy: 698, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 box
   rotate: false
-  xy: 652, 2
+  xy: 948, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 bullet
   rotate: false
-  xy: 752, 8
+  xy: 2, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 bush
   rotate: false
-  xy: 302, 2
+  xy: 598, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 cab
   rotate: false
-  xy: 152, 2
+  xy: 348, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 gasoline
   rotate: false
-  xy: 202, 2
+  xy: 448, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 gasoline
   rotate: false
-  xy: 502, 2
+  xy: 798, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 head
   rotate: false
-  xy: 752, 26
+  xy: 998, 92
   size: 24, 24
   orig: 24, 24
   offset: 0, 0
   index: -1
+host
+  rotate: false
+  xy: 198, 18
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+join
+  rotate: false
+  xy: 398, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 plain
   rotate: false
-  xy: 52, 2
+  xy: 248, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 2
 plain
   rotate: false
-  xy: 252, 2
+  xy: 498, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
 plain
   rotate: false
-  xy: 352, 2
+  xy: 648, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 plain
   rotate: false
-  xy: 452, 2
+  xy: 748, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 6
 plain
   rotate: false
-  xy: 552, 2
+  xy: 848, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 plain
   rotate: false
-  xy: 702, 2
+  xy: 298, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 5
+play
+  rotate: false
+  xy: 348, 18
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+settings
+  rotate: false
+  xy: 248, 18
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 spawn
   rotate: false
-  xy: 602, 2
+  xy: 898, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 trace
   rotate: false
-  xy: 2, 2
+  xy: 198, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0

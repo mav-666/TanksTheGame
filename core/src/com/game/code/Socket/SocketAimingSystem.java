@@ -28,7 +28,7 @@ public class SocketAimingSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        float angle = mappers.get(TransformComponent.class).get(entity).degAngle;
+        float angle = mappers.get(TransformComponent.class, entity).degAngle;
 
         socket.emit("playerAimed", new JSONObject(Collections.singletonMap("degAngle", angle)));
     }

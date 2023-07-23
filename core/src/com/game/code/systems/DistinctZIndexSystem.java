@@ -18,7 +18,7 @@ public class DistinctZIndexSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent transform = mappers.get(TransformComponent.class).get(entity);
+        TransformComponent transform = mappers.get(TransformComponent.class, entity);
 
         if(transform.zIndex == (int) transform.zIndex)
             transform.zIndex -= (Math.random() * (0.1 - 0.01)) + 0.01;

@@ -1,15 +1,20 @@
 package com.game.code.EntityBuilding.battlefiled;
 
-import com.badlogic.gdx.math.Vector2;
-import com.game.code.EntityBuilding.SummonerType;
+import com.badlogic.ashley.core.Entity;
+import com.game.code.EntityBuilding.Summoners.SummonerType;
+import com.game.code.components.SummonsComponent;
 
 public interface EntityCreator {
 
-    void createEntityOn(Vector2 spot, float zIndex, String entityName);
+    Entity createEntityOn(float x, float y, float zIndex, String entityName);
 
-    default void createEntityOn(Vector2 spot, String entityName) {
-        createEntityOn(spot, 0, entityName);
+    default Entity createEntityOn(float x, float y, String entityName) {
+        return createEntityOn(x, y, 0, entityName);
     }
+
+    void clearSettings();
+
+    SummonsComponent getCreationSettings();
 
     void setSummonerType(SummonerType summonerType);
 }

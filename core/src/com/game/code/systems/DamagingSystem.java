@@ -16,19 +16,17 @@ import com.game.code.utils.TweenUtils.TweenM;
 public class DamagingSystem extends IteratingSystem {
 
     private final Mappers mappers = Mappers.getInstance();
-    private final Color damaged;
+    private final Color damaged = Color.valueOf("781f2c");
+    Color startColor = new Color();
 
     public DamagingSystem() {
         super(Family.all(HealthComponent.class, TakesDamageComponent.class).get(), 90);
-
-
-        damaged = Color.valueOf("781f2c");
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
 
-        if(isInvincible(entity) || mappers.get(HealthComponent.class).get(entity).health <= 0) {
+        if(isInvincible(entity) || mappers.get(HealthComponent.class, entity).health <= 0) {
             entity.remove(TakesDamageComponent.class);
             return;
         }
@@ -39,19 +37,19 @@ public class DamagingSystem extends IteratingSystem {
     }
 
     private boolean isInvincible(Entity entity) {
-        return mappers.get(InvincibleComponent.class).has(entity);
+        return mappers.has(InvincibleComponent.class, entity);
     }
 
     private void dealDamageTo(Entity entity) {
-        HealthComponent health = mappers.get(HealthComponent.class).get(entity);
-        TakesDamageComponent damage = mappers.get(TakesDamageComponent.class).get(entity);
+        HealthComponent health = mappers.get(HealthComponent.class, entity);
+        TakesDamageComponent damage = mappers.get(TakesDamageComponent.class, entity);
 
         health.health = Math.max(0, health.health - damage.damage);
         entity.remove(TakesDamageComponent.class);
     }
 
     private void makeInvincible(Entity entity) {
-        ComponentMapper<InvincibilityComponent> invincibilityM = mappers.get(InvincibilityComponent.class);
+        ComponentMapper<InvincibilityComponent> invincibilityM = mappers.getMapper(InvincibilityComponent.class);
 
         if(!invincibilityM.has(entity))
             return;
@@ -68,13 +66,8 @@ public class DamagingSystem extends IteratingSystem {
     }
 
     private void addBlinkEffectOn(Entity entity, float seconds) {
-        ComponentMapper<TextureComponent> textureM = mappers.get(TextureComponent.class);
-
-        if(!textureM.has(entity))
-            return;
-
-        Color color = textureM.get(entity).color;
-        Color startColor = new Color(color);
+        Color color = mappers.getOrCreate(ColorComponent.class, entity, getEngine()).color;
+        startColor.set(color);
 
         Timeline.createSequence()
                 .push(Tween.to(color, ColorAccessor.RGB, 0.05f).target(damaged.r, damaged.g, damaged.b))

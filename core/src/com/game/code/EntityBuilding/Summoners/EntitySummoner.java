@@ -2,14 +2,13 @@ package com.game.code.EntityBuilding.Summoners;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.math.Vector2;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.SummoningDirector;
-import com.game.code.components.BodyComponent;
-import com.game.code.components.SummonsNowComponent;
-import com.game.code.components.TransformComponent;
+import com.game.code.components.*;
 
 public class EntitySummoner extends EntityBuilderSummoner implements SummoningDirector {
+
+    private String entityName;
 
     public EntitySummoner(EntityBuilder entityBuilder, Engine engine) {
         super(entityBuilder, engine);
@@ -17,28 +16,47 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
 
     @Override
     public Entity summonBy(Entity summoner) {
-        String entityName = mappers.get(SummonsNowComponent.class).get(summoner).entityName;
+        entityName = mappers.get(SummonsNowComponent.class, summoner).entityName;
 
-        entityBuilder.build(entityName);
+        build();
 
-        initTransformBy(summoner);
+        init(summoner);
 
         engine.addEntity(entityBuilder.getEntity());
 
         return entityBuilder.getEntity();
     }
 
-    protected void initTransformBy(Entity summoner) {
-        TransformComponent entityTransform = entityBuilder.getComponent(TransformComponent.class);
-        TransformComponent summonerTransform = mappers.get(TransformComponent.class).get(summoner);
-        Vector2 offset = mappers.get(SummonsNowComponent.class).get(summoner).offset;
+    protected void build() {
+        entityBuilder.build(entityName);
+    }
 
-        entityTransform.position.set(summonerTransform.position)
-                .add(offset);
-        entityTransform.degAngle = summonerTransform.degAngle;
+    protected void init(Entity summoner) {
+        initTransformBy(summoner);
+    }
+
+    protected void initTransformBy(Entity summoner) {
+        SummonsComponent summonsC = mappers.get(SummonsNowComponent.class, summoner);
+
+        TransformComponent entityTransform = entityBuilder.getComponent(TransformComponent.class);
+        TransformComponent summonerTransform = mappers.get(TransformComponent.class, summoner);
+
+        entityTransform.position.set(summonerTransform.position).add(summonsC.offset);
+        entityTransform.degAngle = summonsC.degAngle;
         entityTransform.zIndex += summonerTransform.zIndex;
+
+        initScale(summonsC);
 
         if(entityBuilder.hasComponent(BodyComponent.class))
             entityBuilder.getComponent(BodyComponent.class).body.setTransform(summonerTransform.position, summonerTransform.degAngle);
+    }
+
+    protected void initScale(SummonsComponent summonsComponent) {
+        if(!entityBuilder.hasComponent(TextureComponent.class))
+            return;
+        
+        TextureComponent texture = entityBuilder.getComponent(TextureComponent.class);
+        texture.scaleX = summonsComponent.scaleX;
+        texture.scaleY = summonsComponent.scaleY;
     }
 }

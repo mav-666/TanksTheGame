@@ -21,11 +21,12 @@ public class SummonsWhileMovingSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        SummonsWhileMovingComponent whileMoving = mappers.get(SummonsWhileMovingComponent.class).get(entity);
+        SummonsWhileMovingComponent whileMoving = mappers.get(SummonsWhileMovingComponent.class, entity);
         SummonsNowComponent summons = getEngine().createComponent(SummonsNowComponent.class);
 
         summons.summonerType = whileMoving.summonerType;
         summons.entityName = whileMoving.entityName;
+        summons.degAngle = mappers.get(TransformComponent.class, entity).degAngle;
         summons.offset.set(whileMoving.offset);
 
         entity.add(summons);

@@ -1,8 +1,9 @@
 package com.game.code.EntityBuilding.FieldInitializers;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.game.code.utils.Assets;
-import com.game.code.utils.Particle;
+import com.game.code.systems.RenderingSystem;
+import com.game.code.utils.Assets.Assets;
+import com.game.code.utils.Assets.Particle;
 
 public class AssetParticleInitializer extends FieldInitializer<ParticleEffect, String> {
 

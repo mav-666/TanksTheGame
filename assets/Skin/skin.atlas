@@ -1,279 +1,55 @@
 
 skin.png
-size: 256, 256
+size: 128, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-HealthBar
+white-pixel
   rotate: false
-  xy: 129, 204
-  size: 33, 11
-  orig: 33, 11
+  xy: 40, 33
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1
 HealthBarBg
   rotate: false
-  xy: 207, 224
-  size: 1, 6
-  orig: 1, 6
-  offset: 0, 0
-  index: -1
-HealthBarKnob
-  rotate: false
-  xy: 122, 175
+  xy: 1, 16
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
 LoadingBar
   rotate: false
-  xy: 57, 171
+  xy: 1, 24
+  size: 37, 10
+  orig: 37, 10
+  offset: 0, 0
+  index: -1
+LoadingBar
+  rotate: false
+  xy: 1, 24
   size: 37, 10
   orig: 37, 10
   offset: 0, 0
   index: -1
 LoadingBarKnob
   rotate: false
-  xy: 151, 186
+  xy: 101, 94
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
-RotationKey
+healthMeter
   rotate: false
-  xy: 1, 127
-  size: 46, 31
-  orig: 46, 31
+  xy: 1, 36
+  size: 48, 64
+  orig: 48, 64
   offset: 0, 0
   index: -1
-SettingBackKnob
+healthMeterBlendingMask
   rotate: false
-  xy: 17, 99
-  size: 1, 6
-  orig: 1, 6
-  offset: 0, 0
-  index: -1
-ShootKey
-  rotate: false
-  xy: 183, 232
-  size: 29, 23
-  orig: 29, 23
-  offset: 0, 0
-  index: -1
-TitleBg
-  rotate: false
-  xy: 1, 183
-  size: 126, 72
-  orig: 126, 72
-  offset: 0, 0
-  index: -1
-TitleText
-  rotate: false
-  xy: 1, 160
-  size: 54, 21
-  orig: 54, 21
-  offset: 0, 0
-  index: -1
-checkBox
-  rotate: false
-  xy: 1, 91
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-checkBoxChecked
-  rotate: false
-  xy: 1, 75
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-connectIcon
-  rotate: false
-  xy: 1, 37
-  size: 10, 10
-  orig: 10, 10
-  offset: 0, 0
-  index: -1
-defaultButton
-  rotate: false
-  xy: 83, 161
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-defaultButtonActive
-  rotate: false
-  xy: 155, 194
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-defaultButtonHover
-  rotate: false
-  xy: 23, 107
-  size: 8, 8
-  orig: 8, 8
-  offset: 0, 0
-  index: -1
-hostIcon
-  rotate: false
-  xy: 214, 233
-  size: 11, 9
-  orig: 11, 9
-  offset: 0, 0
-  index: -1
-movenetKeys
-  rotate: false
-  xy: 129, 217
-  size: 52, 38
-  orig: 52, 38
-  offset: 0, 0
-  index: -1
-playButton
-  rotate: false
-  xy: 1, 107
-  size: 20, 8
-  orig: 20, 8
-  offset: 0, 0
-  index: -1
-playButtonActive
-  rotate: false
-  xy: 27, 117
-  size: 20, 8
-  orig: 20, 8
-  offset: 0, 0
-  index: -1
-playButtonHover
-  rotate: false
-  xy: 129, 184
-  size: 20, 8
-  orig: 20, 8
-  offset: 0, 0
-  index: -1
-scrollButton
-  rotate: false
-  xy: 164, 204
-  size: 11, 11
-  orig: 11, 11
-  offset: 0, 0
-  index: -1
-scrollButtonActive
-  rotate: false
-  xy: 1, 62
-  size: 11, 11
-  orig: 11, 11
-  offset: 0, 0
-  index: -1
-scrollButtonHover
-  rotate: false
-  xy: 238, 244
-  size: 11, 11
-  orig: 11, 11
-  offset: 0, 0
-  index: -1
-scrollKnob
-  rotate: false
-  xy: 49, 152
-  size: 6, 6
-  orig: 6, 6
-  offset: 0, 0
-  index: -1
-scrolll
-  rotate: false
-  xy: 57, 155
-  size: 5, 4
-  orig: 5, 4
-  offset: 0, 0
-  index: -1
-settingBack
-  rotate: false
-  xy: 183, 219
-  size: 22, 11
-  orig: 22, 11
-  offset: 0, 0
-  index: -1
-settingBackHover
-  rotate: false
-  xy: 214, 244
-  size: 22, 11
-  orig: 22, 11
-  offset: 0, 0
-  index: -1
-settingKnob
-  rotate: false
-  xy: 1, 49
-  size: 11, 11
-  orig: 11, 11
-  offset: 0, 0
-  index: -1
-settingTextField
-  rotate: false
-  xy: 96, 173
-  size: 24, 8
-  orig: 24, 8
-  offset: 0, 0
-  index: -1
-settingTextFieldActive
-  rotate: false
-  xy: 129, 194
-  size: 24, 8
-  orig: 24, 8
-  offset: 0, 0
-  index: -1
-settingTextFieldCursor
-  rotate: false
-  xy: 5, 1
-  size: 2, 10
-  orig: 2, 10
-  offset: 0, 0
-  index: -1
-textField
-  rotate: false
-  xy: 1, 117
-  size: 24, 8
-  orig: 24, 8
-  offset: 0, 0
-  index: -1
-textFieldActive
-  rotate: false
-  xy: 57, 161
-  size: 24, 8
-  orig: 24, 8
-  offset: 0, 0
-  index: -1
-textFieldCursor
-  rotate: false
-  xy: 1, 1
-  size: 2, 10
-  orig: 2, 10
-  offset: 0, 0
-  index: -1
-treeMinus
-  rotate: false
-  xy: 1, 25
-  size: 10, 10
-  orig: 10, 10
-  offset: 0, 0
-  index: -1
-treeMinusHover
-  rotate: false
-  xy: 1, 25
-  size: 10, 10
-  orig: 10, 10
-  offset: 0, 0
-  index: -1
-treePlus
-  rotate: false
-  xy: 1, 13
-  size: 10, 10
-  orig: 10, 10
-  offset: 0, 0
-  index: -1
-treePlusHover
-  rotate: false
-  xy: 1, 13
-  size: 10, 10
-  orig: 10, 10
+  xy: 51, 38
+  size: 48, 62
+  orig: 48, 62
   offset: 0, 0
   index: -1

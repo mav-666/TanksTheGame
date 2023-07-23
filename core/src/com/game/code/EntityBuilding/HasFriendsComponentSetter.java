@@ -28,8 +28,8 @@ public class HasFriendsComponentSetter implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        ComponentMapper<HasFriendsComponent> friendlyM = mappers.get(HasFriendsComponent.class);
-        ComponentMapper<BodyComponent> bodyM = mappers.get(BodyComponent.class);
+        ComponentMapper<HasFriendsComponent> friendlyM = mappers.getMapper(HasFriendsComponent.class);
+        ComponentMapper<BodyComponent> bodyM = mappers.getMapper(BodyComponent.class);
 
         short index = nextIndex();
 

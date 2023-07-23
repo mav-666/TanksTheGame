@@ -1,0 +1,12 @@
+{
+  1: {
+    name: TransformComponent
+  }
+  2: {
+    name: ScrollComponent
+    init: {
+      visibleItems: 5
+      padding: 0.5f
+    }
+  }
+}

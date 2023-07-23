@@ -1,47 +1,63 @@
 package com.game.code;
 
 
+import aurelienribon.tweenengine.Tween;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.game.code.EntityBuilding.Json.JsonLoader;
+import com.game.code.FileManagment.InternalJsonLoader;
 import com.game.code.Socket.ClientSocket;
-import com.game.code.UI.screens.AbstractLoadingScreen;
-import com.game.code.UI.screens.Loading.ScreenHistory;
-import com.game.code.UI.screens.Loading.ScreenLoader;
-import com.game.code.utils.Assets;
+import com.game.code.screens.AbstractLoadingScreen;
+import com.game.code.screens.Loading.ScreenHistory;
+import com.game.code.screens.Loading.ScreenLoader;
+import com.game.code.screens.MenuScreen;
+import com.game.code.utils.Assets.Assets;
+import com.game.code.utils.TweenUtils.BodyTransformAccessor;
+import com.game.code.utils.TweenUtils.ColorAccessor;
+import com.game.code.utils.TweenUtils.Vector2Accessor;
 import io.socket.client.Socket;
 
+
 public class Application extends Game {
+    public int seed = 1;
     public SpriteBatch batch;
+    public Assets assets = new Assets();
+    public JsonLoader jsonLoader = new InternalJsonLoader();
     public Skin skin;
-    public Assets assets;
 
-    private ClientSocket clientSocket;
-    private ScreenHistory screenHistory;
-    private ScreenLoader screenLoader;
+    private final ClientSocket clientSocket = new ClientSocket();
 
+    private final ScreenHistory screenHistory = new ScreenHistory(1);
+    private final ScreenLoader screenLoader = new ScreenLoader(this);
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-
-        screenHistory = new ScreenHistory(5);
         screenHistory.addFilter((screen) -> screen instanceof AbstractLoadingScreen);
 
-        screenLoader = new ScreenLoader(this);
-
-        assets = new Assets();
-
-        assets.loadUISkin();
-
+        assets.loadSkin();
         skin = assets.getSkin();
 
-        clientSocket = new ClientSocket();
+        batch = new SpriteBatch();
 
-        loadScreen(new GameScreen(this));
+        initTween();
 
+        loadScreen(new MenuScreen(this));
+    }
 
+    private void initTween() {
+        Tween.registerAccessor(Color.class, new ColorAccessor());
+        Tween.registerAccessor(Vector2.class, new Vector2Accessor());
+        Tween.registerAccessor(Body.class, new BodyTransformAccessor());
+    }
+
+    @Override
+    public void render() {
+        super.render();
     }
 
     @Override
@@ -67,8 +83,8 @@ public class Application extends Game {
         return screenHistory.getPreviousScreen();
     }
 
-    public ClientSocket getClientSocket() {
-        return clientSocket;
+    public Socket getSocket() {
+        return clientSocket.getSocket();
     }
 }
 

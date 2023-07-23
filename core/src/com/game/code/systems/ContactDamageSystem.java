@@ -22,15 +22,15 @@ public class ContactDamageSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        CollusionComponent collusion = mappers.get(CollusionComponent.class).get(entity);
+        CollusionComponent collusion = mappers.get(CollusionComponent.class, entity);
 
-        float damage = mappers.get(ContactDamageComponent.class).get(entity).damage;
+        float damage = mappers.get(ContactDamageComponent.class, entity).damage;
 
         collusion.involved.forEach(involved -> dealDamageTo(involved, damage));
     }
 
     private void dealDamageTo(Entity entity, float damage) {
-        ComponentMapper<TakesDamageComponent> takesDamageM = mappers.get(TakesDamageComponent.class);
+        ComponentMapper<TakesDamageComponent> takesDamageM = mappers.getMapper(TakesDamageComponent.class);
         if(!takesDamageM.has(entity)) {
             TakesDamageComponent takesDamage = getEngine().createComponent(TakesDamageComponent.class);
             entity.add(takesDamage);

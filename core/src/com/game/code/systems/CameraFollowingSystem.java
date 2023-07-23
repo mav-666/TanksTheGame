@@ -21,17 +21,17 @@ public class CameraFollowingSystem extends IteratingSystem {
         super(Family.all(TransformComponent.class, CameraFollowedComponent.class).get());
 
         this.camera = camera;
-
-
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Vector2 target = mappers.get(TransformComponent.class).get(entity).position;
+        Vector2 target = mappers.get(TransformComponent.class, entity).position;
         lerpToTarget(camera.position, target);
     }
 
     private void lerpToTarget(Vector3 cameraPos, Vector2 target){
-        cameraPos.add((target.x - cameraPos.x) * .05f, (target.y - cameraPos.y) * .05f, 0);
+        float t = Math.min(1, target.dst(cameraPos.x, cameraPos.y) * 0.05f);
+
+        cameraPos.add((target.x - cameraPos.x) * t, (target.y - cameraPos.y) * t, 0);
     }
 }

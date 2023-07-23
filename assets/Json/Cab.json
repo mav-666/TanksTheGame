@@ -22,7 +22,7 @@
   11: {
     name: "MobilityComponent"
     init: {
-      movementSpeed: 18f
+      movementSpeed: 10f
       agility: 4f
     }
   }

@@ -3,7 +3,6 @@ package com.game.code.EntityBuilding.FieldInitializers.Box2dBodyCreation;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.FloatArray;
-import com.game.code.EntityBuilding.ShapeFactory;
 
 public class PolygonFactory implements ShapeFactory {
     PolygonShape polygon;

@@ -1,0 +1,48 @@
+{
+  1: {
+    name: TransformComponent
+    init: {
+      zIndex: 1
+    }
+  }
+  2: {
+    name: TextComponent
+    init: {
+      label: [Pixel, 4]
+    }
+  }
+  14: {
+    name: ColorComponent
+    init: {
+      color: brown
+    }
+  }
+  3: {
+    name: BodyComponent
+    init: {
+      body: TextButtonTriggerBodyDef
+    }
+  }
+  4: {
+    name: EndCollusionComponent
+  }
+  6: {
+    name: ContactEventComponent
+  }
+  7: {
+    name: "HealthComponent"
+    init: {
+      health: -1f
+    }
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  10: {
+    name: ImmortalComponent
+  }
+
+}

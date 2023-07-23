@@ -48,7 +48,7 @@ public class OtherSocketMovementSystem extends EntitySystem implements EntityLis
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class).get(entity).id;
+        String id = mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 
@@ -64,7 +64,7 @@ public class OtherSocketMovementSystem extends EntitySystem implements EntityLis
     }
 
     private void setTransformFor(Entity entity, float x, float y, float radAngle) {
-        Body body = mappers.get(BodyComponent.class).get(entity).body;
+        Body body = mappers.get(BodyComponent.class, entity).body;
         body.setTransform(x, y, radAngle);
     }
 
@@ -74,7 +74,7 @@ public class OtherSocketMovementSystem extends EntitySystem implements EntityLis
 
     @Override
     public void entityRemoved(Entity entity) {
-        String id = mappers.get(IdComponent.class).get(entity).id;
+        String id = mappers.get(IdComponent.class, entity).id;
         players.remove(id);
     }
 }

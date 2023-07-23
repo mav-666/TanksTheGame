@@ -66,7 +66,7 @@ public class JsonEntityBuilder extends EntityBuilder {
             try {
                 Field field = component.getClass().getField(jsonField.name);
 
-                var fieldInit = componentInitializer.findInitializer(componentInitializer.getTypeOf(field));
+                var fieldInit = componentInitializer.findInitializer(ComponentInitializer.getTypeOf(field));
                 if(fieldInit.isEmpty()) return;
 
                 componentInitializer.initField(component, jsonField.name, getConfigFrom(jsonField, fieldInit.get()));

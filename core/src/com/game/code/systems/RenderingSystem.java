@@ -4,32 +4,37 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.game.code.components.DestroyedComponent;
-import com.game.code.components.ParticleComponent;
-import com.game.code.components.TextureComponent;
-import com.game.code.components.TransformComponent;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.utils.Align;
+import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 
 public class RenderingSystem extends SortedIteratingSystem {
 
-    private final static float PPM = 16f;
+    public final static float PPM = 16f;
 
     private final Mappers mappers = Mappers.getInstance();
 
-    private final SpriteBatch batch;
+    private final Batch batch;
     private final Camera camera;
 
-    private final ComponentMapper<TextureComponent> textureM = mappers.get(TextureComponent.class);
-    private final ComponentMapper<ParticleComponent> particleM = mappers.get(ParticleComponent.class);
-    private final ComponentMapper<TransformComponent> transformM = mappers.get(TransformComponent.class);
+    private final ComponentMapper<TextureComponent> textureM = mappers.getMapper(TextureComponent.class);
+    private final ComponentMapper<ParticleComponent> particleM = mappers.getMapper(ParticleComponent.class);
+    private final ComponentMapper<TextComponent> textM = mappers.getMapper(TextComponent.class);
+    private final ComponentMapper<WidgetComponent> widgetM = mappers.getMapper(WidgetComponent.class);
+    private final ComponentMapper<TransformComponent> transformM = mappers.getMapper(TransformComponent.class);
+
+    private Vector2 position;
 
 
-    public RenderingSystem(Camera camera, SpriteBatch batch) {
-        super(Family.all(TransformComponent.class).one(TextureComponent.class, ParticleComponent.class).get(), new ZComparator(), 40);
+    public RenderingSystem(Camera camera, Batch batch) {
+        super(Family.all(TransformComponent.class).one(TextureComponent.class, ParticleComponent.class, TextComponent.class, WidgetComponent.class).get(), new ZComparator(), 40);
 
         this.camera = camera;
         this.batch = batch;
@@ -46,24 +51,36 @@ public class RenderingSystem extends SortedIteratingSystem {
     @Override
     public void update(float deltaTime) {
         batch.setProjectionMatrix(camera.combined);
+        batch.enableBlending();
         batch.begin();
         super.update(deltaTime);
         batch.end();
+
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if(textureM.has(entity))
-            processTexture(entity);
+        position = transformM.get(entity).position;
 
-        if(particleM.has(entity))
-            processParticle(entity, deltaTime);
-    }
-
-    private void processTexture(Entity entity) {
-        if(textureM.get(entity).isHidden)
+        if(mappers.has(InvisibleComponent.class, entity))
             return;
 
+        if(textureM.has(entity))
+            drawTexture(entity);
+
+        if(particleM.has(entity))
+            drawParticle(entity, deltaTime);
+
+        if(textM.has(entity))
+            drawText(entity, deltaTime);
+
+        if(widgetM.has(entity))
+            drawWidget(entity, deltaTime);
+
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawTexture(Entity entity) {
         TransformComponent transform = transformM.get(entity);
         TextureComponent texture = textureM.get(entity);
 
@@ -78,7 +95,8 @@ public class RenderingSystem extends SortedIteratingSystem {
         float originX = transform.origin.x + width/2;
         float originY = transform.origin.y + height/2;
 
-        batch.setColor(texture.color);
+        if(mappers.has(ColorComponent.class, entity))
+            batch.setColor(mappers.get(ColorComponent.class, entity).color);
 
         batch.draw(texture.textureRegion,
                 posX, posY,
@@ -87,14 +105,10 @@ public class RenderingSystem extends SortedIteratingSystem {
                 texture.scaleX, texture.scaleY,
                 transform.degAngle);
 
-        batch.setColor(Color.WHITE);
         texture.offset.rotateDeg(-transform.degAngle);
     }
 
-
-
-    private void processParticle(Entity entity, float deltaTime) {
-        Vector2 position = transformM.get(entity).position;
+    private void drawParticle(Entity entity, float deltaTime) {
         ParticleComponent particle = particleM.get(entity);
 
         if(particle.particleEffect.isComplete())
@@ -104,5 +118,35 @@ public class RenderingSystem extends SortedIteratingSystem {
         particle.particleEffect.setPosition(position.x, position.y);
         particle.particleEffect.update(deltaTime);
         particle.particleEffect.draw(batch, deltaTime);
+    }
+
+    private void drawText(Entity entity, float deltaTime) {
+        Vector2 offset = textM.get(entity).offset;
+        Widget label = textM.get(entity).label;
+
+        if(mappers.has(ColorComponent.class, entity))
+            label.setColor(mappers.get(ColorComponent.class, entity).color);
+
+        drawActor(label, offset, deltaTime);
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawWidget(Entity entity, float deltaTime) {
+        Vector2 offset = widgetM.get(entity).offset;
+        Actor widget = widgetM.get(entity).widget;
+
+        drawActor(widget, offset, deltaTime);
+        batch.setColor(Color.WHITE);
+    }
+
+    private void drawActor(Actor widget, Vector2 offset, float deltaTime) {
+        float posX = position.x + offset.x;
+        float posY = position.y + offset.y;
+
+        widget.setPosition(posX, posY, Align.center);
+
+        widget.act(deltaTime);
+        widget.draw(batch, 1);
+        batch.setColor(Color.WHITE);
     }
 }

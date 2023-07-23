@@ -23,8 +23,8 @@ public class ProjectileSummoner extends EntityBuilderSummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        projectileTemplate = mappers.get(ProjectileTemplateComponent.class).get(summoner);
-        shooterTransform = mappers.get(TransformComponent.class).get(summoner);
+        projectileTemplate = mappers.get(ProjectileTemplateComponent.class, summoner);
+        shooterTransform = mappers.get(TransformComponent.class, summoner);
 
         entityBuilder.build(projectileTemplate.entityName);
 

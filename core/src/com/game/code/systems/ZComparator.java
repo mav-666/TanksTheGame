@@ -10,7 +10,7 @@ import java.util.Comparator;
 
 public class ZComparator implements Comparator<Entity> {
 
-    private final ComponentMapper<TransformComponent> transformM = Mappers.getInstance().get(TransformComponent.class);
+    private final ComponentMapper<TransformComponent> transformM = Mappers.getInstance().getMapper(TransformComponent.class);
 
     @Override
     public int compare(Entity o1, Entity o2) {

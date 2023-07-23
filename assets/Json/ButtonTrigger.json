@@ -1,0 +1,17 @@
+{
+  1: {
+    name: TransformComponent
+  }
+  3: {
+    name: BodyComponent
+    init: {
+      body: ButtonTriggerBodyDef
+    }
+  }
+  6: {
+    name: "ContactEventComponent"
+  }
+  4: {
+    name: EndCollusionComponent
+  }
+}

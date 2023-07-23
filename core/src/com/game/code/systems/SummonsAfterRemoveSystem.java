@@ -20,7 +20,7 @@ public class SummonsAfterRemoveSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SummonsAfterRemoveComponent summonsAfterRemove = mappers.get(SummonsAfterRemoveComponent.class).get(entity);
+        SummonsAfterRemoveComponent summonsAfterRemove = mappers.get(SummonsAfterRemoveComponent.class, entity);
         SummonsNowComponent summons = getEngine().createComponent(SummonsNowComponent.class);
 
         summons.summonerType = summonsAfterRemove.summonerType;

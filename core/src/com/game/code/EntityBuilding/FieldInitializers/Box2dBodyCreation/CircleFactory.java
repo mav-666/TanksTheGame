@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.utils.FloatArray;
-import com.game.code.EntityBuilding.ShapeFactory;
 
 public class CircleFactory implements ShapeFactory {
 

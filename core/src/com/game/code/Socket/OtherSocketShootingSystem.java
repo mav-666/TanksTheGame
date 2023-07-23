@@ -43,7 +43,7 @@ public class OtherSocketShootingSystem extends EntitySystem implements EntityLis
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class).get(entity).id;
+        String id = mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 

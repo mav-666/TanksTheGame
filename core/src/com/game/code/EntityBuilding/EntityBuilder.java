@@ -18,29 +18,16 @@ public abstract class EntityBuilder {
 
     }
 
-    public void build(String entityName) {
-        entity = engine.createEntity();
-    }
-
     public <T extends Component> T getComponent(Class<T> componentType) {
-        ComponentMapper<T> mapper = mappers.get(componentType);
-        T component;
-
-        if(mapper.has(entity))
-            component = mapper.get(entity);
-        else {
-            component = engine.createComponent(componentType);
-            entity.add(component);
-        }
-
-        return component;
+        return mappers.getOrCreate(componentType, entity, engine);
     }
 
     public <T extends Component> boolean hasComponent(Class<T> componentType) {
-        ComponentMapper<T> mapper = mappers.get(componentType);
-        T component;
+        return mappers.has(componentType, entity);
+    }
 
-        return mapper.has(entity);
+    public void build(String entityName) {
+        entity = engine.createEntity();
     }
 
     public Engine getEngine() {

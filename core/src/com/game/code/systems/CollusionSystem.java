@@ -13,26 +13,31 @@ import com.game.code.utils.Mappers;
 public class CollusionSystem extends IteratingSystem {
 
     private final Mappers mappers = Mappers.getInstance();
+    private final ComponentMapper<StartCollusionComponent> startCollusionM = mappers.getMapper(StartCollusionComponent.class);
+    private final ComponentMapper<EndCollusionComponent> endCollusionM = mappers.getMapper(EndCollusionComponent.class);
 
     public CollusionSystem() {
-        super(Family.one(StartCollusionComponent.class, EndCollusionComponent.class).get(), 99);
-
-
+        super(Family.one(StartCollusionComponent.class, EndCollusionComponent.class).get(), 98);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        ComponentMapper<StartCollusionComponent> startCollusionM = mappers.get(StartCollusionComponent.class);
+        removeStartsCollusion(entity);
+        removeEndsCollusion(entity);
+
+    }
+
+    private void removeStartsCollusion(Entity entity) {
         if(startCollusionM.has(entity)) {
             startCollusionM.get(entity).involved.clear();
             entity.remove(StartsCollusionComponent.class);
         }
+    }
 
-        ComponentMapper<EndCollusionComponent> endCollusionM = mappers.get(EndCollusionComponent.class);
+    private void removeEndsCollusion(Entity entity) {
         if(endCollusionM.has(entity)) {
             endCollusionM.get(entity).involved.clear();
             entity.remove(EndsCollusionComponent.class);
         }
-
     }
 }

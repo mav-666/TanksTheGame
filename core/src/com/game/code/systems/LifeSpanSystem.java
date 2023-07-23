@@ -22,7 +22,7 @@ public class LifeSpanSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        float lifeSpan = mappers.get(LifeSpanComponent.class).get(entity).seconds;
+        float lifeSpan = mappers.get(LifeSpanComponent.class, entity).seconds;
 
         entity.remove(LifeSpanComponent.class);
 

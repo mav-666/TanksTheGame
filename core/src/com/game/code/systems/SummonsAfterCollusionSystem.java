@@ -20,9 +20,10 @@ public class SummonsAfterCollusionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mappers.get(StartCollusionComponent.class).get(entity).involved.forEach(involved -> {
-            ComponentMapper<TransformComponent> transformM = mappers.get(TransformComponent.class);
-            SummonsAfterCollusionComponent afterCollusion = mappers.get(SummonsAfterCollusionComponent.class).get(entity);
+        mappers.get(StartCollusionComponent.class, entity).involved.forEach(involved -> {
+            ComponentMapper<TransformComponent> transformM = mappers.getMapper(TransformComponent.class);
+
+            SummonsAfterCollusionComponent afterCollusion = mappers.get(SummonsAfterCollusionComponent.class, entity);
             SummonsNowComponent summons = getEngine().createComponent(SummonsNowComponent.class);
 
             summons.summonerType = afterCollusion.summonerType;

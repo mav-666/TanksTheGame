@@ -33,4 +33,7 @@
   12: {
     name: "AnimatedRecoilComponent"
   }
+  16: {
+    name: ColorComponent
+  }
 }

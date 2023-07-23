@@ -8,6 +8,7 @@ import com.game.code.components.*;
 public class TankSummoner extends EntitySummoner {
     private boolean isPlayer;
     private String id;
+    private String name;
 
     private float tankWidth;
     private float tankHeight;
@@ -24,8 +25,10 @@ public class TankSummoner extends EntitySummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        id = mappers.get(SummonsNowComponent.class).get(summoner).entityName;
+        String[] entityName = mappers.get(SummonsNowComponent.class, summoner).entityName.split(" ");
+        id = entityName[0];
         isPlayer = id.equals("player");
+        name = entityName.length >= 2 ? entityName[1] : "";
 
         Entity cab = createCab();
 
@@ -37,7 +40,7 @@ public class TankSummoner extends EntitySummoner {
         Entity head = createHead();
 
         ConnectedComponent HeadConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        HeadConnectedC.target = mappers.get(BodyComponent.class).get(cab).body;
+        HeadConnectedC.target = mappers.get(BodyComponent.class, cab).body;
 
         entityBuilder.getComponent(InheritColorComponent.class).target = cab;
         entityBuilder.getComponent(InheritDeathComponent.class).target = cab;
@@ -47,7 +50,7 @@ public class TankSummoner extends EntitySummoner {
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 
         ConnectedComponent BarrelConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        BarrelConnectedC.target = mappers.get(BodyComponent.class).get(cab).body;
+        BarrelConnectedC.target = mappers.get(BodyComponent.class, cab).body;
         BarrelConnectedC.connectionPoint.set(0, -textureC.height/2);
 
         entityBuilder.getComponent(InheritAngleComponent.class).target = head;
@@ -67,7 +70,6 @@ public class TankSummoner extends EntitySummoner {
         } else {
             entityBuilder.getComponent(IdComponent.class).id = id;
         }
-
         engine.addEntity(entityBuilder.getEntity());
 
         return entityBuilder.getEntity();
@@ -81,6 +83,8 @@ public class TankSummoner extends EntitySummoner {
         } else {
             entityBuilder.getComponent(IdComponent.class).id = id;
         }
+
+        entityBuilder.getComponent(TextComponent.class).label.setText(name);
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 

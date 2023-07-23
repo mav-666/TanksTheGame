@@ -1,0 +1,36 @@
+{
+  1: {
+    name: TransformComponent
+    init: {
+      zIndex: -1
+    }
+  }
+  2: {
+    name: TextureComponent
+    init: {
+      width: 0.5f
+      height: 0.5f
+    }
+  }
+  3: {
+    name: BodyComponent
+    init: {
+      body: ButtonBodyDef
+    }
+  }
+  7: {
+    name: "HealthComponent"
+    init: {
+      health: -1f
+    }
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  10: {
+    name: ImmortalComponent
+  }
+}

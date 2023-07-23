@@ -1,9 +1,6 @@
 {
   1: {
     name: "TransformComponent"
-    init: {
-      position: [2,2]
-    }
   }
   3: {
     name: "BodyComponent"

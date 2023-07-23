@@ -21,8 +21,8 @@ public class ForceSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Body body = mappers.get(BodyComponent.class).get(entity).body;
-        Vector2 force = mappers.get(ForcedComponent.class).get(entity).force;
+        Body body = mappers.get(BodyComponent.class, entity).body;
+        Vector2 force = mappers.get(ForcedComponent.class, entity).force;
 
         body.applyForceToCenter(force, true);
     }

@@ -28,12 +28,12 @@ public class SocketMovementSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        TransformComponent transformC = mappers.get(TransformComponent.class).get(entity);
+        TransformComponent transformC = mappers.get(TransformComponent.class, entity);
 
         socket.emit("playerMoved", new JSONObject(Map.of(
                 "x", transformC.position.x,
                 "y", transformC.position.y,
                 "degAngle", transformC.degAngle,
-                "isMoving", mappers.get(MovesComponent.class).has(entity))));
+                "isMoving", mappers.has(MovesComponent.class, entity))));
     }
 }

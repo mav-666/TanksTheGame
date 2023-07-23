@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.game.code.utils.Assets;
+import com.game.code.utils.Assets.Assets;
 
 public class AssetTextureInitializer extends FieldInitializer<TextureRegion, String> {
 
