@@ -9,6 +9,9 @@ Color: {
 	lightBrown: {
 		hex: e5ae78ff
 	}
+	void: {
+		hex: 00000000
+	}
 	white: {
 		hex: ffffffff
 	}
@@ -46,6 +49,10 @@ TintedDrawable: {
 	healthFront: {
 		name: white-pixel
 		color: brown
+	}
+	void: {
+		name: white-pixel
+		color: void
 	}
 }
 com.ray3k.tenpatch.TenPatchDrawable: {
@@ -85,6 +92,11 @@ SliderStyle: {
 		background: healthBack
 		knob: healthFront
 		knobBefore: healthFront
+	}
+	default: {
+		background: void
+		knob: knobRock
+		knobBefore: knobMeter
 	}
 }
 }

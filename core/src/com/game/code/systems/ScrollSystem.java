@@ -74,7 +74,7 @@ public class ScrollSystem extends IteratingSystem {
 
         Timeline transition = Timeline.createSequence()
                 .beginParallel()
-                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity, getEngine()).color, ColorAccessor.A, 0.5f).target(0))
+                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, 0.5f).target(0))
                 .push(Tween.to(body, BodyTransformAccessor.X, 0.5f).target(calcItemX(calcBoundIndex(-direction))))
                 .end()
                 .push(Tween.call((type, source) ->  {
@@ -82,7 +82,7 @@ public class ScrollSystem extends IteratingSystem {
                     entity.add(getEngine().createComponent(HiddenBodyComponent.class));
                 }));
 
-        transition.start(TweenM.getInstance().getManager());
+        transition.start(TweenM.getManager());
     }
 
     private float calcItemX(int index) {
@@ -111,11 +111,11 @@ public class ScrollSystem extends IteratingSystem {
                     entity.remove(HiddenBodyComponent.class);
                 }))
                 .beginParallel()
-                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity, getEngine()).color, ColorAccessor.A, 0.5f).target(1))
+                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, 0.5f).target(1))
                 .push(Tween.to(body, BodyTransformAccessor.X, 0.5f).target(calcItemX(index)))
                 .end();
 
 
-        transition.start(TweenM.getInstance().getManager());
+        transition.start(TweenM.getManager());
     }
 }

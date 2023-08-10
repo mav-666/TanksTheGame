@@ -17,12 +17,12 @@ public abstract class JsonConfigFactory<T extends Config> implements ConfigFacto
         var json =  jsonLoader.findJson(configName);
 
         if(json.isEmpty())
-            return processJson(new JsonValue(0));
+            return parseJson(new JsonValue(0));
 
-        return processJson(json.get());
+        return parseJson(json.get());
     }
 
-    protected abstract T processJson(JsonValue jsonValue);
+    protected abstract T parseJson(JsonValue jsonValue);
 
 
 }

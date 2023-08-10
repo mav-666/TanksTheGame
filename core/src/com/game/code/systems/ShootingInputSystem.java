@@ -5,10 +5,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.game.code.components.DeadComponent;
-import com.game.code.components.PlayerComponent;
-import com.game.code.components.ProjectileTemplateComponent;
-import com.game.code.components.ShootsComponent;
+import com.game.code.components.*;
 
 
 public class ShootingInputSystem extends IntervalIteratingSystem {
@@ -16,7 +13,7 @@ public class ShootingInputSystem extends IntervalIteratingSystem {
 
     public ShootingInputSystem() {
         super(Family.all(PlayerComponent.class, ProjectileTemplateComponent.class)
-                .exclude(DeadComponent.class).get(), TIME_STEP, 10);
+                .exclude(DeadComponent.class, DisabledShootingComponent.class).get(), TIME_STEP, 10);
     }
 
     @Override

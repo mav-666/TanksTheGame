@@ -13,16 +13,6 @@
   }
   3: {
     name: "CanonComponent"
-    init: {
-      rotationSpeed: 2f
-    }
-  }
-  15: {
-    name: TextComponent
-    init: {
-      label: [Pixel, 2]
-      offset: [0, 0.60f]
-    }
   }
   16: {
     name: ColorComponent

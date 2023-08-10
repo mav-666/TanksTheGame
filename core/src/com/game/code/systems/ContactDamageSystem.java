@@ -4,10 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.game.code.components.CollidesComponent;
-import com.game.code.components.CollusionComponent;
-import com.game.code.components.ContactDamageComponent;
-import com.game.code.components.TakesDamageComponent;
+import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 
 public class ContactDamageSystem extends IteratingSystem {
@@ -15,14 +12,14 @@ public class ContactDamageSystem extends IteratingSystem {
     private final Mappers mappers = Mappers.getInstance();
 
     public ContactDamageSystem() {
-        super(Family.all(ContactDamageComponent.class, CollusionComponent.class, CollidesComponent.class).get());
+        super(Family.all(ContactDamageComponent.class, StartsCollusionComponent.class).get());
 
 
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        CollusionComponent collusion = mappers.get(CollusionComponent.class, entity);
+        StartCollusionComponent collusion = mappers.get(StartCollusionComponent.class, entity);
 
         float damage = mappers.get(ContactDamageComponent.class, entity).damage;
 

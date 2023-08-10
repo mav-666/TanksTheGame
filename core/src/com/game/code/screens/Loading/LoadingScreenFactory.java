@@ -6,7 +6,6 @@ import com.game.code.screens.AbstractLoadingScreen;
 
 public class LoadingScreenFactory {
 
-
     private final Application app;
 
     public LoadingScreenFactory(Application app) {
@@ -14,9 +13,6 @@ public class LoadingScreenFactory {
     }
 
     public AbstractLoadingScreen get(LoadableScreen loadableScreen) {
-        return switch (loadableScreen.getLoadingScreenType()) {
-            default -> new LoadingBarScreen(app, loadableScreen, loadableScreen.getLoadingTask());
-
-        };
+            return new LoadingBarScreen(app, loadableScreen, loadableScreen.getLoadingTask());
     }
 }

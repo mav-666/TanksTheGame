@@ -1,0 +1,16 @@
+{
+  1: {
+    name: TransformComponent
+  }
+  2: {
+    name: TextureComponent
+    init: {
+      textureRegion: "spawn"
+      width: 1f
+      height: 1f
+    }
+  }
+  3: {
+    name: SpawnComponent
+  }
+}

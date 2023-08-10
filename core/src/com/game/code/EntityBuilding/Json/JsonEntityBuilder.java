@@ -70,7 +70,7 @@ public class JsonEntityBuilder extends EntityBuilder {
                 if(fieldInit.isEmpty()) return;
 
                 componentInitializer.initField(component, jsonField.name, getConfigFrom(jsonField, fieldInit.get()));
-            } catch (NoSuchFieldException e) {
+            } catch (NoSuchFieldException | NullPointerException e) {
                 Gdx.app.log("Error", "json reading failed due to inappropriate field");
                 e.printStackTrace();
             }

@@ -160,4 +160,9 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
         prefs.flush();
 
     }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Keyboard;
+    }
 }

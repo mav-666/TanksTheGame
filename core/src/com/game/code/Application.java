@@ -32,7 +32,7 @@ public class Application extends Game {
 
     private final ClientSocket clientSocket = new ClientSocket();
 
-    private final ScreenHistory screenHistory = new ScreenHistory(1);
+    private final ScreenHistory screenHistory = new ScreenHistory(2);
     private final ScreenLoader screenLoader = new ScreenLoader(this);
 
     @Override
@@ -46,6 +46,8 @@ public class Application extends Game {
 
         initTween();
 
+        clientSocket.getSocket().connect();
+
         loadScreen(new MenuScreen(this));
     }
 
@@ -58,6 +60,8 @@ public class Application extends Game {
     @Override
     public void render() {
         super.render();
+
+        screenLoader.updateScreen();
     }
 
     @Override
@@ -69,7 +73,7 @@ public class Application extends Game {
 
     @Override
     public void dispose(){
-        clientSocket.getSocket().disconnect();
+        clientSocket.disconnectAll();
         assets.dispose();
         getScreen().dispose();
         batch.dispose();
@@ -85,6 +89,10 @@ public class Application extends Game {
 
     public Socket getSocket() {
         return clientSocket.getSocket();
+    }
+
+    public Socket getSocket(String nsp) {
+        return clientSocket.getSocket(nsp);
     }
 }
 

@@ -21,10 +21,6 @@
   }
   11: {
     name: "MobilityComponent"
-    init: {
-      movementSpeed: 10f
-      agility: 4f
-    }
   }
   5: {
     name: "InvincibilityComponent"
@@ -40,14 +36,17 @@
   }
   7: {
     name: "HealthComponent"
-    init: {
-      health: 100f
-    }
   }
   14: {
     name: "SummonsWhileMovingComponent"
     init: {
       entityName: "Trace"
+    }
+  }
+  15: {
+    name: "RespawnsAfterDeathComponent"
+    init: {
+      delaySec: 3
     }
   }
 }

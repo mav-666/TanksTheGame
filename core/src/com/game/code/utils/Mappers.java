@@ -6,11 +6,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
 
-import java.util.HashMap;
-
 public class Mappers {
     private static Mappers instance;
 
+    private Engine engine;
     private final ObjectMap<Class<? extends Component>, ComponentMapper<? extends Component>> mappers = new ObjectMap<>();
 
     private Mappers() {}
@@ -32,10 +31,10 @@ public class Mappers {
         return component;
     }
 
-    public <T extends Component> T getOrCreate(Class<T> componentType, Entity entity, Engine engine) {
+    public <T extends Component> T getOrCreate(Class<T> componentType, Entity entity) {
         T component = get(componentType, entity);
 
-        if(component == null) {
+        if(component == null && engine != null) {
             component = engine.createComponent(componentType);
             entity.add(component);
         }
@@ -56,4 +55,7 @@ public class Mappers {
         return (ComponentMapper<T>) mappers.get(componentType);
     }
 
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
 }

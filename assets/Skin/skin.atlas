@@ -6,50 +6,64 @@ filter: Nearest, Nearest
 repeat: none
 white-pixel
   rotate: false
-  xy: 40, 33
+  xy: 109, 107
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 HealthBarBg
   rotate: false
-  xy: 1, 16
+  xy: 1, 21
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
 LoadingBar
   rotate: false
-  xy: 1, 24
-  size: 37, 10
-  orig: 37, 10
-  offset: 0, 0
-  index: -1
-LoadingBar
-  rotate: false
-  xy: 1, 24
+  xy: 1, 32
   size: 37, 10
   orig: 37, 10
   offset: 0, 0
   index: -1
 LoadingBarKnob
   rotate: false
-  xy: 101, 94
+  xy: 101, 99
   size: 1, 6
   orig: 1, 6
   offset: 0, 0
   index: -1
+backKnobMeter
+  rotate: false
+  xy: 1, 29
+  size: 6, 1
+  orig: 6, 1
+  offset: 0, 0
+  index: -1
 healthMeter
   rotate: false
-  xy: 1, 36
+  xy: 1, 44
   size: 48, 64
   orig: 48, 64
   offset: 0, 0
   index: -1
 healthMeterBlendingMask
   rotate: false
-  xy: 51, 38
+  xy: 51, 46
   size: 48, 62
   orig: 48, 62
+  offset: 0, 0
+  index: -1
+knobMeter
+  rotate: false
+  xy: 101, 107
+  size: 6, 1
+  orig: 6, 1
+  offset: 0, 0
+  index: -1
+knobRock
+  rotate: false
+  xy: 40, 36
+  size: 6, 6
+  orig: 6, 6
   offset: 0, 0
   index: -1

@@ -4,7 +4,7 @@ import com.badlogic.gdx.utils.Array;
 
 import java.util.Iterator;
 
-public class MultipleTaskLoader extends TaskLoader {
+public class MultipleTaskLoader implements TaskLoader {
     protected Array<TaskLoader> allTasks;
     protected Array<TaskLoader> doneTasks;
 

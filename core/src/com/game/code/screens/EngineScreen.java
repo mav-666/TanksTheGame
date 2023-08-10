@@ -15,7 +15,7 @@ import com.game.code.EntityBuilding.FieldInitializers.Config.ConfigFactory;
 import com.game.code.EntityBuilding.Json.BodyConfigJsonFactory;
 import com.game.code.EntityBuilding.Json.JsonEntityBuilder;
 import com.game.code.EntityBuilding.Json.JsonLoader;
-import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
+import com.game.code.EntityBuilding.Summoners.*;
 import com.game.code.EntityBuilding.battlefiled.EntityCreator;
 import com.game.code.EntityBuilding.battlefiled.EntityCreatorImpl;
 import com.game.code.screens.Loading.LoadableScreen;
@@ -24,14 +24,16 @@ import com.game.code.systems.Box2dDebugSystem;
 import com.game.code.systems.RenderingSystem;
 import com.game.code.utils.CollusionRegister;
 import com.game.code.utils.CustomizableEngine;
+import com.game.code.utils.Mappers;
 import com.game.code.utils.TweenUtils.TweenM;
 
 public abstract class EngineScreen extends AbstractScreen implements LoadableScreen {
     protected final CustomizableEngine engine = new CustomizableEngine();
     protected final World world = new World(Vector2.Zero, false);
 
-    public EntityCreator entityCreator;
+    protected EntityBuilder entityBuilder;
     public EntitySummonerProvider entitySummonerProvider;
+    public EntityCreator entityCreator;
 
     protected Viewport viewport;
 
@@ -40,23 +42,25 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
 
         world.setContactListener(new CollusionRegister(engine));
 
-        initEntityBuilder(app.jsonLoader);
+        entityBuilder = initEntityBuilder(app.jsonLoader);
     }
 
-    protected void initEngine(Viewport viewport) {
-        this.viewport = viewport;
-        engine.includeBasic(entitySummonerProvider, world, viewport, app.batch);
-
-    }
-
-    private void initEntityBuilder(JsonLoader jsonLoader) {
+    private EntityBuilder initEntityBuilder(JsonLoader jsonLoader) {
         ComponentInitializer componentInitializer = initComponentInitializer(jsonLoader);
 
         EntityBuilder entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonLoader);
 
-        entitySummonerProvider = new EntitySummonerProvider(engine, entityBuilder, componentInitializer, app.skin);
+        entitySummonerProvider = new EntitySummonerProvider(new EntitySummoner(entityBuilder, engine));
 
-        entityCreator = new EntityCreatorImpl(entitySummonerProvider);
+        entitySummonerProvider.add(new SpriteSummoner(entityBuilder, engine, componentInitializer));
+        entitySummonerProvider.add(new ParticleSummoner(entityBuilder, engine, componentInitializer));
+        entitySummonerProvider.add(new ProjectileSummoner(entityBuilder, engine));
+        entitySummonerProvider.add(new TankSummoner(entityBuilder, engine));
+        entitySummonerProvider.add(new ButtonSummoner(entityBuilder, engine, componentInitializer));
+
+        entityCreator = new EntityCreatorImpl(entitySummonerProvider, entityBuilder);
+
+        return entityBuilder;
     }
 
     private ComponentInitializer initComponentInitializer(JsonLoader jsonLoader) {
@@ -75,12 +79,22 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
 
     @Override
     public void loaded() {
+        viewport = initViewport();
+        initEngine(viewport);
         initAim();
+
+    }
+
+    protected abstract Viewport initViewport();
+
+    protected void initEngine(Viewport viewport) {
+        this.viewport = viewport;
+        engine.includeBasic(entitySummonerProvider, world, viewport, app.batch);
+        Mappers.getInstance().setEngine(engine);
     }
 
     private void initAim() {
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
-        EntityBuilder entityBuilder = entitySummonerProvider.getEntityBuilder();
         entityBuilder.build("Aim");
         engine.addEntity(entityBuilder.getEntity());
     }
@@ -100,7 +114,7 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
         }
 
         engine.update(delta);
-        TweenM.getInstance().getManager().update(delta);
+        TweenM.getManager().update(delta);
     }
 
     @Override
@@ -121,7 +135,7 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
 
     @Override
     public void dispose() {
-        TweenM.getInstance().getManager().killAll();
+        TweenM.getManager().killAll();
         engine.removeAllEntities();
         engine.removeAllSystems();
         world.dispose();

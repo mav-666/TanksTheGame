@@ -1,9 +1,6 @@
 package com.game.code.Socket;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
@@ -26,24 +23,33 @@ public class OtherSocketMovementSystem extends EntitySystem implements EntityLis
 
     public OtherSocketMovementSystem(Socket socket) {
         super(12);
-        socket.on("playerMoved", args -> {
-            try {
-                JSONObject data = (JSONObject) args[0];
 
-                String id = data.getString("id");
-                float x = (float) data.getDouble("x");
-                float y = (float) data.getDouble("y");
-                float radAngle = (float) Math.toRadians(data.getDouble("degAngle"));
-                boolean isMoving = data.getBoolean("isMoving");
+        socket.on("playerMoved", this::playerMovedEvent);
+    }
 
-                if(players.containsKey(id))
-                    playerTransforms.put(id, Triple.of(x, y, radAngle));
-                if(isMoving)
-                    movingPlayers.add(id);
-            } catch (JSONException e) {
-                Gdx.app.log("SocketMovementError", "Failed reading movementInput");
-            }
-        });
+    private void playerMovedEvent(Object... args) {
+        try {
+            JSONObject data = (JSONObject) args[0];
+
+            String id = data.getString("id");
+            float x = (float) data.getDouble("x");
+            float y = (float) data.getDouble("y");
+            float radAngle = (float) Math.toRadians(data.getDouble("degAngle"));
+            boolean isMoving = data.getBoolean("isMoving");
+
+            if(players.containsKey(id))
+                playerTransforms.put(id, Triple.of(x, y, radAngle));
+            if(isMoving)
+                movingPlayers.add(id);
+        } catch (JSONException e) {
+            Gdx.app.log("SocketMovementError", "Failed reading movementInput");
+        }
+    }
+
+    @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+        getEngine().addEntityListener(FAMILY, this);
     }
 
     @Override

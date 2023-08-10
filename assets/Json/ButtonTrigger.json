@@ -12,6 +12,6 @@
     name: "ContactEventComponent"
   }
   4: {
-    name: EndCollusionComponent
+    name: CollusionComponent
   }
 }

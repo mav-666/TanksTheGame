@@ -2,11 +2,18 @@ package com.game.code.EntityBuilding.Summoners;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.*;
 
 public class EntitySummoner extends EntityBuilderSummoner implements SummoningDirector {
+
+    private final Vector2 vertex = new Vector2();
 
     private String entityName;
 
@@ -48,7 +55,27 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
         initScale(summonsC);
 
         if(entityBuilder.hasComponent(BodyComponent.class))
-            entityBuilder.getComponent(BodyComponent.class).body.setTransform(summonerTransform.position, summonerTransform.degAngle);
+            initBody(summonerTransform.position, summonsC);
+    }
+
+    private void initBody(Vector2 pos, SummonsComponent summonsC) {
+        Body body = entityBuilder.getComponent(BodyComponent.class).body;
+        body.getFixtureList().forEach(fixture -> {
+            boolean isSensor = fixture.isSensor();
+            initShapeScale(fixture.getShape(), summonsC.scaleX, summonsC.scaleY);
+            fixture.setSensor(isSensor);
+        });
+        body.setTransform(pos, summonsC.degAngle);
+    }
+
+    //Workaround :(
+    private void initShapeScale(Shape shape, float scaleX, float scaleY) {
+        if(shape.getType() == Shape.Type.Polygon) {
+            PolygonShape polygon = ((PolygonShape) shape);
+            polygon.getVertex(2, vertex);
+            polygon.setAsBox(vertex.x * scaleX, vertex.y * scaleY);
+        } else
+            shape.setRadius(shape.getRadius() * scaleX);
     }
 
     protected void initScale(SummonsComponent summonsComponent) {
@@ -58,5 +85,10 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
         TextureComponent texture = entityBuilder.getComponent(TextureComponent.class);
         texture.scaleX = summonsComponent.scaleX;
         texture.scaleY = summonsComponent.scaleY;
+    }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Default;
     }
 }

@@ -7,6 +7,6 @@ public enum SummonerType {
     Tank,
     Projectile,
     Button,
-    Keyboard
-    ;
+    Keyboard,
+    BattlefieldSetting,
 }

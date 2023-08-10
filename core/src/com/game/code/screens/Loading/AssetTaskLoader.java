@@ -2,7 +2,7 @@ package com.game.code.screens.Loading;
 
 import com.badlogic.gdx.assets.AssetManager;
 
-public class AssetTaskLoader extends TaskLoader {
+public class AssetTaskLoader implements TaskLoader {
     AssetManager assetManager;
 
     protected AssetTaskLoader(AssetManager assetManager) {

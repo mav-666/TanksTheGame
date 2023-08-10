@@ -1,9 +1,10 @@
-package com.game.code.utils;
+package com.game.code.systems.listeners.Box2D;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.code.components.HasFriendsComponent;
+import com.game.code.utils.Mappers;
 
 import java.util.Optional;
 

@@ -12,8 +12,6 @@ public class DistinctZIndexSystem extends IteratingSystem {
 
     public DistinctZIndexSystem() {
         super(Family.all(TransformComponent.class).get(), 60);
-
-
     }
 
     @Override

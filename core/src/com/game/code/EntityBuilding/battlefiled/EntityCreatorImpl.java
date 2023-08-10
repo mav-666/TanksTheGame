@@ -1,5 +1,6 @@
 package com.game.code.EntityBuilding.battlefiled;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.game.code.EntityBuilding.EntityBuilder;
@@ -15,28 +16,27 @@ public class EntityCreatorImpl implements EntityCreator {
 
     private final EntitySummonerProvider provider;
     private final Entity creationSettings;
+    private final Engine engine;
 
     private SummonerType summonerType = SummonerType.Default;
 
-    public EntityCreatorImpl(EntitySummonerProvider provider) {
+    public EntityCreatorImpl(EntitySummonerProvider provider, EntityBuilder entityBuilder) {
         this.provider = provider;
+        this.engine = entityBuilder.getEngine();
 
-        EntityBuilder entityBuilder = provider.getEntityBuilder();
         entityBuilder.build("");
-
         creationSettings = entityBuilder.getEntity();
     }
 
     @Override
     public Entity createEntityOn(float x, float y, float zIndex, String entityName) {
         Mappers mappers = Mappers.getInstance();
-        Engine engine = provider.getEntityBuilder().getEngine();
 
-        TransformComponent transform = mappers.getOrCreate(TransformComponent.class, creationSettings, engine);
+        TransformComponent transform = mappers.getOrCreate(TransformComponent.class, creationSettings);
         transform.position.set(x, y);
         transform.zIndex = zIndex;
 
-        SummonsNowComponent summons = mappers.getOrCreate(SummonsNowComponent.class, creationSettings, engine);
+        SummonsNowComponent summons = mappers.getOrCreate(SummonsNowComponent.class, creationSettings);
         summons.entityName = entityName;
         summons.summonerType = summonerType.name();
 
@@ -47,13 +47,18 @@ public class EntityCreatorImpl implements EntityCreator {
 
     @Override
     public void clearSettings() {
-        creationSettings.remove(SummonsNowComponent.class);
+        creationSettings.add(engine.createComponent(SummonsNowComponent.class));
         summonerType = SummonerType.Default;
     }
 
     @Override
-    public SummonsComponent getCreationSettings() {
-        return Mappers.getInstance().get(SummonsNowComponent.class, creationSettings);
+    public <T extends Component> T  getCreationSettings(Class<T> component) {
+        return Mappers.getInstance().getOrCreate(component, creationSettings);
+    }
+
+    @Override
+    public SummonsComponent getSummoningSettings() {
+        return getCreationSettings(SummonsNowComponent.class);
     }
 
     @Override

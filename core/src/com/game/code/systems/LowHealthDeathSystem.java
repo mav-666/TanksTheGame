@@ -14,15 +14,13 @@ public class LowHealthDeathSystem extends IteratingSystem {
 
     public LowHealthDeathSystem() {
         super(Family.all(HealthComponent.class).exclude(ImmortalComponent.class, DeadComponent.class).get());
-
-
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         HealthComponent health = mappers.get(HealthComponent.class, entity);
 
-        if(health.health <= 0)
+        if(health.currentHP <= 0)
             entity.add(getEngine().createComponent(DeadComponent.class));
     }
 }

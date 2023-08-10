@@ -7,11 +7,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 //камера привязанная к объекту, не выходит за границы карты
 public class BoundedCamera extends OrthographicCamera {
     
-    private final Bounds bounds;
-
+    private Bounds bounds;
     private float boundsX, boundsY;
 
     public BoundedCamera(Bounds bounds) {
+        setBounds(bounds);
+    }
+
+    public void setBounds(Bounds bounds) {
         this.bounds = bounds;
     }
 

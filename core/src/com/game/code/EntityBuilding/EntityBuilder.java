@@ -1,7 +1,6 @@
 package com.game.code.EntityBuilding;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.game.code.utils.Mappers;
@@ -19,7 +18,7 @@ public abstract class EntityBuilder {
     }
 
     public <T extends Component> T getComponent(Class<T> componentType) {
-        return mappers.getOrCreate(componentType, entity, engine);
+        return mappers.getOrCreate(componentType, entity);
     }
 
     public <T extends Component> boolean hasComponent(Class<T> componentType) {

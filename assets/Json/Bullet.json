@@ -23,6 +23,9 @@
   7: {
     name: "ContactBreakComponent"
   }
+  9: {
+    name: ContactScoreComponent
+  }
   8: {
     name: "SummonsAfterRemoveComponent"
     init: {

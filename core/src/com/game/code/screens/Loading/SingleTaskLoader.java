@@ -1,6 +1,6 @@
 package com.game.code.screens.Loading;
 
-public class SingleTaskLoader extends TaskLoader {
+public class SingleTaskLoader implements TaskLoader {
     private final String name;
     private final Task task;
     boolean isLoaded = false;

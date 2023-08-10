@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
-import com.game.code.utils.FriendsMaker;
+import com.game.code.systems.listeners.Box2D.FriendsMaker;
 
 public class ProjectileSummoner extends EntityBuilderSummoner {
 
@@ -35,6 +35,7 @@ public class ProjectileSummoner extends EntityBuilderSummoner {
         initBody(shootingPoint);
         friendsMaker.makeFriendsTo(summoner, entityBuilder.getEntity());
         initPosition(shootingPoint);
+        initPlayer(summoner);
         setContactDamage();
         setTextureSize();
 
@@ -82,5 +83,15 @@ public class ProjectileSummoner extends EntityBuilderSummoner {
         TextureComponent texture = entityBuilder.getComponent(TextureComponent.class);
 
         texture.width = texture.height = projectileTemplate.radius * 2;
+    }
+
+    private void initPlayer(Entity summoner) {
+        if(mappers.has(PlayerComponent.class, summoner))
+            entityBuilder.getComponent(PlayerComponent.class);
+    }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Projectile;
     }
 }

@@ -2,22 +2,21 @@ package com.game.code.EntityBuilding.Summoners;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.game.code.EntityBuilding.EntityBuilder;
+import com.game.code.EntityBuilding.FieldInitializers.TankConfig.*;
 import com.game.code.components.*;
+
+import java.util.Arrays;
 
 public class TankSummoner extends EntitySummoner {
     private boolean isPlayer;
     private String id;
     private String name;
+    private TankConfig tankConfig;
 
     private float tankWidth;
     private float tankHeight;
-
-    private enum TankParts{
-        Cab,
-        Head,
-        Barrel,
-    }
 
     public TankSummoner(EntityBuilder entityBuilder, Engine engine) {
         super(entityBuilder, engine);
@@ -26,9 +25,11 @@ public class TankSummoner extends EntitySummoner {
     @Override
     public Entity summonBy(Entity summoner) {
         String[] entityName = mappers.get(SummonsNowComponent.class, summoner).entityName.split(" ");
-        id = entityName[0];
-        isPlayer = id.equals("player");
+        isPlayer = Arrays.asList(entityName).contains("player");
         name = entityName.length >= 2 ? entityName[1] : "";
+        id = entityName[0];
+
+        tankConfig = mappers.has(TankTemplateComponent.class, summoner) ? mappers.get(TankTemplateComponent.class, summoner).tankConfig : new TankConfig();
 
         Entity cab = createCab();
 
@@ -61,8 +62,17 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private Entity createCab() {
-        entityBuilder.build(TankParts.Cab.name());
+        CabConfig cabConfig = tankConfig.cabConfig();
+
+        entityBuilder.build(cabConfig.cabName());
         entityBuilder.getEntity().flags = 2;
+
+        MobilityComponent mobility = entityBuilder.getComponent(MobilityComponent.class);
+        mobility.agility = cabConfig.agility();
+        mobility.movementSpeed = cabConfig.movementSpeed();
+
+        HealthComponent health = entityBuilder.getComponent(HealthComponent.class);
+        health.currentHP = cabConfig.HP();
 
         if(isPlayer) {
             entityBuilder.getComponent(PlayerComponent.class);
@@ -76,7 +86,12 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private Entity createHead() {
-        entityBuilder.build(TankParts.Head.name());
+        HeadConfig headConfig = tankConfig.headConfig();
+
+        entityBuilder.build(headConfig.headName());
+
+        CanonComponent canon = entityBuilder.getComponent(CanonComponent.class);
+        canon.rotationSpeed = headConfig.rotationSpeed();
 
         if(isPlayer) {
             entityBuilder.getComponent(PlayerComponent.class);
@@ -84,7 +99,7 @@ public class TankSummoner extends EntitySummoner {
             entityBuilder.getComponent(IdComponent.class).id = id;
         }
 
-        entityBuilder.getComponent(TextComponent.class).label.setText(name);
+        entityBuilder.getComponent(NameComponent.class).name = name;
 
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 
@@ -99,7 +114,15 @@ public class TankSummoner extends EntitySummoner {
     }
 
     private void createBarrel() {
-        entityBuilder.build(TankParts.Barrel.name());
+        BarrelConfig barrelConfig = tankConfig.barrelConfig();
+
+        entityBuilder.build(barrelConfig.barrelName());
+
+        RechargingComponent recharging = entityBuilder.getComponent(RechargingComponent.class);
+        recharging.seconds = barrelConfig.rechargeSeconds();
+
+        initProjectileTemplate(barrelConfig.projectileConfig());
+
 
         if(isPlayer) {
             entityBuilder.getComponent(PlayerComponent.class);
@@ -117,5 +140,19 @@ public class TankSummoner extends EntitySummoner {
         projectileC.shootingPoint.set(0, textureC.height/2);
 
         engine.addEntity(entityBuilder.getEntity());
+    }
+
+    private void initProjectileTemplate(ProjectileConfig projectileConfig) {
+        ProjectileTemplateComponent projectileTemplate = entityBuilder.getComponent(ProjectileTemplateComponent.class);
+        projectileTemplate.radius = projectileConfig.radius();
+        projectileTemplate.recoil = projectileConfig.recoil();
+        projectileTemplate.entityName = projectileConfig.projectileName();
+        projectileTemplate.speed = projectileConfig.speed();
+        projectileTemplate.contactDamage = projectileConfig.contactDamage();
+    }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Tank;
     }
 }

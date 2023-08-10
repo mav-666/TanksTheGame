@@ -1,5 +1,6 @@
 package com.game.code.EntityBuilding.battlefiled;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.components.SummonsComponent;
@@ -14,7 +15,9 @@ public interface EntityCreator {
 
     void clearSettings();
 
-    SummonsComponent getCreationSettings();
+    <T extends Component> T  getCreationSettings(Class<T> component);
+
+    SummonsComponent getSummoningSettings();
 
     void setSummonerType(SummonerType summonerType);
 }

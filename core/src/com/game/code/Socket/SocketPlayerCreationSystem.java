@@ -3,7 +3,9 @@ package com.game.code.Socket;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.game.code.EntityBuilding.ComponentInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.TankConfig.TankConfigInitializer;
+import com.game.code.EntityBuilding.Json.TankConfigJsonFactory;
 import com.game.code.EntityBuilding.battlefiled.PlayerCreator;
 import io.socket.client.Socket;
 import org.json.JSONArray;
@@ -12,42 +14,54 @@ import org.json.JSONObject;
 
 public class SocketPlayerCreationSystem extends EntitySystem {
 
-    private final ObjectMap<String, String> playerNames = new ObjectMap<>();
+    private final Socket socket;
+    private final JSONObject tankData;
     private final Array<String> creationQueue = new Array<>();
     private final PlayerCreator playerCreator;
 
-    public SocketPlayerCreationSystem(Socket socket, String playerName, PlayerCreator playerCreator) {
-        playerNames.put("player", playerName);
+    public SocketPlayerCreationSystem(Socket socket, PlayerCreator playerCreator) {
         this.playerCreator = playerCreator;
 
-        socket.on("playerJoined", args -> {
-            JSONObject data = (JSONObject) args[0];
+        this.socket = socket;
+        this.tankData = new JSONObject();
 
-            try {
-                String id = data.getString("id");
-                String name = data.getString("name");
-                playerNames.put(id, name);
-                creationQueue.add(id);
-            } catch (JSONException e) {
-                Gdx.app.log("SocketCreation", "Failed reading id");
-            }
+        ComponentInitializer.getInstance().addInitializer(
+                new TankConfigInitializer(
+                        new TankConfigJsonFactory(
+                                new SocketJsonLoader(tankData))));
 
-        }).on("getPlayers", args -> {
-            JSONArray dataArray = (JSONArray) args[0];
-            for(int i = 0; i < dataArray.length(); i++) {
-                try {
-                    JSONObject data = dataArray.getJSONObject(i);
-                    String id = data.getString("id");
-                    String name = data.getString("name");
+        socket.on("playerJoined", this::playerJoinedEvent)
+                .on("getPlayers", this::getPlayersEvent);
+    }
 
-                    playerNames.put(id, name);
-                    creationQueue.add(id);
-                } catch (JSONException e) {
-                    Gdx.app.log("SocketCreation", "Failed reading id");
-                }
-            }
-            creationQueue.add("player");
-        });
+    private void playerJoinedEvent(Object... args) {
+        try {
+            addPlayerBy((JSONObject) args[0]);
+        } catch (JSONException e) {
+            Gdx.app.log("SocketCreation", "Failed adding joined player");
+        }
+    }
+
+    private void getPlayersEvent(Object... args) {
+        JSONArray dataArray = (JSONArray) args[0];
+        try {
+
+            for(int i = 0; i < dataArray.length(); i++)
+                addPlayerBy(dataArray.getJSONObject(i));
+
+
+        } catch (JSONException e) {
+            Gdx.app.log("SocketCreation", "Failed getting current players");
+        }
+    }
+
+    private void addPlayerBy(JSONObject data) throws JSONException {
+            String name = data.getString("name");
+            String id = data.getString("id");
+            JSONObject tankConfig = data.getJSONObject("tankConfig");
+
+            tankData.put(id, tankConfig);
+            creationQueue.add(id + " " + name + (id.equals(socket.id()) ? " player" : ""));
     }
 
     @Override
@@ -59,7 +73,7 @@ public class SocketPlayerCreationSystem extends EntitySystem {
     }
 
     public void createPlayer(String id) {
-        playerCreator.create(id + " " + playerNames.get(id));
+        playerCreator.create(id);
         creationQueue.removeValue(id, false);
     }
 }

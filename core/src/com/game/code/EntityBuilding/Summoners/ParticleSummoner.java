@@ -16,7 +16,7 @@ public class ParticleSummoner extends EntitySummoner {
 
     private ParticleComponent particle;
 
-    ParticleSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
+    public ParticleSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
         super(entityBuilder, engine);
 
         this.componentInitializer = componentInitializer;
@@ -58,5 +58,10 @@ public class ParticleSummoner extends EntitySummoner {
     @Override
     protected void initScale(SummonsComponent summonsComponent) {
         particle.particleEffect.scaleEffect(summonsComponent.scaleX, summonsComponent.scaleY);
+    }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Particle;
     }
 }

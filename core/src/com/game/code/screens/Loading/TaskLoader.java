@@ -3,26 +3,25 @@ package com.game.code.screens.Loading;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
+import io.socket.client.Ack;
+import io.socket.client.Socket;
 
-public abstract class TaskLoader {
+public interface TaskLoader {
 
-    private static Builder builder = new Builder();
-
-    public static Builder create() {
-        return builder.reset();
+    static Builder create() {
+        return new Builder();
     }
 
+    void update() throws LoadingException;
 
-    public abstract void update() throws LoadingException;
+    boolean isDone();
 
-    public abstract boolean isDone();
+    float getProgress();
 
-    public abstract float getProgress();
-
-    public abstract String getName();
+    String getName();
 
 
-    public static class Builder {
+    class Builder {
 
         TaskLoader loadingTask;
         Array<TaskLoader> loadingTasks = new Array<>();
@@ -32,9 +31,21 @@ public abstract class TaskLoader {
 
             return this;
         }
+
+        public Builder add(TaskLoader taskLoader) {
+            loadingTasks.add(taskLoader);
+
+            return this;
+        }
         
         public Builder loadAssets(AssetManager assetManager) {
             loadingTasks.add(new AssetTaskLoader(assetManager));
+
+            return this;
+        }
+
+        public Builder loadFromSocket(Socket socket, String eventName, Ack ack, Object... args) {
+            loadingTasks.add(new SocketRequestLoader(socket, eventName, ack, args));
 
             return this;
         }
@@ -46,12 +57,6 @@ public abstract class TaskLoader {
             } else loadingTask = loadingTasks.first();
 
             return loadingTask;
-        }
-
-        public Builder reset() {
-            loadingTasks.clear();
-
-            return this;
         }
     }
 }

@@ -16,19 +16,9 @@
   }
   10: {
     name: "ProjectileTemplateComponent"
-    init: {
-      radius: 0.1f
-      recoil: 0.2f
-      entityName: "Bullet"
-      speed: 5f
-      contactDamage: 20
-    }
   }
   11: {
     name: "RechargingComponent"
-    init: {
-      seconds: 0.75f
-    }
   }
   12: {
     name: "AnimatedRecoilComponent"

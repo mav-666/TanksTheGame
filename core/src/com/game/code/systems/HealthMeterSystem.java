@@ -29,6 +29,14 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
 
         entityBuilder.build("GUIElement");
         meter = entityBuilder.getEntity();
+
+        this.setProcessing(false);
+    }
+
+    @Override
+    public void addedToEngine(Engine engine) {
+        super.addedToEngine(engine);
+        getEngine().addEntityListener(FAMILY, this);
     }
 
     @Override
@@ -36,6 +44,8 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
         healthC = mappers.get(HealthComponent.class, entity);
         createWidget(skin);
         createHealthMeter(healthMeter);
+
+        this.setProcessing(true);
     }
 
     @Override
@@ -44,8 +54,7 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
     }
 
     private void createWidget(Skin skin) {
-        healthMeter = new HealthMeter(skin, healthC.health);
-        healthMeter.setScale(RenderingSystem.toMeters(1f));
+        healthMeter = new HealthMeter(skin, healthC.currentHP);
     }
 
     private void createHealthMeter(HealthMeter healthMeter) {
@@ -60,6 +69,6 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
     @Override
     public void update(float deltaTime) {
         offset.set(viewport.getWorldWidth()/2f - 0.5f, -viewport.getWorldHeight()/2f + 0.25f);
-        healthMeter.setValue(healthC.health);
+        healthMeter.setValue(healthC.currentHP);
     }
 }

@@ -20,7 +20,7 @@
     }
   }
   6: {
-    name: "StartCollusionComponent"
+    name: "CollusionComponent"
   }
   7: {
     name: SummonsAfterCollusionComponent

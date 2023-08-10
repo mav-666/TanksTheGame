@@ -24,11 +24,11 @@ public abstract class LimitedPlacer extends Placer {
         return maxPlaced == -1 || currentPlaced < maxPlaced;
     }
 
-    public void iterate(Place place) {
+    public void iterate(Placement placement) {
         reset();
-        do {
-            place.on(nextSpot());
+        while (hasNext() && isNotEnough()) {
+            placement.on(nextSpot());
             currentPlaced++;
-        } while (hasNext() && isNotEnough());
+        }
     }
 }

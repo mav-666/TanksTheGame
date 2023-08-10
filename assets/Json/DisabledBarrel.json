@@ -1,0 +1,32 @@
+{
+  1: {
+    name: "TransformComponent"
+    init: {
+      zIndex: -2f
+    }
+  }
+  2: {
+    name: "TextureComponent"
+    init: {
+      textureRegion: "disabledBarrel"
+    }
+  }
+  7: {
+    name: "ConnectedComponent"
+  }
+  10: {
+    name: "ProjectileTemplateComponent"
+  }
+  15: {
+    name: "DisabledShootingComponent"
+  }
+  11: {
+    name: "RechargingComponent"
+  }
+  12: {
+    name: "AnimatedRecoilComponent"
+  }
+  16: {
+    name: ColorComponent
+  }
+}

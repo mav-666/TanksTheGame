@@ -1,9 +1,6 @@
 package com.game.code.Socket;
 
-import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.EntityListener;
-import com.badlogic.ashley.core.EntitySystem;
-import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.game.code.components.IdComponent;
@@ -23,18 +20,26 @@ public class OtherSocketShootingSystem extends EntitySystem implements EntityLis
 
     public OtherSocketShootingSystem(Socket socket) {
         super(12);
-        socket.on("playerShot", args -> {
-            try {
-                JSONObject data = (JSONObject) args[0];
 
-                String id = data.getString("id");
+        socket.on("playerShot", this::playerShotEvent);
+    }
 
-                if(players.containsKey(id));
-                    addShoots(players.get(id));
-            } catch (JSONException e) {
-                Gdx.app.log("SocketMovementError", "Failed reading movementInput");
-            }
-        });
+    private void playerShotEvent(Object... args) {
+        try {
+            JSONObject data = (JSONObject) args[0];
+
+            String id = data.getString("id");
+
+            if(players.containsKey(id))
+                addShoots(players.get(id));
+        } catch (JSONException e) {
+            Gdx.app.log("OtherSocketShootingSystem", "Failed reading shootInput");
+        }
+    }
+    
+    @Override
+    public void addedToEngine(Engine engine) {
+        getEngine().addEntityListener(FAMILY, this);
     }
 
     private void addShoots(Entity entity) {
@@ -49,6 +54,7 @@ public class OtherSocketShootingSystem extends EntitySystem implements EntityLis
 
     @Override
     public void entityRemoved(Entity entity) {
-
+        String id = mappers.get(IdComponent.class, entity).id;
+        players.remove(id);
     }
 }

@@ -11,10 +11,10 @@ public abstract class Placer {
         this.bounds = bounds;
     }
 
-    public void iterate(Place place) {
+    public void iterate(Placement placement) {
         reset();
         do {
-            place.on(nextSpot());
+            placement.on(nextSpot());
         } while (hasNext());
     }
 

@@ -22,7 +22,12 @@ public class InheritDeathSystem extends IteratingSystem {
 
         Entity original = mappers.get(InheritDeathComponent.class, entity).target;
 
-        if(original != null && deadM.has(original))
+        if(original == null) return;
+
+        if(deadM.has(original))
             entity.add(getEngine().createComponent(DeadComponent.class));
+        else
+            entity.remove(DeadComponent.class);
+
     }
 }

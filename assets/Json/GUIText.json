@@ -1,0 +1,17 @@
+{
+  1:{
+    name: TransformComponent
+    init: {
+      zIndex: -10
+    }
+  }
+  2: {
+    name: TextComponent
+    init: {
+      label: [Pixel, 4]
+    }
+  }
+  3: {
+    name: FollowsCameraComponent
+  }
+}

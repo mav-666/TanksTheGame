@@ -12,7 +12,7 @@ public class SpriteSummoner extends EntitySummoner {
 
     protected final ComponentInitializer componentInitializer;
 
-    SpriteSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
+    public SpriteSummoner(EntityBuilder entityBuilder, Engine engine, ComponentInitializer componentInitializer) {
         super(entityBuilder, engine);
 
         this.componentInitializer = componentInitializer;
@@ -43,5 +43,10 @@ public class SpriteSummoner extends EntitySummoner {
         super.initTransformBy(summoner);
 
         entityBuilder.getComponent(TransformComponent.class).zIndex++;
+    }
+
+    @Override
+    public SummonerType getType() {
+        return SummonerType.Sprite;
     }
 }

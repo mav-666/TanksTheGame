@@ -16,7 +16,7 @@ public class RandomPlacer extends LimitedPlacer {
 
     @Override
     public Vector2 nextSpot() {
-        return new Vector2((int) random.nextFloat(bounds.startX(), bounds.width()), (int) random.nextFloat(bounds.startY(), bounds.height()));
+        return new Vector2(random.nextFloat(bounds.startX(), bounds.width()), random.nextFloat(bounds.startY(), bounds.height()));
     }
 
     @Override

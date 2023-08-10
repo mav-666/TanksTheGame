@@ -7,15 +7,13 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.game.code.systems.RenderingSystem;
 
-public class HealthMeter extends WidgetGroup {
+public class HealthMeter extends Meter {
 
     private static final float SCALE = 1/4f;
 
-    private final Slider slider;
     private final Image blendingMask;
     private final Image front;
 
@@ -24,26 +22,39 @@ public class HealthMeter extends WidgetGroup {
         float width = frontD.getMinWidth() * SCALE;
         float height = frontD.getMinHeight() * SCALE;
 
+        this.setScale(RenderingSystem.toMeters(0.5f));
+
         setSize(RenderingSystem.toMeters(width), RenderingSystem.toMeters(1f));
 
-        blendingMask = new Image(skin.getDrawable("healthMeterBlendingMask"));
-        blendingMask.setScale(SCALE);
-        front = new Image(frontD);
-        front.setScale(SCALE);
+        initSlider(skin, width * 2, height * 2, maxValue);
+        addActor(slider);
 
+        blendingMask = new Image(skin.getDrawable("healthMeterBlendingMask"));
+        blendingMask.setScale(SCALE * 2);
+        addActor(blendingMask);
+
+        front = new Image(frontD);
+        front.setScale(SCALE * 2);
+        addActor(front);
+    }
+
+    @Override
+    protected void initSlider(Skin skin, float width, float height, float maxValue) {
+        Slider.SliderStyle sliderStyle = createSliderStyle(skin, width);
+
+        slider = new Slider(0, maxValue, 1, true, sliderStyle);
+        slider.setAnimateDuration(2f);
+        slider.setAnimateInterpolation(Interpolation.swingOut);
+        slider.setHeight(height - 3);
+    }
+
+    private Slider.SliderStyle createSliderStyle(Skin skin, float width) {
         Slider.SliderStyle sliderStyle = skin.get("health", Slider.SliderStyle.class);
         sliderStyle.background.setMinWidth(width);
         sliderStyle.knob.setMinWidth(width);
         sliderStyle.knobBefore.setMinWidth(width);
 
-        slider = new Slider(0, maxValue, 1, true, sliderStyle);
-        slider.setAnimateDuration(2f);
-        slider.setAnimateInterpolation(Interpolation.bounceOut);
-        slider.setHeight(height - 3);
-
-        addActor(slider);
-        addActor(blendingMask);
-        addActor(front);
+        return sliderStyle;
     }
 
     @Override

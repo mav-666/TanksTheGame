@@ -4,21 +4,11 @@ import aurelienribon.tweenengine.TweenManager;
 
 public class TweenM {
 
-    private final TweenManager tweenManager;
+    private static TweenManager tweenManager;
 
-    private static TweenM tween;
-
-    private TweenM() {
-        tweenManager = new TweenManager();
-    }
-
-    public static TweenM getInstance() {
-        if(tween == null)
-            tween = new TweenM();
-        return tween;
-    }
-
-    public TweenManager getManager() {
+    public static TweenManager getManager() {
+        if(tweenManager == null)
+            tweenManager = new TweenManager();
         return tweenManager;
     }
 }

@@ -25,7 +25,6 @@ public class CollusionRegister implements ContactListener {
         && B.getBody().getUserData() instanceof Entity Be) {
 
             addStartCollusion(Ae, Be);
-            addCollusionComponent(Ae, Be);
         }
     }
 
@@ -34,29 +33,13 @@ public class CollusionRegister implements ContactListener {
 
         if(startCollusionM.has(A)) {
             startCollusionM.get(A).involved.add(B);
+            A.add(engine.createComponent(StartsCollusionComponent.class));
         }
 
         if(startCollusionM.has(B)) {
             startCollusionM.get(B).involved.add(A);
+            B.add(engine.createComponent(StartsCollusionComponent.class));
         }
-
-        A.add(engine.createComponent(StartsCollusionComponent.class));
-        B.add(engine.createComponent(StartsCollusionComponent.class));
-    }
-
-    private void addCollusionComponent(Entity A, Entity B) {
-        ComponentMapper<CollusionComponent> collusionM = mappers.getMapper(CollusionComponent.class);
-
-        if(collusionM.has(A)) {
-            collusionM.get(A).involved.add(B);
-        }
-
-        if(collusionM.has(B)) {
-            collusionM.get(B).involved.add(A);
-        }
-
-        A.add(engine.createComponent(CollidesComponent.class));
-        B.add(engine.createComponent(CollidesComponent.class));
     }
 
     @Override
@@ -88,15 +71,15 @@ public class CollusionRegister implements ContactListener {
     private void addEndsCollusionComponent(Entity A, Entity B) {
         ComponentMapper<EndCollusionComponent> endCollusionM = mappers.getMapper(EndCollusionComponent.class);
 
-        if(endCollusionM.has(A))
+        if(endCollusionM.has(A)) {
             endCollusionM.get(A).involved.add(B);
+            A.add(engine.createComponent(EndsCollusionComponent.class));
+        }
 
-        if(endCollusionM.has(B))
+        if(endCollusionM.has(B)) {
             endCollusionM.get(B).involved.add(A);
-
-        A.add(engine.createComponent(EndsCollusionComponent.class));
-        B.add(engine.createComponent(EndsCollusionComponent.class));
-
+            B.add(engine.createComponent(EndsCollusionComponent.class));
+        }
     }
 
     @Override

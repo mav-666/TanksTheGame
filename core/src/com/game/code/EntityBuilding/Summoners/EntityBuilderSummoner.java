@@ -15,7 +15,5 @@ public abstract class EntityBuilderSummoner implements SummoningDirector {
     EntityBuilderSummoner(EntityBuilder entityBuilder, Engine engine) {
         this.entityBuilder = entityBuilder;
         this.engine = engine;
-
-
     }
 }

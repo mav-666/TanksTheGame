@@ -12,7 +12,7 @@ import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.*;
 import com.game.code.components.RechargesComponent;
 import com.game.code.components.ShootsComponent;
-import com.game.code.utils.BodySearcher;
+import com.game.code.systems.listeners.Box2D.BodySearcher;
 import com.game.code.utils.Mappers;
 import com.game.code.utils.TweenUtils.TweenM;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
@@ -28,7 +28,7 @@ public class ShootingSystem extends IteratingSystem {
 
     public ShootingSystem(SummoningDirector summoningDirector) {
         super(Family.all(ShootsComponent.class, ProjectileTemplateComponent.class, TransformComponent.class)
-                .exclude(RechargesComponent.class).get(), 12);
+                .exclude(RechargesComponent.class, DisabledShootingComponent.class).get(), 12);
 
         this.summoningDirector = summoningDirector;
 
@@ -54,7 +54,7 @@ public class ShootingSystem extends IteratingSystem {
         Timeline.createSequence()
                 .pushPause(seconds)
                 .push(Tween.call((summonerType, source) -> entity.remove(RechargesComponent.class)))
-                .start(TweenM.getInstance().getManager());
+                .start(TweenM.getManager());
     }
 
     private void addRecoil(Entity entity, Entity projectile) {
@@ -99,6 +99,6 @@ public class ShootingSystem extends IteratingSystem {
         Timeline.createSequence()
                 .push(Tween.to(offset, Vector2Accessor.Y, 0.1f).target(-height/3f).ease(TweenEquations.easeOutQuad))
                 .push(Tween.to(offset, Vector2Accessor.Y, 0.2f).target(0).ease(TweenEquations.easeInQuad))
-                .start(TweenM.getInstance().getManager());
+                .start(TweenM.getManager());
     }
 }

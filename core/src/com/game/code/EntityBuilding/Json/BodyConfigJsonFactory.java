@@ -22,7 +22,7 @@ public class BodyConfigJsonFactory extends JsonConfigFactory<BodyConfig> {
     }
 
     @Override
-    protected BodyConfig processJson(JsonValue jsonValue) {
+    protected BodyConfig parseJson(JsonValue jsonValue) {
         BodyDef bodyDef= parseBodyDef(jsonValue.get("bodyDef"));
 
         Array<FixtureDef> fixtureDefs = new Array<>();

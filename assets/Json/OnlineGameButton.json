@@ -1,0 +1,44 @@
+{
+  1: {
+    name: TransformComponent
+    init: {
+      zIndex: -5
+    }
+  }
+  2: {
+    name: TextureComponent
+    init: {
+      textureRegion: onlineGameButton
+      width: 1f
+      height: 1f
+    }
+  }
+  3: {
+    name: BodyComponent
+    init: {
+      body: ButtonBodyDef
+    }
+  }
+  7: {
+    name: "HealthComponent"
+    init: {
+      currentHP: -1f
+    }
+  }
+  5: {
+    name: "InvincibilityComponent"
+    init: {
+      seconds: 0.5f
+    }
+  }
+  10: {
+    name: ImmortalComponent
+  }
+  11: {
+    name: TextComponent
+    init: {
+      offset: [0, -0.4]
+      label: [Pixel, 2]
+    }
+  }
+}

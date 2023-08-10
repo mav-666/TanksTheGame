@@ -34,7 +34,7 @@
   6: {
     name: "HealthComponent"
     init: {
-      health: 50f
+      currentHP: 50f
     }
   }
 }
