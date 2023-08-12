@@ -11,9 +11,10 @@ import com.game.code.Socket.SocketOnlineGamesHandler;
 import com.game.code.components.ButtonTemplateComponent;
 import com.game.code.components.TextComponent;
 import com.game.code.components.TransformComponent;
+import com.game.code.screens.Loading.TaskLoader;
 import com.game.code.utils.BoundedCamera;
 import com.game.code.utils.Bounds;
-import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 import io.socket.client.Socket;
 
 public class OnlineGameListScreen extends EngineScreen {
@@ -26,10 +27,16 @@ public class OnlineGameListScreen extends EngineScreen {
     }
 
     @Override
-    public void loaded() {
-        super.loaded();
+    public TaskLoader getLoadingTask() {
+        return TaskLoader.create()
+                .add(super.getLoadingTask())
+                .add(this::createGrid, "grid")
+                .get();
+    }
+
+    @Override
+    public void show() {
         initSocket();
-        createGrid();
     }
 
     @Override
@@ -49,19 +56,36 @@ public class OnlineGameListScreen extends EngineScreen {
     }
 
     private void createGrid() {
+        createEmptyBox();
+
+        createGameListText();
+
+        createFilling();
+
+        createBackButton();
+
+        createTank();
+    }
+
+    private void createEmptyBox() {
         new BorderPlacer(bounds).iterate(spot -> entityCreator.createEntityOn(spot.x, spot.y, "Border"));
 
         entityCreator.setSummonerType(SummonerType.Sprite);
         new SquarePlacer(bounds).iterate(spot -> entityCreator.createEntityOn(spot.x, spot.y, 2, "plain"));
 
+    }
+
+    private void createGameListText() {
         entityBuilder.build("Text");
-        TextraLabel label = entityBuilder.getComponent(TextComponent.class).label;
+        TypingLabel label = entityBuilder.getComponent(TextComponent.class).label;
         label.setText("List of online games");
         label.setColor(app.skin.getColor("brown"));
 
         entityBuilder.getComponent(TransformComponent.class).position.set(6, 6);
         engine.addEntity(entityBuilder.getEntity());
+    }
 
+    private void createFilling() {
         entityCreator.clearSettings();
         entityCreator.createEntityOn(11, 2, "Box");
         entityCreator.createEntityOn(11, 3, "Box");
@@ -78,12 +102,16 @@ public class OnlineGameListScreen extends EngineScreen {
         entityCreator.createEntityOn(9, 8.5f, "Box");
         entityCreator.getSummoningSettings().degAngle = 0;
         entityCreator.createEntityOn(11, 8, "Box");
+    }
 
+    private void createBackButton() {
         entityCreator.setSummonerType(SummonerType.Button);
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent =  () -> app.loadScreen(new MenuScreen(app));
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = this::setMenuScreen;
         entityCreator.createEntityOn( 9, 2, -1, "back");
+    }
 
-        createTank();
+    private void setMenuScreen() {
+        app.getScreen(MenuScreen.class).ifPresentOrElse(app::loadScreen, () -> app.loadScreen(new MenuScreen(app)));
     }
 
     private void createTank() {
@@ -93,9 +121,11 @@ public class OnlineGameListScreen extends EngineScreen {
     }
 
     @Override
-    public void dispose() {
-        super.dispose();
+    public void hide() {
+        super.hide();
 
-        app.getSocket("/join").disconnect();
+        Socket join = app.getSocket("/join");
+        join.disconnect();
+        join.off();
     }
 }

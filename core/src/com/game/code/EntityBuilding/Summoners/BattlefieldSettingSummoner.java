@@ -4,13 +4,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.ObjectFloatMap;
 import com.game.code.EntityBuilding.EntityBuilder;
-import com.game.code.EntityBuilding.battlefiled.BattlefieldSettings;
 import com.game.code.EntityBuilding.battlefiled.EntityCreator;
 import com.game.code.UI.Meter;
 import com.game.code.UI.MeterImpl;
 import com.game.code.components.*;
-import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 
 public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
 
@@ -30,19 +30,24 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
         pos.set(mappers.get(TransformComponent.class, summoner).position);
 
         String fillingName = mappers.get(SummonsNowComponent.class, summoner).entityName;
-        BattlefieldSettings battlefieldSettings = mappers.get(BattlefieldSettingTemplateComponent.class, summoner).battlefieldSettings;
+
+        MeterTemplateComponent battlefieldSettingTemplateC = mappers.get(MeterTemplateComponent.class, summoner);
+        ObjectFloatMap<String> setting = battlefieldSettingTemplateC.setting;
+        String labelText = battlefieldSettingTemplateC.labelText;
+        Meter.MeterConfig meterConfig = battlefieldSettingTemplateC.meterConfig;
 
         createFillingSprite(fillingName);
 
-        TextraLabel label = createPercentageLabel();
-
         Entity meterE = createMeterEntity();
 
-        Meter meter = createMeterWidgetFor(meterE, fillingName, battlefieldSettings);
+        Meter meter = createMeterWidgetFor(meterConfig, fillingName, setting);
+        mappers.get(WidgetComponent.class, meterE).widget = meter;
+
+        TypingLabel label = createPercentageLabel(labelText);
 
         ButtonActivation activation = () -> {
-            battlefieldSettings.setPercentageOf(fillingName, meter.getValue());
-            label.setText("[%50]" +(int)meter.getValue() + "%");
+            setting.put(fillingName, meter.getValue());
+            label.setText(labelText.replace("{value}", String.valueOf((int) meter.getValue())));
         };
 
         activation.update();
@@ -62,9 +67,10 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
         entityCreator.createEntityOn(pos.x, pos.y + 1.5f, 1, fillingName);
     }
 
-    private TextraLabel createPercentageLabel() {
+    private TypingLabel createPercentageLabel(String labelText) {
         entityBuilder.build("Text");
-        TextraLabel label = entityBuilder.getComponent(TextComponent.class).label;
+        TypingLabel label = entityBuilder.getComponent(TextComponent.class).label;
+        label.setText(labelText);
         entityBuilder.getComponent(TransformComponent.class).position.set(pos.x, pos.y + 1.5f);
         entityBuilder.getComponent(TransformComponent.class).zIndex = 0.9f;
 
@@ -84,11 +90,9 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
         return entityBuilder.getEntity();
     }
 
-    private Meter createMeterWidgetFor(Entity meterE, String fillingName, BattlefieldSettings battlefieldSettings) {
-        Meter meter = new MeterImpl(skin, 0.2f, 1, 100);
-        meter.setValue(battlefieldSettings.getPercentageOf(fillingName));
-        entityBuilder.getComponent(WidgetComponent.class).widget = meter;
-        mappers.get(WidgetComponent.class, meterE).widget = meter;
+    private Meter createMeterWidgetFor(Meter.MeterConfig meterConfig, String fillingName, ObjectFloatMap<String> setting) {
+        Meter meter = new MeterImpl(skin, 0.2f, 1, meterConfig);
+        meter.setValue(setting.get(fillingName, 0));
 
         return meter;
     }

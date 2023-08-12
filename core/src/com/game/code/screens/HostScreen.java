@@ -2,6 +2,7 @@ package com.game.code.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.game.code.Application;
+import com.game.code.Socket.OtherSocketShootingSystem;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 import org.json.JSONObject;
@@ -13,6 +14,12 @@ public class HostScreen extends GameLobbyScreen {
 
     public HostScreen(Application app) {
         super(app);
+    }
+
+    @Override
+    protected void initEngine() {
+        super.initEngine();
+        engine.removeSystem(engine.getSystem(OtherSocketShootingSystem.class));
     }
 
     @Override
@@ -34,5 +41,12 @@ public class HostScreen extends GameLobbyScreen {
     protected void logPlayerEvent(Object... args) {
         String playerName = Gdx.app.getPreferences("Prefs").getString("playerName") + " host";
         app.getSocket("/inRoom").emit("playerLogged", new JSONObject(Map.of("name", playerName)));
+    }
+
+    @Override
+    protected void backButtonEvent() {
+        Socket host = app.getSocket("/host");
+        host.disconnect();
+        host.off();
     }
 }

@@ -2,16 +2,18 @@ package com.game.code.screens.Loading;
 
 import com.badlogic.gdx.Screen;
 import com.game.code.Application;
+import com.game.code.screens.AbstractLoadingScreen;
+import com.game.code.screens.LoadingBarScreen;
 
 public class ScreenLoader {
-    private final LoadingScreenFactory loadingScreenFactory;
     private final Application app;
+    private final ScreenHistory screenHistory;
 
     private Screen nextScreen;
 
-    public ScreenLoader(Application app) {
-        this.loadingScreenFactory = new LoadingScreenFactory(app);
+    public ScreenLoader(Application app, ScreenHistory screenHistory) {
         this.app = app;
+        this.screenHistory = screenHistory;
     }
 
     public void updateScreen() {
@@ -32,6 +34,11 @@ public class ScreenLoader {
     }
 
     private void setLoadingScreen(LoadableScreen loadableScreen) {
-        app.setScreen(loadingScreenFactory.get(loadableScreen));
+        TaskLoader taskLoader = screenHistory.containsScreen(loadableScreen) ? TaskLoader.create().get() : loadableScreen.getLoadingTask();
+        app.setScreen(createLoadingScreen(loadableScreen, taskLoader));
+    }
+
+    private AbstractLoadingScreen createLoadingScreen(LoadableScreen loadableScreen, TaskLoader taskLoader) {
+        return new LoadingBarScreen(app, loadableScreen, taskLoader);
     }
 }

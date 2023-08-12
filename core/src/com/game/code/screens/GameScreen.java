@@ -45,13 +45,23 @@ public class GameScreen extends EngineScreen {
     }
 
     @Override
-    protected void initEngine(Viewport viewport) {
-        super.initEngine(viewport);
+    public TaskLoader getLoadingTask() {
+        return TaskLoader.create()
+                .add(settingsParser.getLoadingTask())
+                .add(super.getLoadingTask())
+                .add(this::initSocket, "socket")
+                .get();
+    }
+
+    @Override
+    protected void initEngine() {
+        super.initEngine();
+
         initHealthMeter();
 
-        engine.addSystem(new TimeSystem(viewport, entityBuilder, matchTime));
-
         initScore();
+
+        engine.addSystem(new TimeSystem(viewport, entityBuilder, matchTime));
       }
 
     private void initHealthMeter() {
@@ -63,16 +73,11 @@ public class GameScreen extends EngineScreen {
         ScoreSystem scoreSystem = new ScoreSystem();
         engine.addSystem(scoreSystem);
         engine.addSystem(new ScoreDisplaySystem(viewport, entityBuilder, scoreSystem.getScore()));
-
     }
 
     @Override
-    public TaskLoader getLoadingTask() {
-        return TaskLoader.create()
-                .add(super.getLoadingTask())
-                .add(this::initSocket, "socket")
-                .add(settingsParser.getLoadingTask())
-                .get();
+    protected Viewport initViewport() {
+        return new ExtendViewport(13.5f,8, new BoundedCamera(bounds));
     }
 
     private void initSocket() {
@@ -84,25 +89,29 @@ public class GameScreen extends EngineScreen {
     }
 
     @Override
-    public void loaded() {
-        super.loaded();
+    public void show() {
         app.getSocket("/inRoom").emit("ready");
         engine.includeDebug(entityBuilder, world, viewport);
         createGrid();
     }
 
-    @Override
-    protected Viewport initViewport() {
-        return new ExtendViewport(13.5f,8, new BoundedCamera(bounds));
+    private void createGrid() {
+        createEmptyBox();
+
+        createFilling();
+
+        createDecor();
     }
 
-    private void createGrid() {
-        LimitedPlacer randomPlacer = new IntPlacer(bounds, new UniqueRandomPlacer(innerBounds, random));
-
+    private void createEmptyBox() {
         new BorderPlacer(bounds).iterate(spot -> entityCreator.createEntityOn(spot.x, spot.y, "border"));
 
         entityCreator.setSummonerType(SummonerType.Sprite);
         new SquarePlacer(bounds).iterate(spot -> entityCreator.createEntityOn(spot.x, spot.y, 2, "plain"));
+    }
+
+    private void createFilling() {
+        LimitedPlacer randomPlacer = new IntPlacer(bounds, new UniqueRandomPlacer(innerBounds, random));
 
         entityCreator.clearSettings();
         randomPlacer.setMaxPlaced(convertPercentToAmountOf("box"));
@@ -111,12 +120,10 @@ public class GameScreen extends EngineScreen {
         randomPlacer.iterate( spot -> placeWithRandomTransforms(spot, "gasoline"));
         randomPlacer.setMaxPlaced(convertPercentToAmountOf("bush"));
         randomPlacer.iterate( spot -> placeWithRandomTransforms(spot, "bush"));
-
-        createDecor();
     }
 
     private int convertPercentToAmountOf(String fillingName) {
-        return (int) ((bounds.width()-1) * (bounds.height()-1)  * settingsParser.getGameSettings().getPercentageOf(fillingName)/100f);
+        return (int) ((bounds.width()-1) * (bounds.height()-1)  * settingsParser.getGameSettings().fillingPercentages().get(fillingName, 0)/100f);
     }
 
     private void placeWithRandomTransforms(Vector2 spot, String name) {
@@ -162,7 +169,7 @@ public class GameScreen extends EngineScreen {
 
     class SocketGameSettingsParser {
 
-        private final BattlefieldSettings battlefieldSettings = new BattlefieldSettings();
+        private final GameSettings gameSettings = new GameSettings();
 
         private TaskLoader getLoadingTask() {
             return TaskLoader.create().loadFromSocket(app.getSocket("/inRoom"), "getGameSettings",
@@ -175,18 +182,18 @@ public class GameScreen extends EngineScreen {
             setPercentageOf("gasoline", data);
             setPercentageOf("box", data);
 
-            setSizeBy(data);
+            setOtherSettings(data);
         }
 
         private void setPercentageOf(String fillingName, JSONObject data) {
             try{
-                battlefieldSettings.setPercentageOf(fillingName, (float) data.getInt(fillingName));
+                gameSettings.fillingPercentages().put(fillingName, (float) data.getInt(fillingName));
             } catch (JSONException e) {
                 Gdx.app.log("GameSettingsError", "failed parsing " + fillingName);
             }
         }
 
-        private void setSizeBy(JSONObject data) {
+        private void setOtherSettings(JSONObject data) {
             try{
                 int width = data.getInt("width");
                 int height = data.getInt("height");
@@ -199,9 +206,8 @@ public class GameScreen extends EngineScreen {
             }
         }
 
-        public BattlefieldSettings getGameSettings() {
-            battlefieldSettings.levelAllValues();
-            return battlefieldSettings;
+        public GameSettings getGameSettings() {
+            return gameSettings;
         }
     }
 }

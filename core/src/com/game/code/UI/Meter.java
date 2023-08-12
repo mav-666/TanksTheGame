@@ -8,7 +8,7 @@ public abstract class Meter extends WidgetGroup {
 
     protected Slider slider;
 
-    abstract protected void initSlider(Skin skin, float width, float height, float maxValue);
+    abstract protected void initSlider(Skin skin, float width, float height, MeterConfig meterConfig);
 
     public float getValue() {
         return slider.getValue();
@@ -20,5 +20,18 @@ public abstract class Meter extends WidgetGroup {
 
     public void setValue(float value) {
         slider.setValue(value);
+    }
+
+    public static record MeterConfig(
+            float min,
+            float max,
+            float step
+    ) {
+        public MeterConfig(float max) {
+            this(max, 1);
+        }
+        public MeterConfig(float max, float step) {
+            this(0, max, step);
+        }
     }
 }

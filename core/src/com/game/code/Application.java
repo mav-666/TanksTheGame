@@ -22,6 +22,8 @@ import com.game.code.utils.TweenUtils.ColorAccessor;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
 import io.socket.client.Socket;
 
+import java.util.Optional;
+
 
 public class Application extends Game {
     public int seed = 1;
@@ -32,8 +34,8 @@ public class Application extends Game {
 
     private final ClientSocket clientSocket = new ClientSocket();
 
-    private final ScreenHistory screenHistory = new ScreenHistory(2);
-    private final ScreenLoader screenLoader = new ScreenLoader(this);
+    private final ScreenHistory screenHistory = new ScreenHistory(5);
+    private final ScreenLoader screenLoader = new ScreenLoader(this, screenHistory);
 
     @Override
     public void create() {
@@ -68,7 +70,8 @@ public class Application extends Game {
     public void setScreen(Screen screen) {
         super.setScreen(screen);
 
-        screenHistory.add(screen);
+        if(!screenHistory.containsScreen(screen))
+            screenHistory.add(screen);
     }
 
     @Override
@@ -83,8 +86,8 @@ public class Application extends Game {
         screenLoader.loadScreen(screen);
     }
 
-    public Screen getPreviousScreen() {
-        return screenHistory.getPreviousScreen();
+    public Optional<Screen> getScreen(Class<? extends Screen> screenType) {
+        return screenHistory.getScreen(screenType);
     }
 
     public Socket getSocket() {

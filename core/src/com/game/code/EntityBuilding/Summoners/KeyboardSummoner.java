@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
-import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 import org.apache.commons.lang3.StringUtils;
 
 public class KeyboardSummoner extends EntityBuilderSummoner {
@@ -18,7 +18,7 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
     private final Skin skin;
 
     private Vector2 pos;
-    private TextraLabel nameLabel;
+    private TypingLabel nameLabel;
     private Color textColor;
 
     public KeyboardSummoner(EntityBuilder entityBuilder, Engine engine, Skin skin) {
@@ -90,7 +90,7 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
 
         entityBuilder.getComponent(TextComponent.class).label.setText(String.valueOf(symbol));
         entityBuilder.getComponent(ContactEventComponent.class).event = () -> {
-            nameLabel.setText(nameLabel.storedText + symbol);
+            nameLabel.setText(nameLabel.getOriginalText().append(symbol).toString());
             textColor.set(skin.getColor("brown"));
         };
 

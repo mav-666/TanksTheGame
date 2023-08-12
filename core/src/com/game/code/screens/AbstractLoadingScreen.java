@@ -36,7 +36,6 @@ public abstract class AbstractLoadingScreen extends AbstractUIScreen {
     }
 
     protected void finishLoading() {
-        loadableScreen.loaded();
         app.setScreen(loadableScreen);
     }
 

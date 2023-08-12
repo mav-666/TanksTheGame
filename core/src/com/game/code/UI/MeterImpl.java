@@ -8,12 +8,12 @@ import com.game.code.systems.RenderingSystem;
 
 public class MeterImpl extends Meter {
 
-    public MeterImpl(Skin skin, float width, float height, float maxValue) {
+    public MeterImpl(Skin skin, float width, float height, MeterConfig meterConfig) {
 
         width = RenderingSystem.toPixels(width);
         height = RenderingSystem.toPixels(height);
 
-        initSlider(skin, width * 2, height * 2, maxValue);
+        initSlider(skin, width * 2, height * 2, meterConfig);
 
         setSize(RenderingSystem.toMeters(width), RenderingSystem.toMeters(height));
 
@@ -23,10 +23,10 @@ public class MeterImpl extends Meter {
     }
 
     @Override
-    protected void initSlider(Skin skin, float width, float height, float maxValue) {
+    protected void initSlider(Skin skin, float width, float height, MeterConfig meterConfig) {
         Slider.SliderStyle sliderStyle = createSliderStyle(skin, width);
 
-        slider = new Slider(0, maxValue,  1f, true, sliderStyle);
+        slider = new Slider(meterConfig.min(), meterConfig.max(),  meterConfig.step(), true, sliderStyle);
         slider.setAnimateDuration(0.5f);
         slider.setAnimateInterpolation(Interpolation.linear);
         slider.setHeight(height);

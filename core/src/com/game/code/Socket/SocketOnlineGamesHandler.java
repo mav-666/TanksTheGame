@@ -77,7 +77,7 @@ public class SocketOnlineGamesHandler {
     }
 
     private void changeScreen(String roomId) {
-        app.loadScreen(new JoinScreen(app, roomId));
+        app.getScreen(JoinScreen.class).ifPresentOrElse(app::loadScreen, () -> app.loadScreen(new JoinScreen(app, roomId)));
     }
 
     private void updateGame(OnlineGameData onlineGameData) {

@@ -2,9 +2,9 @@ package com.game.code.EntityBuilding.FieldInitializers;
 
 import com.badlogic.gdx.utils.Align;
 import com.game.code.utils.Assets.Assets;
-import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 
-public class TextraLabelInitializer extends ArrayFieldInitializer<TextraLabel, String> {
+public class TextraLabelInitializer extends ArrayFieldInitializer<TypingLabel, String> {
 
     private final Assets assets;
 
@@ -13,10 +13,10 @@ public class TextraLabelInitializer extends ArrayFieldInitializer<TextraLabel, S
     }
 
     @Override
-    public TextraLabel getInitBy( String[] config) {
-        TextraLabel textraLabel = new TextraLabel("", assets.getFont(config[0], Float.parseFloat(config[1])));
-        textraLabel.useIntegerPositions(false);
-        textraLabel.setAlignment(Align.center);
-        return textraLabel;
+    public TypingLabel getInitBy( String[] config) {
+        TypingLabel TypingLabel = new TypingLabel("", assets.getFont(config[0], Float.parseFloat(config[1])));
+        TypingLabel.useIntegerPositions(false);
+        TypingLabel.setAlignment(Align.center);
+        return TypingLabel;
     }
 }

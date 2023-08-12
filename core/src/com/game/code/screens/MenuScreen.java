@@ -9,6 +9,7 @@ import com.game.code.EntityBuilding.battlefiled.BorderPlacer;
 import com.game.code.EntityBuilding.battlefiled.SquarePlacer;
 import com.game.code.components.ButtonTemplateComponent;
 import com.game.code.components.SummonsComponent;
+import com.game.code.screens.Loading.TaskLoader;
 import com.game.code.utils.BoundedCamera;
 import com.game.code.utils.Bounds;
 
@@ -21,22 +22,24 @@ public class MenuScreen extends EngineScreen {
     }
 
     @Override
-    protected void initEngine(Viewport viewport) {
-        super.initEngine(viewport);
+    protected void initEngine() {
+        super.initEngine();
         entitySummonerProvider.add(new KeyboardSummoner(entityBuilder, engine, app.skin));
         engine.includeDebug(entityBuilder, world, viewport);
     }
 
     @Override
-    public void loaded() {
-        super.loaded();
-        createGrid();
-        createKeyboard();
+    protected Viewport initViewport() {
+        return new ExtendViewport(9, 6, new BoundedCamera(bounds));
     }
 
     @Override
-    protected Viewport initViewport() {
-        return new ExtendViewport(9, 6, new BoundedCamera(bounds));
+    public TaskLoader getLoadingTask() {
+        return TaskLoader.create()
+                .add(super.getLoadingTask())
+                .add(this::createGrid, "grid")
+                .add(this::createKeyboard, "keyboard")
+                .get();
     }
 
     private void createGrid() {

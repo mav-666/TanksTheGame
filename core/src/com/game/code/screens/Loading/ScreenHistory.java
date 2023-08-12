@@ -3,6 +3,7 @@ package com.game.code.screens.Loading;
 import com.badlogic.gdx.Screen;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ScreenHistory {
@@ -18,8 +19,8 @@ public class ScreenHistory {
         filters = new ArrayList<>();
     }
 
-    public Screen getPreviousScreen() {
-        return availableScreens.get(Math.min(1, capacity));
+    public Optional<Screen> getScreen(Class<? extends Screen> screenType) {
+        return availableScreens.stream().filter(screen -> screen.getClass() == screenType).findFirst();
     }
 
     public void add(Screen screen) {

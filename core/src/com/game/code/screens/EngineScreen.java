@@ -46,7 +46,7 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
     }
 
     private EntityBuilder initEntityBuilder(JsonLoader jsonLoader) {
-        ComponentInitializer componentInitializer = initComponentInitializer(jsonLoader);
+        ComponentInitializer componentInitializer = initComponentInitializer();
 
         EntityBuilder entityBuilder = new JsonEntityBuilder(engine, componentInitializer, jsonLoader);
 
@@ -63,14 +63,15 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
         return entityBuilder;
     }
 
-    private ComponentInitializer initComponentInitializer(JsonLoader jsonLoader) {
+    private ComponentInitializer initComponentInitializer() {
         ComponentInitializer componentInitializer = ComponentInitializer.getInstance();
 
-        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(jsonLoader));
+        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(app.jsonLoader));
+        componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
 
         componentInitializer.addInitializer(new AssetTextureInitializer(app.assets));
         componentInitializer.addInitializer(new AssetParticleInitializer(app.assets));
-        componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
+
         componentInitializer.addInitializer(new TextraLabelInitializer(app.assets));
         componentInitializer.addInitializer(new SkinColorInitializer(app.skin));
 
@@ -78,25 +79,36 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
     }
 
     @Override
-    public void loaded() {
-        viewport = initViewport();
-        initEngine(viewport);
-        initAim();
-
+    public TaskLoader getLoadingTask() {
+        return TaskLoader.create()
+                .add(app.assets::loadParticles, "Particles")
+                .add(app.assets::loadTextures, "Textures")
+                .loadAssets(app.assets.getAssetManager())
+                .add(this::initEngine, "engine")
+                .add(this::initAim, "aim")
+                .get();
     }
 
-    protected abstract Viewport initViewport();
-
-    protected void initEngine(Viewport viewport) {
-        this.viewport = viewport;
+    protected void initEngine() {
+        this.viewport = initViewport();
         engine.includeBasic(entitySummonerProvider, world, viewport, app.batch);
         Mappers.getInstance().setEngine(engine);
     }
+
+    protected abstract Viewport initViewport();
 
     private void initAim() {
         Gdx.graphics.setSystemCursor(Cursor.SystemCursor.None);
         entityBuilder.build("Aim");
         engine.addEntity(entityBuilder.getEntity());
+    }
+
+    @Override
+    public void show() {
+        super.show();
+
+        ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(app.jsonLoader));
+        ComponentInitializer.getInstance().addInitializer(new BodyInitializer(world, bodyConfigFactory));
     }
 
     @Override
@@ -122,15 +134,6 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
         super.resize(width, height);
 
         viewport.update(width, height, false);
-    }
-
-    @Override
-    public TaskLoader getLoadingTask() {
-        return TaskLoader.create()
-                .add(app.assets::loadParticles, "Particles")
-                .add(app.assets::loadTextures, "Textures")
-                .loadAssets(app.assets.getAssetManager())
-                .get();
     }
 
     @Override

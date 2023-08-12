@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.TextComponent;
 import com.game.code.utils.MatchTime;
-import com.github.tommyettinger.textra.TextraLabel;
+import com.github.tommyettinger.textra.TypingLabel;
 
 public class TimeSystem extends IntervalSystem {
 
@@ -15,7 +15,7 @@ public class TimeSystem extends IntervalSystem {
     private final EntityBuilder entityBuilder;
     private final MatchTime matchTime;
 
-    private TextraLabel label;
+    private TypingLabel label;
     private Vector2 offset;
 
 
@@ -38,7 +38,6 @@ public class TimeSystem extends IntervalSystem {
         offset = textC.offset;
         label = textC.label;
         label.setText(matchTime.toString());
-
 
         getEngine().addEntity(entityBuilder.getEntity());
     }

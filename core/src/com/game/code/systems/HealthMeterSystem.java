@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.UI.HealthMeter;
+import com.game.code.UI.Meter;
 import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 
@@ -54,7 +55,7 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
     }
 
     private void createWidget(Skin skin) {
-        healthMeter = new HealthMeter(skin, healthC.currentHP);
+        healthMeter = new HealthMeter(skin, new Meter.MeterConfig(healthC.currentHP));
     }
 
     private void createHealthMeter(HealthMeter healthMeter) {

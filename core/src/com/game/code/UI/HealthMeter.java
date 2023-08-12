@@ -17,7 +17,7 @@ public class HealthMeter extends Meter {
     private final Image blendingMask;
     private final Image front;
 
-    public HealthMeter(Skin skin, float maxValue) {
+    public HealthMeter(Skin skin, MeterConfig meterConfig) {
         Drawable frontD = skin.getDrawable("healthMeter");
         float width = frontD.getMinWidth() * SCALE;
         float height = frontD.getMinHeight() * SCALE;
@@ -26,7 +26,7 @@ public class HealthMeter extends Meter {
 
         setSize(RenderingSystem.toMeters(width), RenderingSystem.toMeters(1f));
 
-        initSlider(skin, width * 2, height * 2, maxValue);
+        initSlider(skin, width * 2, height * 2, meterConfig);
         addActor(slider);
 
         blendingMask = new Image(skin.getDrawable("healthMeterBlendingMask"));
@@ -39,10 +39,10 @@ public class HealthMeter extends Meter {
     }
 
     @Override
-    protected void initSlider(Skin skin, float width, float height, float maxValue) {
+    protected void initSlider(Skin skin, float width, float height, MeterConfig meterConfig) {
         Slider.SliderStyle sliderStyle = createSliderStyle(skin, width);
 
-        slider = new Slider(0, maxValue, 1, true, sliderStyle);
+        slider = new Slider(meterConfig.min(), meterConfig.max(), meterConfig.step(), true, sliderStyle);
         slider.setAnimateDuration(2f);
         slider.setAnimateInterpolation(Interpolation.swingOut);
         slider.setHeight(height - 3);

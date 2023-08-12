@@ -20,21 +20,21 @@ ShootKey
   index: -1
 aim
   rotate: false
-  xy: 598, 68
+  xy: 698, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 back
   rotate: false
-  xy: 848, 68
+  xy: 948, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 barrel
   rotate: false
-  xy: 612, 30
+  xy: 762, 30
   size: 12, 36
   orig: 12, 36
   offset: 0, 0
@@ -48,28 +48,28 @@ box
   index: 2
 box
   rotate: false
-  xy: 748, 68
+  xy: 848, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 box
   rotate: false
-  xy: 298, 18
+  xy: 398, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 bullet
   rotate: false
-  xy: 644, 50
+  xy: 794, 50
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 bush
   rotate: false
-  xy: 648, 68
+  xy: 748, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -97,7 +97,7 @@ decor
   index: 8
 decor
   rotate: false
-  xy: 626, 50
+  xy: 776, 50
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -111,7 +111,7 @@ decor
   index: 2
 decor
   rotate: false
-  xy: 626, 32
+  xy: 776, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -125,14 +125,14 @@ decor
   index: 10
 decor
   rotate: false
-  xy: 644, 32
+  xy: 794, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 decor
   rotate: false
-  xy: 662, 50
+  xy: 812, 50
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -146,21 +146,21 @@ decor
   index: 1
 decor
   rotate: false
-  xy: 662, 32
+  xy: 812, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 6
 disabledBarrel
   rotate: false
-  xy: 598, 30
+  xy: 748, 30
   size: 12, 36
   orig: 12, 36
   offset: 0, 0
   index: -1
 down
   rotate: false
-  xy: 548, 68
+  xy: 598, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -174,7 +174,7 @@ gasoline
   index: 2
 gasoline
   rotate: false
-  xy: 898, 68
+  xy: 198, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -186,9 +186,16 @@ head
   orig: 24, 24
   offset: 0, 0
   index: -1
+height
+  rotate: false
+  xy: 648, 68
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
 host
   rotate: false
-  xy: 348, 18
+  xy: 448, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -202,7 +209,7 @@ join
   index: -1
 onlineGameButton
   rotate: false
-  xy: 248, 18
+  xy: 348, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -216,56 +223,63 @@ plain
   index: 2
 plain
   rotate: false
-  xy: 498, 68
+  xy: 548, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 4
 plain
   rotate: false
-  xy: 698, 68
+  xy: 798, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 1
 plain
   rotate: false
-  xy: 798, 68
+  xy: 898, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 6
 plain
   rotate: false
-  xy: 948, 68
+  xy: 248, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 3
 plain
   rotate: false
-  xy: 498, 18
+  xy: 648, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: 5
 play
   rotate: false
-  xy: 548, 18
+  xy: 698, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 398, 18
+  xy: 498, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
   index: -1
 spawn
   rotate: false
-  xy: 198, 18
+  xy: 298, 18
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+time
+  rotate: false
+  xy: 498, 68
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
@@ -279,7 +293,14 @@ trace
   index: -1
 up
   rotate: false
-  xy: 448, 18
+  xy: 598, 18
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+width
+  rotate: false
+  xy: 548, 18
   size: 48, 48
   orig: 48, 48
   offset: 0, 0
