@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectFloatMap;
 import com.game.code.EntityBuilding.EntityBuilder;
-import com.game.code.EntityBuilding.battlefiled.EntityCreator;
+import com.game.code.EntityBuilding.EntityCreator;
 import com.game.code.UI.Meter;
 import com.game.code.UI.MeterImpl;
 import com.game.code.components.*;
@@ -15,8 +15,8 @@ import com.github.tommyettinger.textra.TypingLabel;
 public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
 
     private final Skin skin;
-    private final EntityCreator entityCreator;
-    private final Vector2 pos = new Vector2();
+    protected final EntityCreator entityCreator;
+    protected final Vector2 pos = new Vector2();
 
     public BattlefieldSettingSummoner(EntityBuilder entityBuilder, Engine engine, Skin skin, EntityCreator entityCreator) {
         super(entityBuilder, engine);
@@ -40,21 +40,21 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
 
         Entity meterE = createMeterEntity();
 
-        Meter meter = createMeterWidgetFor(meterConfig, fillingName, setting);
+        Meter meter = createMeterWidgetFor(meterConfig);
         mappers.get(WidgetComponent.class, meterE).widget = meter;
 
         TypingLabel label = createPercentageLabel(labelText);
 
-        ButtonActivation activation = () -> {
-            setting.put(fillingName, meter.getValue());
-            label.setText(labelText.replace("{value}", String.valueOf((int) meter.getValue())));
-        };
+        meter.getSignal().add((signal, value) -> {
+            setting.put(fillingName, value);
+            label.setText(labelText.replace("{value}", String.valueOf(value.intValue())));
+        });
 
-        activation.update();
+        meter.setValue(setting.get(fillingName, 0));
 
-        createIncrementButton(meter, activation);
+        createIncrementButton(meter);
 
-        createDecrementButton(meter, activation);
+        createDecrementButton(meter);
 
         entityCreator.setSummonerType(SummonerType.BattlefieldSetting);
 
@@ -90,16 +90,14 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
         return entityBuilder.getEntity();
     }
 
-    private Meter createMeterWidgetFor(Meter.MeterConfig meterConfig, String fillingName, ObjectFloatMap<String> setting) {
-        Meter meter = new MeterImpl(skin, 0.2f, 1, meterConfig);
-        meter.setValue(setting.get(fillingName, 0));
-
-        return meter;
+    private Meter createMeterWidgetFor(Meter.MeterConfig meterConfig) {
+        return new MeterImpl(skin, 0.2f, 1, meterConfig);
     }
 
-    private void createIncrementButton(Meter meter, ButtonActivation activation) {
+
+    private void createIncrementButton(Meter meter) {
         entityCreator.setSummonerType(SummonerType.Button);
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> {incrementFilling(meter); activation.update();};
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> incrementFilling(meter);
         entityCreator.createEntityOn(pos.x, pos.y + 0.75f,"up");
     }
 
@@ -107,9 +105,9 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
         meter.addValue(5);
     }
 
-    private void createDecrementButton(Meter meter, ButtonActivation activation) {
+    private void createDecrementButton(Meter meter) {
         entityCreator.setSummonerType(SummonerType.Button);
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> {decrementFilling(meter); activation.update();};
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> decrementFilling(meter);
         entityCreator.createEntityOn(pos.x, pos.y - 0.75f,"down");
     }
 
@@ -120,10 +118,5 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
     @Override
     public SummonerType getType() {
         return SummonerType.BattlefieldSetting;
-    }
-
-    @FunctionalInterface
-    interface ButtonActivation {
-        void update();
     }
 }
