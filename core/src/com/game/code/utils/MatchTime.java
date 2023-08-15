@@ -1,20 +1,23 @@
 package com.game.code.utils;
 
+import com.badlogic.ashley.signals.Signal;
+
 public class MatchTime {
 
-    private int matchDuration;
+    private final Signal<Boolean> timeEndSignal = new Signal<>();
     private int currentTime;
 
     public MatchTime(int matchDurationSec) {
-        this.matchDuration = currentTime = matchDurationSec;
+        this.currentTime = matchDurationSec;
     }
 
     public void updateTime() {
         currentTime = Math.max(0, --currentTime);
+        if(currentTime == 0) timeEndSignal.dispatch(true);
     }
 
-    public void setMatchDuration(int matchDuration) {
-        this.matchDuration = matchDuration;
+    public Signal<Boolean> getTimeEndSignal() {
+        return timeEndSignal;
     }
 
     @Override

@@ -13,10 +13,15 @@ public class SocketScoreSystem extends EntitySystem implements EntityListener {
     public final static Family FAMILY = Family.all(NameComponent.class).one(IdComponent.class, PlayerComponent.class).get();
 
     private final Mappers mappers = Mappers.getInstance();
+
+    private final Socket socket;
+
     private final ObjectMap<String, Entity> players = new ObjectMap<>();
 
     public SocketScoreSystem(Socket socket) {
         super();
+
+        this.socket = socket;
 
         socket.on("gainsPoints", this::gainsPointsEvent);
     }
@@ -62,5 +67,10 @@ public class SocketScoreSystem extends EntitySystem implements EntityListener {
 
     @Override
     public void entityRemoved(Entity entity) {
+    }
+
+    @Override
+    public void removedFromEngine(Engine engine) {
+        socket.off("gainsPoints");
     }
 }

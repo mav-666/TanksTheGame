@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -14,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Align;
 import com.game.code.components.*;
 import com.game.code.utils.Mappers;
+
+import java.util.Comparator;
 
 public class RenderingSystem extends SortedIteratingSystem {
 
@@ -148,5 +149,18 @@ public class RenderingSystem extends SortedIteratingSystem {
         widget.act(deltaTime);
         widget.draw(batch, 1);
         batch.setColor(Color.WHITE);
+    }
+
+    public static class ZComparator implements Comparator<Entity> {
+
+        private final ComponentMapper<TransformComponent> transformM = Mappers.getInstance().getMapper(TransformComponent.class);
+
+        @Override
+        public int compare(Entity o1, Entity o2) {
+            float pos1 = transformM.get(o1).zIndex;
+            float pos2 = transformM.get(o2).zIndex;
+
+            return (int) (Math.signum(pos2 - pos1));
+        }
     }
 }

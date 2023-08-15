@@ -16,8 +16,8 @@ import com.game.code.EntityBuilding.Json.BodyConfigJsonFactory;
 import com.game.code.EntityBuilding.Json.JsonEntityBuilder;
 import com.game.code.EntityBuilding.Json.JsonLoader;
 import com.game.code.EntityBuilding.Summoners.*;
-import com.game.code.EntityBuilding.battlefiled.EntityCreator;
-import com.game.code.EntityBuilding.battlefiled.EntityCreatorImpl;
+import com.game.code.EntityBuilding.EntityCreator;
+import com.game.code.EntityBuilding.EntityCreatorImpl;
 import com.game.code.screens.Loading.LoadableScreen;
 import com.game.code.screens.Loading.TaskLoader;
 import com.game.code.systems.Box2dDebugSystem;
@@ -28,7 +28,7 @@ import com.game.code.utils.Mappers;
 import com.game.code.utils.TweenUtils.TweenM;
 
 public abstract class EngineScreen extends AbstractScreen implements LoadableScreen {
-    protected final CustomizableEngine engine = new CustomizableEngine();
+    protected final CustomizableEngine engine = new CustomizableEngine(app.componentInitializer);
     protected final World world = new World(Vector2.Zero, false);
 
     protected EntityBuilder entityBuilder;
@@ -64,18 +64,10 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
     }
 
     private ComponentInitializer initComponentInitializer() {
-        ComponentInitializer componentInitializer = ComponentInitializer.getInstance();
-
         ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(app.jsonLoader));
-        componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
+        app.componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
 
-        componentInitializer.addInitializer(new AssetTextureInitializer(app.assets));
-        componentInitializer.addInitializer(new AssetParticleInitializer(app.assets));
-
-        componentInitializer.addInitializer(new TextraLabelInitializer(app.assets));
-        componentInitializer.addInitializer(new SkinColorInitializer(app.skin));
-
-        return componentInitializer;
+        return app.componentInitializer;
     }
 
     @Override
@@ -105,10 +97,8 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
 
     @Override
     public void show() {
-        super.show();
-
         ConfigFactory<BodyConfig> bodyConfigFactory = ConfigFactory.cache(new BodyConfigJsonFactory(app.jsonLoader));
-        ComponentInitializer.getInstance().addInitializer(new BodyInitializer(world, bodyConfigFactory));
+        app.componentInitializer.addInitializer(new BodyInitializer(world, bodyConfigFactory));
     }
 
     @Override

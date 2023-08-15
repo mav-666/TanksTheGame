@@ -7,7 +7,7 @@
   mass: 500
   fixtureDefs: {
     1: {
-      density: 5f
+      density: 100f
       shape: {
         type: "Polygon"
         coordinates: {

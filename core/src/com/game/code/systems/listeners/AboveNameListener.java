@@ -13,11 +13,12 @@ public class AboveNameListener implements EntityListener {
     public static final Family FAMILY = Family.all(NameComponent.class).get();
 
     private final Mappers mappers = Mappers.getInstance();
-    private final ComponentInitializer componentInitializer = ComponentInitializer.getInstance();
+    private final ComponentInitializer componentInitializer;
     private final Engine engine;
 
-    public AboveNameListener(Engine engine) {
+    public AboveNameListener(Engine engine, ComponentInitializer componentInitializer) {
         this.engine = engine;
+        this.componentInitializer = componentInitializer;
     }
 
     @Override

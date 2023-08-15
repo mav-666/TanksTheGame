@@ -9,11 +9,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.game.code.EntityBuilding.ComponentInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.AssetParticleInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.AssetTextureInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.SkinColorInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.TextraLabelInitializer;
 import com.game.code.EntityBuilding.Json.JsonLoader;
 import com.game.code.FileManagment.InternalJsonLoader;
 import com.game.code.Socket.ClientSocket;
-import com.game.code.screens.AbstractLoadingScreen;
-import com.game.code.screens.Loading.ScreenHistory;
+import com.game.code.screens.GameLobbyScreen;
 import com.game.code.screens.Loading.ScreenLoader;
 import com.game.code.screens.MenuScreen;
 import com.game.code.utils.Assets.Assets;
@@ -22,31 +26,28 @@ import com.game.code.utils.TweenUtils.ColorAccessor;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
 import io.socket.client.Socket;
 
-import java.util.Optional;
-
 
 public class Application extends Game {
-    public int seed = 1;
     public SpriteBatch batch;
     public Assets assets = new Assets();
     public JsonLoader jsonLoader = new InternalJsonLoader();
+    public ComponentInitializer componentInitializer = new ComponentInitializer();
     public Skin skin;
 
     private final ClientSocket clientSocket = new ClientSocket();
 
-    private final ScreenHistory screenHistory = new ScreenHistory(5);
-    private final ScreenLoader screenLoader = new ScreenLoader(this, screenHistory);
+    private final ScreenLoader screenLoader = new ScreenLoader(this);
 
     @Override
     public void create() {
-        screenHistory.addFilter((screen) -> screen instanceof AbstractLoadingScreen);
-
         assets.loadSkin();
         skin = assets.getSkin();
 
         batch = new SpriteBatch();
 
         initTween();
+
+        initComponentInitializer();
 
         clientSocket.getSocket().connect();
 
@@ -59,19 +60,26 @@ public class Application extends Game {
         Tween.registerAccessor(Body.class, new BodyTransformAccessor());
     }
 
+    private void initComponentInitializer() {
+        componentInitializer.addInitializer(new AssetTextureInitializer(assets));
+        componentInitializer.addInitializer(new AssetParticleInitializer(assets));
+
+        componentInitializer.addInitializer(new TextraLabelInitializer(assets));
+        componentInitializer.addInitializer(new SkinColorInitializer(skin));
+    }
+
+    @Override
+    public void setScreen(Screen screen) {
+        if(getScreen() != null && !(getScreen() instanceof GameLobbyScreen))
+            screenLoader.disposeScreen(getScreen());
+        super.setScreen(screen);
+    }
+
     @Override
     public void render() {
         super.render();
 
         screenLoader.updateScreen();
-    }
-
-    @Override
-    public void setScreen(Screen screen) {
-        super.setScreen(screen);
-
-        if(!screenHistory.containsScreen(screen))
-            screenHistory.add(screen);
     }
 
     @Override
@@ -84,10 +92,6 @@ public class Application extends Game {
 
     public void loadScreen(Screen screen) {
         screenLoader.loadScreen(screen);
-    }
-
-    public Optional<Screen> getScreen(Class<? extends Screen> screenType) {
-        return screenHistory.getScreen(screenType);
     }
 
     public Socket getSocket() {

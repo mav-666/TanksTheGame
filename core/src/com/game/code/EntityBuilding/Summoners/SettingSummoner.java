@@ -12,13 +12,13 @@ import com.game.code.UI.MeterImpl;
 import com.game.code.components.*;
 import com.github.tommyettinger.textra.TypingLabel;
 
-public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
+public class SettingSummoner extends EntityBuilderSummoner {
 
     private final Skin skin;
     protected final EntityCreator entityCreator;
     protected final Vector2 pos = new Vector2();
 
-    public BattlefieldSettingSummoner(EntityBuilder entityBuilder, Engine engine, Skin skin, EntityCreator entityCreator) {
+    public SettingSummoner(EntityBuilder entityBuilder, Engine engine, Skin skin, EntityCreator entityCreator) {
         super(entityBuilder, engine);
 
         this.skin = skin;
@@ -31,10 +31,11 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
 
         String fillingName = mappers.get(SummonsNowComponent.class, summoner).entityName;
 
-        MeterTemplateComponent battlefieldSettingTemplateC = mappers.get(MeterTemplateComponent.class, summoner);
-        ObjectFloatMap<String> setting = battlefieldSettingTemplateC.setting;
-        String labelText = battlefieldSettingTemplateC.labelText;
-        Meter.MeterConfig meterConfig = battlefieldSettingTemplateC.meterConfig;
+        SettingTemplateComponent settingTemplateC = mappers.get(SettingTemplateComponent.class, summoner);
+        boolean isDisabled = settingTemplateC.isDisabled;
+        ObjectFloatMap<String> setting = settingTemplateC.setting;
+        String labelText = settingTemplateC.labelText;
+        Meter.MeterConfig meterConfig = settingTemplateC.meterConfig;
 
         createFillingSprite(fillingName);
 
@@ -52,9 +53,9 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
 
         meter.setValue(setting.get(fillingName, 0));
 
-        createIncrementButton(meter);
+        createIncrementButton(meter, isDisabled);
 
-        createDecrementButton(meter);
+        createDecrementButton(meter, isDisabled);
 
         entityCreator.setSummonerType(SummonerType.BattlefieldSetting);
 
@@ -95,23 +96,23 @@ public class BattlefieldSettingSummoner extends EntityBuilderSummoner {
     }
 
 
-    private void createIncrementButton(Meter meter) {
+    private void createIncrementButton(Meter meter, boolean isDisabled) {
         entityCreator.setSummonerType(SummonerType.Button);
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> incrementFilling(meter);
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = isDisabled? () -> {} : () -> incrementValue(meter);
         entityCreator.createEntityOn(pos.x, pos.y + 0.75f,"up");
     }
 
-    private void incrementFilling(Meter meter) {
+    private void incrementValue(Meter meter) {
         meter.addValue(5);
     }
 
-    private void createDecrementButton(Meter meter) {
+    private void createDecrementButton(Meter meter, boolean isDisabled) {
         entityCreator.setSummonerType(SummonerType.Button);
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () -> decrementFilling(meter);
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = isDisabled? () -> {} : () -> decrementValue(meter);
         entityCreator.createEntityOn(pos.x, pos.y - 0.75f,"down");
     }
 
-    private void decrementFilling(Meter meter) {
+    private void decrementValue(Meter meter) {
         meter.addValue(-5);
     }
 

@@ -1,6 +1,7 @@
 package com.game.code.systems;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IntervalSystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -13,6 +14,7 @@ public class TimeSystem extends IntervalSystem {
 
     private final Viewport viewport;
     private final EntityBuilder entityBuilder;
+
     private final MatchTime matchTime;
 
     private TypingLabel label;
@@ -54,5 +56,4 @@ public class TimeSystem extends IntervalSystem {
 
        label.setText(matchTime.toString());
     }
-
 }

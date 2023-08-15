@@ -58,9 +58,4 @@ public class MeterImpl extends Meter {
 
         slider.act(delta);
     }
-
-
-    public void setValue(float value) {
-        slider.setValue(value);
-    }
 }

@@ -111,7 +111,7 @@ public class OnlineGameListScreen extends EngineScreen {
     }
 
     private void setMenuScreen() {
-        app.getScreen(MenuScreen.class).ifPresentOrElse(app::loadScreen, () -> app.loadScreen(new MenuScreen(app)));
+        app.loadScreen(new MenuScreen(app));
     }
 
     private void createTank() {
@@ -121,9 +121,7 @@ public class OnlineGameListScreen extends EngineScreen {
     }
 
     @Override
-    public void hide() {
-        super.hide();
-
+    public void dispose() {
         Socket join = app.getSocket("/join");
         join.disconnect();
         join.off();

@@ -11,23 +11,14 @@ import java.util.Optional;
 
 public class ComponentInitializer {
 
-    private static ComponentInitializer instance;
-
     protected final HashMap<Class<?>, FieldInitializer<?, ?>>  initializers = new HashMap<>();
 
-    private ComponentInitializer() {
+    public ComponentInitializer() {
         this.addInitializer(new FloatInitializer());
         this.addInitializer(new StringInitializer());
         this.addInitializer(new IntegerInitializer());
         this.addInitializer(new BooleanInitializer());
         this.addInitializer(new Vector2Initializer());
-    }
-
-    public static ComponentInitializer getInstance() {
-        if(instance == null)
-            instance = new ComponentInitializer();
-
-        return instance;
     }
 
     @SuppressWarnings("unchecked")

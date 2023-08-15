@@ -1,26 +1,30 @@
 package com.game.code.screens;
 
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.Application;
-import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.EntityBuilding.battlefiled.*;
-import com.game.code.Socket.SocketContactScoreSystem;
-import com.game.code.Socket.SocketScoreSystem;
+import com.game.code.Socket.*;
 import com.game.code.components.SummonsComponent;
 import com.game.code.components.TankTemplateComponent;
+import com.game.code.components.TextComponent;
 import com.game.code.screens.Loading.TaskLoader;
-import com.game.code.systems.HealthMeterSystem;
-import com.game.code.systems.ScoreDisplaySystem;
-import com.game.code.systems.ScoreSystem;
-import com.game.code.systems.TimeSystem;
+import com.game.code.systems.*;
 import com.game.code.utils.BoundedCamera;
 import com.game.code.utils.Bounds;
 import com.game.code.utils.MatchTime;
+import com.game.code.utils.Score;
+import com.game.code.utils.TweenUtils.TweenM;
+import io.socket.client.Ack;
 import io.socket.client.Socket;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,28 +34,55 @@ import java.util.Random;
 
 public class GameScreen extends EngineScreen {
 
-    private final Random random;
     private final String roomId;
-    MatchTime matchTime = new MatchTime(120);
 
-    SocketGameSettingsParser settingsParser = new SocketGameSettingsParser();
+    private final GameLobbyScreen gameLobbyScreen;
+
+    private final GameSettings gameSettings = new GameSettings();
+
+    private Random random;
 
     private Bounds bounds;
     private Bounds innerBounds;
-    public GameScreen(Application app, String roomId) {
+    public GameScreen(Application app, String roomId, GameLobbyScreen gameLobbyScreen) {
         super(app);
-        random = new Random(app.seed);
         this.roomId = roomId;
+        this.gameLobbyScreen = gameLobbyScreen;
     }
 
     @Override
     public TaskLoader getLoadingTask() {
         return TaskLoader.create()
-                .add(settingsParser.getLoadingTask())
+                .loadFromSocket(app.getSocket("/inRoom"), "getGameSettings",
+                        this::initGameSettings,
+                        new JSONObject(Map.of("roomId", roomId)))
+                .add(this::initBounds, "bounds")
                 .add(super.getLoadingTask())
                 .add(this::initSocket, "socket")
                 .get();
     }
+
+    private void initGameSettings(Object... args) {
+        try{
+            JSONObject data = (JSONObject) args[0];
+            JSONObject gameSettingsData = data.getJSONObject("gameSettings");
+            int seed = data.getInt("seed");
+
+            random = new Random(seed);
+            new SocketGameSettingsParser(gameSettings).parseGameSettingsData(gameSettingsData);
+
+        } catch (JSONException e) {
+            Gdx.app.log("InitGameSettingsError", "Failed reading gameSettingsData");
+        }
+    }
+
+    private void initBounds() {
+        float width = gameSettings.otherSettings().get("width", 15);
+        float height = gameSettings.otherSettings().get("height", 15);
+        bounds = new Bounds(0, 0, width, height);
+        innerBounds = new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width(), bounds.height());
+    }
+
 
     @Override
     protected void initEngine() {
@@ -61,6 +92,8 @@ public class GameScreen extends EngineScreen {
 
         initScore();
 
+        MatchTime matchTime = new MatchTime(5);
+        matchTime.getTimeEndSignal().add(this::timerEnd);
         engine.addSystem(new TimeSystem(viewport, entityBuilder, matchTime));
       }
 
@@ -74,6 +107,64 @@ public class GameScreen extends EngineScreen {
         engine.addSystem(scoreSystem);
         engine.addSystem(new ScoreDisplaySystem(viewport, entityBuilder, scoreSystem.getScore()));
     }
+
+    private void timerEnd(Signal<Boolean> signal, boolean object) {
+        createEndText();
+
+        removeShootingSystems();
+
+        updateScore();
+
+        Timeline.createSequence()
+                .pushPause(3)
+                .push(Tween.call((type, source) -> app.loadScreen(gameLobbyScreen)))
+                .start(TweenM.getManager());
+
+        signal.removeAllListeners();
+    }
+
+    private void createEndText() {
+        entityBuilder.build("GUIText");
+        TextComponent textC = entityBuilder.getComponent(TextComponent.class);
+        textC.offset.set(0, 1);
+        textC.label.setText("[%300]{SHRINK=2.0;1.0;false}Time is up!");
+        engine.addEntity(entityBuilder.getEntity());
+
+    }
+
+    private void removeShootingSystems() {
+        engine.removeSystem(engine.getSystem(OtherSocketShootingSystem.class));
+        engine.removeSystem(engine.getSystem(SocketShootingInputSystem.class));
+        engine.removeSystem(engine.getSystem(DamagingSystem.class));
+    }
+
+    private void updateScore() {
+        app.getSocket("/inRoom").emit("getScore", "", (Ack) respond -> {
+            Array<Score> allScore = new Array<>();
+
+            JSONArray allScoreData = (JSONArray) respond[0];
+
+            for(int i = 0; i < allScoreData.length(); i++) {
+                try {
+                    JSONObject scoreData = ((JSONObject) allScoreData.get(i));
+
+                    String playerId = scoreData.getString("id");
+                    String playerName = scoreData.getString("name");
+                    int scoreValue = scoreData.getInt("score");
+
+                    allScore.add(new Score(playerId, playerName, scoreValue));
+                } catch (JSONException e) {
+                    Gdx.app.log("ScoreError", "Failed reading score");
+                }
+            }
+
+            gameLobbyScreen.updateScore(allScore);
+
+            if(app.getSocket("/host").connected())
+                app.getSocket("/host").emit("endGame");
+        });
+    }
+
 
     @Override
     protected Viewport initViewport() {
@@ -96,6 +187,7 @@ public class GameScreen extends EngineScreen {
     }
 
     private void createGrid() {
+
         createEmptyBox();
 
         createFilling();
@@ -123,7 +215,7 @@ public class GameScreen extends EngineScreen {
     }
 
     private int convertPercentToAmountOf(String fillingName) {
-        return (int) ((bounds.width()-1) * (bounds.height()-1)  * settingsParser.getGameSettings().fillingPercentages().get(fillingName, 0)/100f);
+        return (int) ((bounds.width()-1) * (bounds.height()-1)  * gameSettings.fillingPercentages().get(fillingName, 0)/100f);
     }
 
     private void placeWithRandomTransforms(Vector2 spot, String name) {
@@ -161,53 +253,9 @@ public class GameScreen extends EngineScreen {
 
     private void createTankTemplate(String id) {
         try {
-            ComponentInitializer.getInstance().initField(entityCreator.getCreationSettings(TankTemplateComponent.class), "tankConfig", id.split(" ")[0]);
+            app.componentInitializer.initField(entityCreator.getCreationSettings(TankTemplateComponent.class), "tankConfig", id.split(" ")[0]);
         } catch (NoSuchFieldException e) {
             Gdx.app.log("Error", "Failed adding tankTemplate for " + id);
-        }
-    }
-
-    class SocketGameSettingsParser {
-
-        private final GameSettings gameSettings = new GameSettings();
-
-        private TaskLoader getLoadingTask() {
-            return TaskLoader.create().loadFromSocket(app.getSocket("/inRoom"), "getGameSettings",
-                    respond -> parseGameSettingsData((JSONObject) respond[0]),
-                    new JSONObject(Map.of("roomId", roomId))).get();
-        }
-
-        private void parseGameSettingsData(JSONObject data) {
-            setPercentageOf("bush", data);
-            setPercentageOf("gasoline", data);
-            setPercentageOf("box", data);
-
-            setOtherSettings(data);
-        }
-
-        private void setPercentageOf(String fillingName, JSONObject data) {
-            try{
-                gameSettings.fillingPercentages().put(fillingName, (float) data.getInt(fillingName));
-            } catch (JSONException e) {
-                Gdx.app.log("GameSettingsError", "failed parsing " + fillingName);
-            }
-        }
-
-        private void setOtherSettings(JSONObject data) {
-            try{
-                int width = data.getInt("width");
-                int height = data.getInt("height");
-
-                bounds = new Bounds(0, 0, width, height);
-                innerBounds = new Bounds(bounds.startX()+1, bounds.startY()+1, bounds.width(), bounds.height());
-
-            } catch (JSONException e) {
-                Gdx.app.log("GameSettingsError", "failed setting size");
-            }
-        }
-
-        public GameSettings getGameSettings() {
-            return gameSettings;
         }
     }
 }

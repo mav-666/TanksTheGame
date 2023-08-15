@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.EntityUserDataSetter;
 import com.game.code.EntityBuilding.HasFriendsComponentSetter;
@@ -18,6 +19,12 @@ import com.game.code.systems.listeners.Box2D.BodyHider;
 import io.socket.client.Socket;
 
 public class CustomizableEngine extends PooledEngine {
+
+    private final ComponentInitializer componentInitializer;
+
+    public CustomizableEngine(ComponentInitializer componentInitializer) {
+        this.componentInitializer = componentInitializer;
+    }
 
     public void includeBasic(EntitySummonerProvider entitySummonerProvider, World world, Viewport viewport, Batch batch) {
         this.addSystem(new RenderingSystem(viewport.getCamera(), batch));
@@ -38,7 +45,7 @@ public class CustomizableEngine extends PooledEngine {
         
         this.addSystem(new SummoningSystem(entitySummonerProvider));
 
-        this.addEntityListener(AboveNameListener.FAMILY, new AboveNameListener(this));
+        this.addEntityListener(AboveNameListener.FAMILY, new AboveNameListener(this, componentInitializer));
         this.addEntityListener(InvincibilityListener.FAMILY, new InvincibilityListener());
         this.addEntityListener(RespawnListener.FAMILY, new RespawnListener(this));
         this.addEntityListener(MaxHealthListener.FAMILY, new MaxHealthListener());
@@ -104,7 +111,7 @@ public class CustomizableEngine extends PooledEngine {
         this.addSystem(new OtherSocketMovementSystem(socket));
         this.addSystem(new SocketMovementSystem(socket));
 
-        this.addSystem(new SocketPlayerCreationSystem(socket, playerCreator));
+        this.addSystem(new SocketPlayerCreationSystem(socket, playerCreator, componentInitializer));
     }
     
     public void includeDebug(EntityBuilder entityBuilder, World world, Viewport viewport) {

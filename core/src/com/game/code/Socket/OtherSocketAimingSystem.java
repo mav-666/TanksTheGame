@@ -4,28 +4,32 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.game.code.components.CanonComponent;
-import com.game.code.components.GainsPointsComponent;
 import com.game.code.components.IdComponent;
 import com.game.code.components.TransformComponent;
+import com.game.code.utils.DeactivatingSystem;
 import com.game.code.utils.Mappers;
 import io.socket.client.Socket;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OtherSocketAimingSystem extends EntitySystem implements EntityListener {
+public class OtherSocketAimingSystem extends DeactivatingSystem implements EntityListener {
     public final static Family FAMILY = Family.all(IdComponent.class).one(CanonComponent.class).get();
 
     private final Mappers mappers = Mappers.getInstance();
+
+    private final Socket socket;
 
     ObjectMap<String, Entity> players = new ObjectMap<>();
 
     public OtherSocketAimingSystem(Socket socket) {
         super(12);
 
-        socket.on("playerAimed", this::payerAimedEvent);
+        this.socket = socket;
+
+        activate();
     }
 
-    private void payerAimedEvent(Object... args) {
+    private void playerAimedEvent(Object... args) {
         try {
             JSONObject data = (JSONObject) args[0];
 
@@ -61,5 +65,20 @@ public class OtherSocketAimingSystem extends EntitySystem implements EntityListe
     public void entityRemoved(Entity entity) {
         String id = mappers.get(IdComponent.class, entity).id;
         players.remove(id);
+    }
+
+    @Override
+    public void removedFromEngine(Engine engine) {
+        deactivate();
+    }
+
+    @Override
+    protected void activate() {
+        socket.on("playerAimed", this::playerAimedEvent);
+    }
+
+    @Override
+    protected void deactivate() {
+        socket.off("playerAimed");
     }
 }

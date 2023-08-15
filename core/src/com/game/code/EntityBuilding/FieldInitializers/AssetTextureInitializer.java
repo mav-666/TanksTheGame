@@ -30,7 +30,7 @@ public class AssetTextureInitializer extends FieldInitializer<TextureRegion, Str
         } catch (Exception e) {
             Gdx.app.log("Error", e.toString());
             Gdx.app.log("Error" ,"Texture not found: " + config);
-            return assets.getTextureAtlas().findRegion("cab");
+            return assets.getTextureAtlas().findRegion("error");
         }
     }
 }

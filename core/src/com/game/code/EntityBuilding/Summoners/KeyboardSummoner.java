@@ -133,7 +133,7 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
 
         entityBuilder.getComponent(TextComponent.class).label.setText("<--");
         entityBuilder.getComponent(ContactEventComponent.class).event = () -> {
-            nameLabel.setText(StringUtils.chop(nameLabel.storedText));
+            nameLabel.setText(StringUtils.chop(nameLabel.getOriginalText().toString()));
             textColor.set(skin.getColor("brown"));
         };
 
@@ -156,7 +156,7 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
     private void saveName() {
         Preferences prefs = Gdx.app.getPreferences("Prefs");
 
-        prefs.putString("playerName", nameLabel.storedText);
+        prefs.putString("playerName", nameLabel.getOriginalText().toString());
         prefs.flush();
 
     }

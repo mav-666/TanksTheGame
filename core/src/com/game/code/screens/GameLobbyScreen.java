@@ -1,32 +1,35 @@
 package com.game.code.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.ObjectFloatMap;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.Application;
-import com.game.code.EntityBuilding.ComponentInitializer;
-import com.game.code.EntityBuilding.Summoners.BattlefieldSettingSummoner;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.EntityBuilding.battlefiled.*;
+import com.game.code.Socket.OtherSocketAimingSystem;
+import com.game.code.Socket.OtherSocketMovementSystem;
+import com.game.code.Socket.OtherSocketShootingSystem;
+import com.game.code.Socket.SocketPlayerCreationSystem;
 import com.game.code.UI.Meter;
 import com.game.code.components.*;
 import com.game.code.screens.Loading.TaskLoader;
 import com.game.code.systems.DamagingSystem;
-import com.game.code.utils.BoundedCamera;
-import com.game.code.utils.Bounds;
+import com.game.code.utils.*;
 import com.github.tommyettinger.textra.TypingLabel;
 import io.socket.client.Socket;
 import org.json.JSONObject;
 
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public abstract class GameLobbyScreen extends EngineScreen {
+    private final static float SPAWN_X = 2, SPAWN_Y = 3;
 
     private final Bounds bounds = new Bounds(16, 10);
-    private final GameSettings gameSettings = new GameSettings();
-    private final float SPAWN_X = 2, SPAWN_Y = 3;
+    protected final GameSettings gameSettings = new GameSettings();
+    private final PercentLeveler percentLeveler = new PercentLeveler();
+
+    private Scoreboard scoreboard;
 
     protected String roomId;
 
@@ -38,7 +41,7 @@ public abstract class GameLobbyScreen extends EngineScreen {
     public TaskLoader getLoadingTask() {
         return TaskLoader.create()
                 .add(super.getLoadingTask())
-                .add(this::createGrid, "grid")
+                .add(this::initSocket, "socket")
                 .get();
     }
 
@@ -46,7 +49,6 @@ public abstract class GameLobbyScreen extends EngineScreen {
     protected void initEngine() {
         super.initEngine();
         engine.removeSystem(engine.getSystem(DamagingSystem.class));
-        entitySummonerProvider.add(new BattlefieldSettingSummoner(entityBuilder, engine, app.skin, entityCreator));
     }
 
     @Override
@@ -54,12 +56,46 @@ public abstract class GameLobbyScreen extends EngineScreen {
         return new ExtendViewport(9, 6, new BoundedCamera(bounds));
     }
 
-    private void createGrid() {
+    protected void initSocket() {
+        Socket socket = app.getSocket("/inRoom");
+
+        socket.on("gameClosed", args -> backButtonEvent());
+        socket.on("gameStarted", args -> app.loadScreen(new GameScreen(app, roomId, this)));
+        socket.on("logPlayer", this::logPlayerEvent);
+
+
+        engine.includeServerInteractions(socket, this::createTank);
+        engine.removeSystem(engine.getSystem(OtherSocketShootingSystem.class));
+    }
+
+    private void createTank(String id) {
+        entityCreator.clearSettings();
+        createTankTemplate(id);
+        entityCreator.setSummonerType(SummonerType.Tank);
+        entityCreator.createEntityOn(SPAWN_X, SPAWN_Y, id);
+    }
+
+    private void createTankTemplate(String id) {
+        try {
+            app.componentInitializer.initField(entityCreator.getCreationSettings(TankTemplateComponent.class), "tankConfig", id.split(" ")[0]);
+        } catch (NoSuchFieldException e) {
+            Gdx.app.log("Error", "Failed adding tankTemplate for " + id);
+        }
+    }
+
+    private void logPlayerEvent(Object... args) {
+        String playerName = Gdx.app.getPreferences("Prefs").getString("playerName");
+        app.getSocket("/inRoom").emit("playerLogged", new JSONObject(Map.of("name", playerName)));
+    }
+
+    protected void createGrid() {
         createEmptyBox();
 
         createNavigationButtons();
 
         createGameSettings();
+
+        createScoreBoard();
 
         createDecor();
     }
@@ -79,19 +115,31 @@ public abstract class GameLobbyScreen extends EngineScreen {
 
         entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = () ->  {
             applyGameSettings();
-            app.getSocket("/host").emit("startGame");
+            Socket host = app.getSocket("/host");
+            if(host.connected())
+                host.emit("startGame");
         };
-        entityCreator.createEntityOn(4, 4, "play");
+        entityCreator.createEntityOn(12, 6, "play");
 
         entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent = this::backButtonEvent;
         entityCreator.createEntityOn( 9, 2, -1, "back");
     }
 
+    protected void backButtonEvent() {
+        Socket socket = app.getSocket("/inRoom");
+        socket.disconnect();
+        socket.off();
+
+        app.loadScreen(new MenuScreen(app));
+    }
+
     private void createGameSettings() {
         entityCreator.clearSettings();
 
+        initSettingSummoner();
+
         entityCreator.setSummonerType(SummonerType.BattlefieldSetting);
-        MeterTemplateComponent meterTemplateC = entityCreator.getCreationSettings(MeterTemplateComponent.class);
+        SettingTemplateComponent meterTemplateC = entityCreator.getCreationSettings(SettingTemplateComponent.class);
 
         createFillingSettings(meterTemplateC);
 
@@ -100,7 +148,9 @@ public abstract class GameLobbyScreen extends EngineScreen {
         createSettingsText();
     }
 
-    private void createFillingSettings(MeterTemplateComponent meterTemplateC) {
+    protected abstract void initSettingSummoner();
+
+    private void createFillingSettings(SettingTemplateComponent meterTemplateC) {
         meterTemplateC.setting = gameSettings.fillingPercentages();
         meterTemplateC.meterConfig = new Meter.MeterConfig(0, 100, 5);
 
@@ -109,7 +159,7 @@ public abstract class GameLobbyScreen extends EngineScreen {
         entityCreator.createEntityOn(6,6, "gasoline");
     }
 
-    private void createOtherSettings(MeterTemplateComponent meterTemplateC) {
+    private void createOtherSettings(SettingTemplateComponent meterTemplateC) {
         meterTemplateC.labelText = "[%50]{value}";
         meterTemplateC.setting = gameSettings.otherSettings();
         meterTemplateC.meterConfig = new Meter.MeterConfig(15, 100, 5);
@@ -129,19 +179,23 @@ public abstract class GameLobbyScreen extends EngineScreen {
     }
 
     private void applyGameSettings() {
-        new PercentLeveler().levelAllValues(gameSettings.fillingPercentages());
+        percentLeveler.levelAllValues(gameSettings.fillingPercentages());
 
         app.getSocket("/host").emit("applyGameSettings", new JSONObject(Map.of(
                 "bush", gameSettings.fillingPercentages().get("bush", 0),
                 "gasoline", gameSettings.fillingPercentages().get("gasoline", 0),
                 "box", gameSettings.fillingPercentages().get("box", 0),
-                "width", gameSettings.otherSettings().get("width", 10),
-                "height", gameSettings.otherSettings().get("height", 10)
+                "width", gameSettings.otherSettings().get("width", 15),
+                "height", gameSettings.otherSettings().get("height", 15)
         )));
     }
 
-    protected void backButtonEvent() {
-        app.loadScreen(new MenuScreen(app));
+    private void createScoreBoard() {
+        entityBuilder.build("Text");
+        entityBuilder.getComponent(TransformComponent.class).position.set(7, 4);
+        TypingLabel label = entityBuilder.getComponent(TextComponent.class).label;
+        scoreboard = new Scoreboard(label, app.skin.getColor("brown"));
+        engine.addEntity(entityBuilder.getEntity());
     }
 
     private void createDecor() {
@@ -161,74 +215,25 @@ public abstract class GameLobbyScreen extends EngineScreen {
         });
     }
 
+    public void updateScore(Array<Score> allScore) {
+        scoreboard.clear();
+        allScore.forEach((score) -> scoreboard.addScore(score));
+        scoreboard.sort();
+        scoreboard.prettyPrint();
+    }
+
     @Override
     public void show() {
-        initSocket();
+        super.show();
+        engine.getSystem(SocketPlayerCreationSystem.class).setProcessing(true);
+        engine.getSystem(OtherSocketMovementSystem.class).setProcessing(true);
+        engine.getSystem(OtherSocketAimingSystem.class).setProcessing(true);
     }
 
-    protected void initSocket() {
-        Socket socket = app.getSocket("/inRoom");
-
-        socket.on("gameClosed", args -> {
-            socket.disconnect();
-            socket.off();
-            app.getScreen(MenuScreen.class).ifPresentOrElse(app::loadScreen, () -> app.loadScreen(new MenuScreen(app)));
-        });
-        socket.on("gameStarted", args -> app.loadScreen(new GameScreen(app, roomId)));
-
-
-        socket.on("logPlayer", this::logPlayerEvent);
-
-        engine.includeServerInteractions(socket, this::createTank);
-    }
-
-    protected void logPlayerEvent(Object... args) {
-        String playerName = Gdx.app.getPreferences("Prefs").getString("playerName");
-        app.getSocket("/inRoom").emit("playerLogged", new JSONObject(Map.of("name", playerName)));
-    }
-
-    private void createTank(String id) {
-        entityCreator.clearSettings();
-        createTankTemplate(id);
-        entityCreator.setSummonerType(SummonerType.Tank);
-        entityCreator.createEntityOn(SPAWN_X, SPAWN_Y, id);
-    }
-
-    private void createTankTemplate(String id) {
-        try {
-            ComponentInitializer.getInstance().initField(entityCreator.getCreationSettings(TankTemplateComponent.class), "tankConfig", id.split(" ")[0]);
-        } catch (NoSuchFieldException e) {
-            Gdx.app.log("Error", "Failed adding tankTemplate for " + id);
-        }
-    }
-
-    static class PercentLeveler {
-
-        private ObjectFloatMap<String> percents;
-
-        public void levelAllValues(ObjectFloatMap<String> percents) {
-            this.percents = percents;
-            float sum = calculateSumPercent();
-            if(sum <= 100) return;
-
-            float balanceModifier = calculateBalanceModifier(sum);
-            percents.keys().forEach((key) -> transformParameter(key, balanceModifier));
-        }
-
-        private float calculateSumPercent() {
-            float sum = 0;
-            for(float percentage :  percents.values().toArray().toArray())
-                sum += percentage;
-
-            return sum;
-        }
-
-        private float calculateBalanceModifier(float sumPercent) {
-            return sumPercent/100;
-        }
-
-        private void transformParameter(String fillingName, float modifier) {
-            percents.put(fillingName, percents.get(fillingName, 0) / modifier);
-        }
+    @Override
+    public void hide() {
+        engine.getSystem(SocketPlayerCreationSystem.class).setProcessing(false);
+        engine.getSystem(OtherSocketMovementSystem.class).setProcessing(false);
+        engine.getSystem(OtherSocketAimingSystem.class).setProcessing(false);
     }
 }

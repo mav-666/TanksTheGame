@@ -1,25 +1,27 @@
 package com.game.code.screens.Loading;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.Array;
 import com.game.code.Application;
 import com.game.code.screens.AbstractLoadingScreen;
 import com.game.code.screens.LoadingBarScreen;
 
 public class ScreenLoader {
     private final Application app;
-    private final ScreenHistory screenHistory;
+
+    private final Array<Screen> loadedScreens = new Array<>();
 
     private Screen nextScreen;
 
-    public ScreenLoader(Application app, ScreenHistory screenHistory) {
+    public ScreenLoader(Application app) {
         this.app = app;
-        this.screenHistory = screenHistory;
     }
 
     public void updateScreen() {
         if(nextScreen == null) return;
-        if(nextScreen instanceof LoadableScreen loadableScreen) {
+        if(nextScreen instanceof LoadableScreen loadableScreen && !loadedScreens.contains(loadableScreen, false)) {
             nextScreen = null;
+            loadedScreens.add(loadableScreen);
             setLoadingScreen(loadableScreen);
             return;
         }
@@ -34,11 +36,15 @@ public class ScreenLoader {
     }
 
     private void setLoadingScreen(LoadableScreen loadableScreen) {
-        TaskLoader taskLoader = screenHistory.containsScreen(loadableScreen) ? TaskLoader.create().get() : loadableScreen.getLoadingTask();
-        app.setScreen(createLoadingScreen(loadableScreen, taskLoader));
+        app.setScreen(createLoadingScreen(loadableScreen, loadableScreen.getLoadingTask()));
     }
 
     private AbstractLoadingScreen createLoadingScreen(LoadableScreen loadableScreen, TaskLoader taskLoader) {
         return new LoadingBarScreen(app, loadableScreen, taskLoader);
+    }
+
+    public void disposeScreen(Screen screen) {
+        loadedScreens.removeValue(screen, false);
+        screen.dispose();
     }
 }

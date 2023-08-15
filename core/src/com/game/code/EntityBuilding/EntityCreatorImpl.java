@@ -1,12 +1,10 @@
-package com.game.code.EntityBuilding.battlefiled;
+package com.game.code.EntityBuilding;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
-import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.SummonsComponent;
 import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TransformComponent;
@@ -29,7 +27,7 @@ public class EntityCreatorImpl implements EntityCreator {
     }
 
     @Override
-    public Entity createEntityOn(float x, float y, float zIndex, String entityName) {
+    public void createEntityOn(float x, float y, float zIndex, String entityName) {
         Mappers mappers = Mappers.getInstance();
 
         TransformComponent transform = mappers.getOrCreate(TransformComponent.class, creationSettings);
@@ -42,7 +40,7 @@ public class EntityCreatorImpl implements EntityCreator {
 
         SummoningDirector summoningDirector = provider.provide(summonerType);
 
-        return summoningDirector.summonBy(creationSettings);
+        summoningDirector.summonBy(creationSettings);
     }
 
     @Override

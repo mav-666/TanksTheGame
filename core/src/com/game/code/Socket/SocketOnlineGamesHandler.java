@@ -27,7 +27,8 @@ public class SocketOnlineGamesHandler {
         socket.on("getOnlineGames", this::getOnlineGamesEvent)
                 .on("newOnlineGame", this::newOnlineGameEvent)
                 .on("gameClosed", this::gameUpdated)
-                .on("gameStarted", this::gameUpdated);
+                .on("gameStarted", this::gameUpdated)
+                .on("gameEnded", this::gameUpdated);
     }
 
     private void getOnlineGamesEvent(Object... args) {
@@ -77,7 +78,7 @@ public class SocketOnlineGamesHandler {
     }
 
     private void changeScreen(String roomId) {
-        app.getScreen(JoinScreen.class).ifPresentOrElse(app::loadScreen, () -> app.loadScreen(new JoinScreen(app, roomId)));
+         app.loadScreen(new JoinScreen(app, roomId));
     }
 
     private void updateGame(OnlineGameData onlineGameData) {

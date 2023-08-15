@@ -1,10 +1,13 @@
 package com.game.code.UI;
 
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 public abstract class Meter extends WidgetGroup {
+
+    private final Signal<Float> signal = new Signal<>();
 
     protected Slider slider;
 
@@ -15,11 +18,16 @@ public abstract class Meter extends WidgetGroup {
     }
 
     public void addValue(float value) {
-        slider.setValue(getValue() + value);
+        this.setValue(getValue() + value);
     }
 
     public void setValue(float value) {
         slider.setValue(value);
+        signal.dispatch(slider.getValue());
+    }
+
+    public Signal<Float> getSignal() {
+        return signal;
     }
 
     public static record MeterConfig(

@@ -6,22 +6,27 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.game.code.components.IdComponent;
 import com.game.code.components.ProjectileTemplateComponent;
 import com.game.code.components.ShootsComponent;
+import com.game.code.utils.DeactivatingSystem;
 import com.game.code.utils.Mappers;
 import io.socket.client.Socket;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class OtherSocketShootingSystem extends EntitySystem implements EntityListener {
+public class OtherSocketShootingSystem extends DeactivatingSystem implements EntityListener {
     public final static Family FAMILY = Family.all(IdComponent.class, ProjectileTemplateComponent.class).get();
 
     private final Mappers mappers = Mappers.getInstance();
 
-    ObjectMap<String, Entity> players = new ObjectMap<>();
+    private final Socket socket;
+
+    private final ObjectMap<String, Entity> players = new ObjectMap<>();
 
     public OtherSocketShootingSystem(Socket socket) {
         super(12);
 
-        socket.on("playerShot", this::playerShotEvent);
+        this.socket = socket;
+
+        activate();
     }
 
     private void playerShotEvent(Object... args) {
@@ -56,5 +61,20 @@ public class OtherSocketShootingSystem extends EntitySystem implements EntityLis
     public void entityRemoved(Entity entity) {
         String id = mappers.get(IdComponent.class, entity).id;
         players.remove(id);
+    }
+
+    @Override
+    public void removedFromEngine(Engine engine) {
+        deactivate();
+    }
+
+    @Override
+    protected void activate() {
+        socket.on("playerShot", this::playerShotEvent);
+    }
+
+    @Override
+    protected void deactivate() {
+        socket.off("playerShot");
     }
 }

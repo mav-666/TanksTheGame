@@ -84,10 +84,10 @@ public class MenuScreen extends EngineScreen {
         entityCreator.createEntityOn(11, 8, "Box");
         entityCreator.setSummonerType(SummonerType.Button);
 
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent =  () -> app.loadScreen(new HostScreen(app));
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent =  () -> {if(app.getSocket().connected()) app.loadScreen(new HostScreen(app));};
         entityCreator.createEntityOn(10, 8, "host");
 
-        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent =  () -> app.loadScreen(new OnlineGameListScreen(app));
+        entityCreator.getCreationSettings(ButtonTemplateComponent.class).activateEvent =  () -> {if(app.getSocket().connected())app.loadScreen(new OnlineGameListScreen(app));};
         entityCreator.createEntityOn(8, 9f, "join");
 
         createTank();
