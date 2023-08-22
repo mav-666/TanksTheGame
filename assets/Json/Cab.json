@@ -49,4 +49,10 @@
       delaySec: 3
     }
   }
+  16: {
+    name: MovingSoundComponent
+    init: {
+      sound: move
+    }
+  }
 }

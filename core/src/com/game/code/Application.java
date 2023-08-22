@@ -10,10 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.game.code.EntityBuilding.ComponentInitializer;
-import com.game.code.EntityBuilding.FieldInitializers.AssetParticleInitializer;
-import com.game.code.EntityBuilding.FieldInitializers.AssetTextureInitializer;
-import com.game.code.EntityBuilding.FieldInitializers.SkinColorInitializer;
-import com.game.code.EntityBuilding.FieldInitializers.TextraLabelInitializer;
+import com.game.code.EntityBuilding.FieldInitializers.*;
 import com.game.code.EntityBuilding.Json.JsonLoader;
 import com.game.code.FileManagment.InternalJsonLoader;
 import com.game.code.Socket.ClientSocket;
@@ -63,6 +60,7 @@ public class Application extends Game {
     private void initComponentInitializer() {
         componentInitializer.addInitializer(new AssetTextureInitializer(assets));
         componentInitializer.addInitializer(new AssetParticleInitializer(assets));
+        componentInitializer.addInitializer((new AssetSoundInitializer(assets)));
 
         componentInitializer.addInitializer(new TextraLabelInitializer(assets));
         componentInitializer.addInitializer(new SkinColorInitializer(skin));

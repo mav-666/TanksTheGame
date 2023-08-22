@@ -1,6 +1,6 @@
 package com.game.code.Socket;
 
-import com.game.code.systems.ShootingInputSystem;
+import com.game.code.systems.Input.ShootingInputSystem;
 import io.socket.client.Socket;
 
 public class SocketShootingInputSystem extends ShootingInputSystem {

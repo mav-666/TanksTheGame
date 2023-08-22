@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.game.code.systems.RenderingSystem;
+import com.game.code.systems.Render.RenderingSystem;
 
 public class MeterImpl extends Meter {
 

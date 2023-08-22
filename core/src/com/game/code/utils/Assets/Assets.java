@@ -1,6 +1,7 @@
 package com.game.code.utils.Assets;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -12,27 +13,36 @@ public class Assets implements Disposable {
     private static final String TEXTURE_ATLAS_PATH = "TextureAtlas/tankTextures.atlas";
 
     private final AssetManager assetManager = new AssetManager();
-    private final ParticleEffectManager particleManager = new ParticleEffectManager(assetManager);
-    private final SkinManager skinManager = new SkinManager(assetManager);
+    private final ParticleEffectAssetLoader particleAssetLoader = new ParticleEffectAssetLoader(assetManager);
+    private final SoundEffectAssetLoader soundAssetLoader = new SoundEffectAssetLoader(assetManager);
+    private final SkinAssetLoader skinAssetLoader = new SkinAssetLoader(assetManager);
 
     public void loadSkin() {
-        skinManager.loadSkin();
+        skinAssetLoader.loadSkin();
     }
 
     public void loadParticles() {
-        particleManager.loadParticles();
+        particleAssetLoader.loadParticles();
     }
 
     public void loadTextures() {
         assetManager.load(TEXTURE_ATLAS_PATH, TextureAtlas.class);
     }
 
-    public ParticleEffect getParticle(Particle name) {
-        return particleManager.getParticleEffect(name);
+    public void loadSounds() {
+        soundAssetLoader.loadSounds();
+    }
+
+    public ParticleEffect getParticle(ParticleType name) {
+        return particleAssetLoader.getParticleEffect(name);
+    }
+
+    public Sound getSound(SoundType name) {
+        return soundAssetLoader.getSoundEffect(name);
     }
 
     public Skin getSkin() {
-        return skinManager.getSkin();
+        return skinAssetLoader.getSkin();
     }
 
     public TextureAtlas getTextureAtlas() {
@@ -40,7 +50,7 @@ public class Assets implements Disposable {
     }
 
     public Font getFont(String fontName, float size) {
-        return skinManager.getFont(fontName, size);
+        return skinAssetLoader.getFont(fontName, size);
     }
 
     public AssetManager getAssetManager() {

@@ -29,4 +29,10 @@
       entityName: leaves
     }
   }
+  8: {
+    name: ContactSoundComponent
+    init: {
+      sound: bushContact
+    }
+  }
 }

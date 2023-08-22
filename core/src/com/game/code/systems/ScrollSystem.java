@@ -111,8 +111,8 @@ public class ScrollSystem extends IteratingSystem {
                     entity.remove(HiddenBodyComponent.class);
                 }))
                 .beginParallel()
-                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, 0.5f).target(1))
-                .push(Tween.to(body, BodyTransformAccessor.X, 0.5f).target(calcItemX(index)))
+                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, .5f).target(1))
+                .push(Tween.to(body, BodyTransformAccessor.X, .5f).target(calcItemX(index)))
                 .end();
 
 

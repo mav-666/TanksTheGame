@@ -20,8 +20,8 @@ import com.game.code.EntityBuilding.EntityCreator;
 import com.game.code.EntityBuilding.EntityCreatorImpl;
 import com.game.code.screens.Loading.LoadableScreen;
 import com.game.code.screens.Loading.TaskLoader;
-import com.game.code.systems.Box2dDebugSystem;
-import com.game.code.systems.RenderingSystem;
+import com.game.code.systems.Box2d.Box2dDebugSystem;
+import com.game.code.systems.Render.RenderingSystem;
 import com.game.code.utils.CollusionRegister;
 import com.game.code.utils.CustomizableEngine;
 import com.game.code.utils.Mappers;
@@ -75,6 +75,7 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
         return TaskLoader.create()
                 .add(app.assets::loadParticles, "Particles")
                 .add(app.assets::loadTextures, "Textures")
+                .add(app.assets::loadSounds, "Sounds")
                 .loadAssets(app.assets.getAssetManager())
                 .add(this::initEngine, "engine")
                 .add(this::initAim, "aim")

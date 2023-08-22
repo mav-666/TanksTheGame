@@ -13,9 +13,49 @@ import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.EntityBuilding.battlefiled.PlayerCreator;
 import com.game.code.Socket.*;
-import com.game.code.systems.*;
-import com.game.code.systems.listeners.*;
-import com.game.code.systems.listeners.Box2D.BodyHider;
+import com.game.code.systems.Actions.AimingSystem;
+import com.game.code.systems.Actions.MovementSystem;
+import com.game.code.systems.Actions.ShootingSystem;
+import com.game.code.systems.Attachment.CameraFollowingSystem;
+import com.game.code.systems.Attachment.FollowCameraSystem;
+import com.game.code.systems.Attachment.FollowCursorSystem;
+import com.game.code.systems.Attachment.Inherit.InheritAngleSystem;
+import com.game.code.systems.Attachment.Inherit.InheritColorSystem;
+import com.game.code.systems.Attachment.Inherit.InheritDeathSystem;
+import com.game.code.systems.Box2d.Box2dDebugSystem;
+import com.game.code.systems.Box2d.ConnectionSystem;
+import com.game.code.systems.Box2d.Contact.CollusionSystem;
+import com.game.code.systems.Box2d.Contact.ContactBreakSystem;
+import com.game.code.systems.Box2d.Contact.ContactDamageSystem;
+import com.game.code.systems.Box2d.Contact.ContactEventSystem;
+import com.game.code.systems.Box2d.DestroyingSystem;
+import com.game.code.systems.Box2d.PhysicsSystem;
+import com.game.code.systems.Box2d.listeners.BodyHider;
+import com.game.code.systems.Box2d.listeners.LifeSpanListener;
+import com.game.code.systems.Death.DamagingSystem;
+import com.game.code.systems.Death.LowHealthDeathSystem;
+import com.game.code.systems.Death.RemoveAfterDeathListener;
+import com.game.code.systems.Death.listeners.FadeAfterDeathListener;
+import com.game.code.systems.Death.listeners.InvincibilityListener;
+import com.game.code.systems.Death.listeners.MaxHealthListener;
+import com.game.code.systems.Death.listeners.RespawnListener;
+import com.game.code.systems.DistinctZIndexSystem;
+import com.game.code.systems.HUD.listeners.AboveNameListener;
+import com.game.code.systems.Input.AimingInputSystem;
+import com.game.code.systems.Input.MovementInputSystem;
+import com.game.code.systems.Input.ShootingInputSystem;
+import com.game.code.systems.Render.CameraInvisibleSystem;
+import com.game.code.systems.Render.GLProfileSystem;
+import com.game.code.systems.Render.RenderingSystem;
+import com.game.code.systems.ScrollSystem;
+import com.game.code.systems.Sound.SoundSystem;
+import com.game.code.systems.Sound.listeners.*;
+import com.game.code.systems.Summon.DebugSummonSystem;
+import com.game.code.systems.Summon.SummoningSystem;
+import com.game.code.systems.Summon.SummonsAfterCollusionSystem;
+import com.game.code.systems.Summon.SummonsWhileMovingSystem;
+import com.game.code.systems.Summon.listeners.SummoningAfterDeathListener;
+import com.game.code.systems.Summon.listeners.SummonsAfterRemoveListener;
 import io.socket.client.Socket;
 
 public class CustomizableEngine extends PooledEngine {
@@ -39,6 +79,8 @@ public class CustomizableEngine extends PooledEngine {
         includeDeath();
 
         includeBox2D(world);
+
+        includeSound();
 
         this.addSystem(new SummonsWhileMovingSystem());
         this.addSystem(new ScrollSystem());
@@ -78,7 +120,7 @@ public class CustomizableEngine extends PooledEngine {
         this.addEntityListener(FadeAfterDeathListener.FAMILY, new FadeAfterDeathListener(this));
         this.addEntityListener(SummoningAfterDeathListener.FAMILY, new SummoningAfterDeathListener(this));
 
-        this.addSystem(new RemoveAfterDeathSystem());
+        this.addEntityListener(RemoveAfterDeathListener.FAMILY, new RemoveAfterDeathListener(this));
     }
 
     private void includeBox2D(World world) {
@@ -99,6 +141,20 @@ public class CustomizableEngine extends PooledEngine {
         
         this.addSystem(new SummonsAfterCollusionSystem());
         this.addEntityListener(SummonsAfterRemoveListener.FAMILY,new SummonsAfterRemoveListener(this));
+    }
+
+    public void includeSound() {
+        this.addEntityListener(SoundSearcher.FAMILY, new SoundSearcher(this));
+
+        this.addEntityListener(AimingSoundListener.FAMILY, new AimingSoundListener(this));
+        this.addEntityListener(ContactSoundListener.FAMILY, new ContactSoundListener(this));
+        this.addEntityListener(DamagedSoundListener.FAMILY, new DamagedSoundListener(this));
+        this.addEntityListener(DeathSoundListener.FAMILY, new DeathSoundListener(this));
+        this.addEntityListener(ShootingSoundListener.FAMILY, new ShootingSoundListener(this));
+
+        this.addSystem(new MovementSoundSystem());
+
+        this.addSystem(new SoundSystem());
     }
     
     public void includeServerInteractions(Socket socket, PlayerCreator playerCreator) {

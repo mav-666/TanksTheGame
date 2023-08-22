@@ -38,4 +38,19 @@
   8: {
     name: RemoveAfterDeathComponent
   }
+  9: {
+    name:DamagedSoundComponent
+    init: {
+      sound: boxHit
+    }
+  }
+  11: {
+    name: CollusionComponent
+  }
+  10: {
+    name: ContactSoundComponent
+    init: {
+      sound: boxContact
+    }
+  }
 }

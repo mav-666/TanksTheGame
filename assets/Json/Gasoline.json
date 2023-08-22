@@ -37,4 +37,19 @@
       currentHP: 50f
     }
   }
+  10: {
+    name:DamagedSoundComponent
+    init: {
+      sound: gasolineHit
+    }
+  }
+  11: {
+    name: ContactSoundComponent
+    init: {
+      sound: gasolineContact
+    }
+  }
+  12: {
+    name: CollusionComponent
+  }
 }

@@ -15,11 +15,11 @@ public class LoadingBar extends IndicationBar {
 
         Image foreground = new Image(skin.get("LoadingBar-T", TenPatchDrawable.class));
 
-        slider = new Slider(0, loadingTasksAmount, 0.01f,false, skin, "loadingBar");
+        slider = new Slider(0, loadingTasksAmount, .01f,false, skin, "loadingBar");
 
         slider.setValue(0);
         slider.setAnimateInterpolation(Interpolation.circle);
-        slider.setAnimateDuration(0.2f);
+        slider.setAnimateDuration(.2f);
 
         addActor(new Container<>(slider).prefSize(getWidth() - 2, getHeight()).pad(0,2, 0, 2));
         addActor(new Container<>(foreground).width(getWidth()));

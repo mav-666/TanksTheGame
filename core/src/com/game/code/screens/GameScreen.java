@@ -16,7 +16,11 @@ import com.game.code.components.SummonsComponent;
 import com.game.code.components.TankTemplateComponent;
 import com.game.code.components.TextComponent;
 import com.game.code.screens.Loading.TaskLoader;
-import com.game.code.systems.*;
+import com.game.code.systems.Death.DamagingSystem;
+import com.game.code.systems.HUD.HealthMeterSystem;
+import com.game.code.systems.HUD.ScoreDisplaySystem;
+import com.game.code.systems.HUD.ScoreSystem;
+import com.game.code.systems.HUD.TimeSystem;
 import com.game.code.utils.BoundedCamera;
 import com.game.code.utils.Bounds;
 import com.game.code.utils.MatchTime;
@@ -92,7 +96,7 @@ public class GameScreen extends EngineScreen {
 
         initScore();
 
-        MatchTime matchTime = new MatchTime(5);
+        MatchTime matchTime = new MatchTime(120);
         matchTime.getTimeEndSignal().add(this::timerEnd);
         engine.addSystem(new TimeSystem(viewport, entityBuilder, matchTime));
       }
@@ -220,7 +224,7 @@ public class GameScreen extends EngineScreen {
 
     private void placeWithRandomTransforms(Vector2 spot, String name) {
         SummonsComponent settings = entityCreator.getSummoningSettings();
-        settings.scaleX = settings.scaleY = random.nextFloat(0.5f, 1.2f);
+        settings.scaleX = settings.scaleY = random.nextFloat(.5f, 1.2f);
         settings.degAngle = random.nextInt(16) * 22.5f;
         entityCreator.createEntityOn(spot.x, spot.y, name);
     }
@@ -230,8 +234,8 @@ public class GameScreen extends EngineScreen {
         decorPlacer.setMaxPlaced((int)((bounds.width()-bounds.startX()) * (bounds.height()-bounds.startY()) / 4));
         entityCreator.setSummonerType(SummonerType.Sprite);
         SummonsComponent settings = entityCreator.getSummoningSettings();
-        settings.scaleX = 0.25f;
-        settings.scaleY = 0.25f;
+        settings.scaleX = .25f;
+        settings.scaleY = .25f;
 
         decorPlacer.iterate(spot -> {
             settings.degAngle = random.nextInt(16) * 22.5f;

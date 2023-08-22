@@ -26,4 +26,10 @@
   16: {
     name: ColorComponent
   }
+  21: {
+    name: ShootingSoundComponent
+    init: {
+      sound: shoot
+    }
+  }
 }

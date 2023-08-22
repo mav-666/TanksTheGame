@@ -14,7 +14,7 @@ import com.game.code.Socket.SocketPlayerCreationSystem;
 import com.game.code.UI.Meter;
 import com.game.code.components.*;
 import com.game.code.screens.Loading.TaskLoader;
-import com.game.code.systems.DamagingSystem;
+import com.game.code.systems.Death.DamagingSystem;
 import com.game.code.utils.*;
 import com.github.tommyettinger.textra.TypingLabel;
 import io.socket.client.Socket;
