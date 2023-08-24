@@ -12,8 +12,6 @@ import com.game.code.utils.Mappers;
 
 public class SummoningAfterDeathListener implements EntityListener {
     public static final Family FAMILY = Family.all(DeadComponent.class, SummonsAfterDeathComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public SummoningAfterDeathListener(Engine engine) {
@@ -22,7 +20,7 @@ public class SummoningAfterDeathListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        SummonsAfterDeathComponent afterDeath = mappers.get(SummonsAfterDeathComponent.class, entity);
+        SummonsAfterDeathComponent afterDeath = Mappers.get(SummonsAfterDeathComponent.class, entity);
         SummonsNowComponent summons = engine.createComponent(SummonsNowComponent.class);
 
         summons.summonerType = afterDeath.summonerType;

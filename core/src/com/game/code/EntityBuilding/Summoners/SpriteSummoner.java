@@ -7,6 +7,7 @@ import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TextureComponent;
 import com.game.code.components.TransformComponent;
+import com.game.code.utils.Mappers;
 
 public class SpriteSummoner extends EntitySummoner {
 
@@ -25,12 +26,12 @@ public class SpriteSummoner extends EntitySummoner {
 
     @Override
     protected void init(Entity summoner) {
-        initTexture(mappers.get(SummonsNowComponent.class, summoner).entityName);
+        initTexture(Mappers.get(SummonsNowComponent.class, summoner).entityName);
         super.init(summoner);
     }
 
     protected void initTexture(String entityName) {
-        TextureComponent textureC = mappers.get(TextureComponent.class, entityBuilder.getEntity());
+        TextureComponent textureC = Mappers.get(TextureComponent.class, entityBuilder.getEntity());
 
         try {
             componentInitializer.initField(textureC, "textureRegion", entityName);

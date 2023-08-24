@@ -14,4 +14,10 @@
   4: {
     name: CollusionComponent
   }
+  10: {
+    name: ContactSoundComponent
+    init: {
+      sound: boxContact
+    }
+  }
 }

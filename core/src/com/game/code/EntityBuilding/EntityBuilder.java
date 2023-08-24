@@ -6,7 +6,6 @@ import com.badlogic.ashley.core.Entity;
 import com.game.code.utils.Mappers;
 
 public abstract class EntityBuilder {
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Engine engine;
 
@@ -18,11 +17,11 @@ public abstract class EntityBuilder {
     }
 
     public <T extends Component> T getComponent(Class<T> componentType) {
-        return mappers.getOrCreate(componentType, entity);
+        return Mappers.getOrCreate(componentType, entity);
     }
 
     public <T extends Component> boolean hasComponent(Class<T> componentType) {
-        return mappers.has(componentType, entity);
+        return Mappers.has(componentType, entity);
     }
 
     public void build(String entityName) {

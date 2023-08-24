@@ -55,4 +55,10 @@
       sound: move
     }
   }
+  12: {
+    name: DamagedSoundComponent
+    init: {
+      sound: tankHit
+    }
+  }
 }

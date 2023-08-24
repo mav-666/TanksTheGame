@@ -12,8 +12,6 @@ import com.game.code.utils.Mappers;
 
 public class ScoreSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final ObjectMap<String, Integer> playerScore = new ObjectMap<>();
 
     public ScoreSystem() {
@@ -23,8 +21,8 @@ public class ScoreSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        String id = mappers.has(PlayerComponent.class, entity)? "player" : mappers.get(IdComponent.class, entity).id;
-        int points = mappers.get(GainsPointsComponent.class, entity).points;
+        String id = Mappers.has(PlayerComponent.class, entity)? "player" : Mappers.get(IdComponent.class, entity).id;
+        int points = Mappers.get(GainsPointsComponent.class, entity).points;
 
         if(!playerScore.containsKey(id))
             playerScore.put(id, 0);

@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
+import com.game.code.utils.Mappers;
 import com.github.tommyettinger.textra.TypingLabel;
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,7 +30,7 @@ public class KeyboardSummoner extends EntityBuilderSummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        pos = mappers.get(TransformComponent.class, summoner).position;
+        pos = Mappers.get(TransformComponent.class, summoner).position;
 
         createTitleText();
 

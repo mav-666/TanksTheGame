@@ -11,9 +11,6 @@ import org.json.JSONObject;
 
 public class SocketScoreSystem extends EntitySystem implements EntityListener {
     public final static Family FAMILY = Family.all(NameComponent.class).one(IdComponent.class, PlayerComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
-
     private final Socket socket;
 
     private final ObjectMap<String, Entity> players = new ObjectMap<>();
@@ -44,10 +41,10 @@ public class SocketScoreSystem extends EntitySystem implements EntityListener {
     private void addPointComponentTo(Entity player, int points) {
 
         Engine engine = getEngine();
-        if(!mappers.has(GainsPointsComponent.class, player))
+        if(!Mappers.has(GainsPointsComponent.class, player))
             player.add(engine.createComponent(GainsPointsComponent.class));
 
-        mappers.get(GainsPointsComponent.class, player).points += points;
+        Mappers.get(GainsPointsComponent.class, player).points += points;
     }
 
     @Override
@@ -57,12 +54,12 @@ public class SocketScoreSystem extends EntitySystem implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        if(mappers.has(PlayerComponent.class, entity)) {
+        if(Mappers.has(PlayerComponent.class, entity)) {
             players.put("player", entity);
             return;
         }
 
-        players.put(mappers.get(IdComponent.class, entity).id, entity);
+        players.put(Mappers.get(IdComponent.class, entity).id, entity);
     }
 
     @Override

@@ -10,7 +10,6 @@ public abstract class EntityBuilderSummoner implements SummoningDirector {
     protected final EntityBuilder entityBuilder;
     protected final Engine engine;
 
-    protected final Mappers mappers = Mappers.getInstance();
 
     EntityBuilderSummoner(EntityBuilder entityBuilder, Engine engine) {
         this.entityBuilder = entityBuilder;

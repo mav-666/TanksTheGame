@@ -148,11 +148,11 @@ public class CustomizableEngine extends PooledEngine {
 
         this.addEntityListener(AimingSoundListener.FAMILY, new AimingSoundListener(this));
         this.addEntityListener(ContactSoundListener.FAMILY, new ContactSoundListener(this));
+        this.addEntityListener(MovementSoundListener.FAMILY, new MovementSoundListener(this));
         this.addEntityListener(DamagedSoundListener.FAMILY, new DamagedSoundListener(this));
         this.addEntityListener(DeathSoundListener.FAMILY, new DeathSoundListener(this));
         this.addEntityListener(ShootingSoundListener.FAMILY, new ShootingSoundListener(this));
-
-        this.addSystem(new MovementSoundSystem());
+        this.addEntityListener(AppearSoundListener.FAMILY, new AppearSoundListener(this));
 
         this.addSystem(new SoundSystem());
     }

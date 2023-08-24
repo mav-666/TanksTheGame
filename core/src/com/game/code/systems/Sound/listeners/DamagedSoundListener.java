@@ -10,8 +10,6 @@ import com.game.code.utils.Mappers;
 
 public class DamagedSoundListener implements EntityListener {
     public static final Family FAMILY = Family.all(TakesDamageComponent.class, DamagedSoundComponent.class, SoundComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public DamagedSoundListener(Engine engine) {
@@ -20,9 +18,9 @@ public class DamagedSoundListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        Sound sound = mappers.get(DamagedSoundComponent.class, entity).sound;
+        Sound sound = Mappers.get(DamagedSoundComponent.class, entity).sound;
 
-        mappers.get(SoundComponent.class, entity).sounds.add(sound);
+        Mappers.get(SoundComponent.class, entity).sounds.add(sound);
 
         entity.add(engine.createComponent(SoundsComponent.class));
     }

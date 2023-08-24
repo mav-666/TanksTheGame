@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Pool;
 import com.game.code.utils.PlayingSound;
 
-public class AimingSoundComponent implements Component, Pool.Poolable {
+public class AppearSoundComponent implements Component, Pool.Poolable {
     public Sound sound;
     public PlayingSound currentSound;
 

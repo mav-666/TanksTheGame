@@ -6,6 +6,7 @@ import com.game.code.EntityBuilding.ComponentInitializer;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
 import com.game.code.utils.Event;
+import com.game.code.utils.Mappers;
 
 public class ButtonSummoner extends SpriteSummoner {
 
@@ -41,16 +42,16 @@ public class ButtonSummoner extends SpriteSummoner {
         entityBuilder.build("ButtonTrigger");
 
         initEvent(summoner);
-        entityBuilder.getComponent(ConnectedComponent.class).target = mappers.get(BodyComponent.class, button).body;
+        entityBuilder.getComponent(ConnectedComponent.class).target = Mappers.get(BodyComponent.class, button).body;
         entityBuilder.getComponent(InheritAngleComponent.class).target = button;
 
         engine.addEntity(entityBuilder.getEntity());
     }
 
     private void initEvent(Entity summoner) {
-        if(mappers.has(ButtonTemplateComponent.class, summoner))
+        if(Mappers.has(ButtonTemplateComponent.class, summoner))
             entityBuilder.getComponent(ContactEventComponent.class).event =
-                    mappers.get(ButtonTemplateComponent.class, summoner).activateEvent;
+                    Mappers.get(ButtonTemplateComponent.class, summoner).activateEvent;
     }
 
     @Override

@@ -96,7 +96,7 @@ public class SocketPlayerCreationSystem extends DeactivatingSystem {
 
     public void removePlayer(String id) {
         getEngine().getEntitiesFor(Family.all(IdComponent.class).get()).forEach(entity -> {
-            if(Mappers.getInstance().get(IdComponent.class, entity).id.equals(id))
+            if(Mappers.get(IdComponent.class, entity).id.equals(id))
                 entity.add(getEngine().createComponent(DestroyedComponent.class));
         });
     }

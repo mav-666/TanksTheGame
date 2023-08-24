@@ -21,7 +21,7 @@ public class Mappers {
         return instance;
     }
 
-    public <T extends Component> T get(Class<T> componentType, Entity entity) {
+    public static <T extends Component> T get(Class<T> componentType, Entity entity) {
         ComponentMapper<T> mapper = getMapper(componentType);
         T component = null;
 
@@ -31,7 +31,8 @@ public class Mappers {
         return component;
     }
 
-    public <T extends Component> T getOrCreate(Class<T> componentType, Entity entity) {
+    public static <T extends Component> T getOrCreate(Class<T> componentType, Entity entity) {
+        Engine engine = getInstance().engine;
         T component = get(componentType, entity);
 
         if(component == null && engine != null) {
@@ -41,21 +42,22 @@ public class Mappers {
         return component;
     }
 
-    public <T extends Component> boolean has(Class<T> componentType, Entity entity) {
+    public static <T extends Component> boolean has(Class<T> componentType, Entity entity) {
         ComponentMapper<T> mapper = getMapper(componentType);
 
         return mapper.has(entity);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Component> ComponentMapper<T> getMapper(Class<T> componentType) {
+    public static <T extends Component> ComponentMapper<T> getMapper(Class<T> componentType) {
+        ObjectMap<Class<? extends Component>, ComponentMapper<? extends Component>> mappers = Mappers.getInstance().mappers;
         if(!mappers.containsKey(componentType)) {
             mappers.put(componentType, ComponentMapper.getFor(componentType));
         }
         return (ComponentMapper<T>) mappers.get(componentType);
     }
 
-    public void setEngine(Engine engine) {
-        this.engine = engine;
+    public static void setEngine(Engine engine) {
+        getInstance().engine = engine;
     }
 }

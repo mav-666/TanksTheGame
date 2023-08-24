@@ -11,8 +11,6 @@ import com.game.code.utils.Mappers;
 
 public class ConnectionSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public ConnectionSystem() {
         super(Family.all(TransformComponent.class, ConnectedComponent.class).get(), 1);
 
@@ -21,13 +19,13 @@ public class ConnectionSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent transform = mappers.get(TransformComponent.class, entity);
-        ConnectedComponent connected = mappers.get(ConnectedComponent.class, entity);
+        TransformComponent transform = Mappers.get(TransformComponent.class, entity);
+        ConnectedComponent connected = Mappers.get(ConnectedComponent.class, entity);
 
         transform.position.set(connected.target.getPosition()).sub(connected.connectionPoint);
 
-        if(mappers.has(BodyComponent.class, entity)) {
-            Body body = mappers.get(BodyComponent.class, entity).body;
+        if(Mappers.has(BodyComponent.class, entity)) {
+            Body body = Mappers.get(BodyComponent.class, entity).body;
             body.setTransform(connected.target.getPosition(), body.getAngle());
         }
     }

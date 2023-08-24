@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.components.*;
 import com.game.code.systems.Box2d.listeners.FriendsMaker;
+import com.game.code.utils.Mappers;
 
 public class ProjectileSummoner extends EntityBuilderSummoner {
 
@@ -23,8 +24,8 @@ public class ProjectileSummoner extends EntityBuilderSummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        projectileTemplate = mappers.get(ProjectileTemplateComponent.class, summoner);
-        shooterTransform = mappers.get(TransformComponent.class, summoner);
+        projectileTemplate = Mappers.get(ProjectileTemplateComponent.class, summoner);
+        shooterTransform = Mappers.get(TransformComponent.class, summoner);
 
         entityBuilder.build(projectileTemplate.entityName);
 
@@ -86,7 +87,7 @@ public class ProjectileSummoner extends EntityBuilderSummoner {
     }
 
     private void initPlayer(Entity summoner) {
-        if(mappers.has(PlayerComponent.class, summoner))
+        if(Mappers.has(PlayerComponent.class, summoner))
             entityBuilder.getComponent(PlayerComponent.class);
     }
 

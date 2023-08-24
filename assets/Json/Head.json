@@ -17,4 +17,10 @@
   16: {
     name: ColorComponent
   }
+  21: {
+    name: AimingSoundComponent
+    init: {
+      sound: aim
+    }
+  }
 }

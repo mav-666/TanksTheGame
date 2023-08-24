@@ -10,6 +10,7 @@ import com.game.code.EntityBuilding.EntityCreator;
 import com.game.code.UI.Meter;
 import com.game.code.UI.MeterImpl;
 import com.game.code.components.*;
+import com.game.code.utils.Mappers;
 import com.github.tommyettinger.textra.TypingLabel;
 
 public class SettingSummoner extends EntityBuilderSummoner {
@@ -27,11 +28,11 @@ public class SettingSummoner extends EntityBuilderSummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        pos.set(mappers.get(TransformComponent.class, summoner).position);
+        pos.set(Mappers.get(TransformComponent.class, summoner).position);
 
-        String fillingName = mappers.get(SummonsNowComponent.class, summoner).entityName;
+        String fillingName = Mappers.get(SummonsNowComponent.class, summoner).entityName;
 
-        SettingTemplateComponent settingTemplateC = mappers.get(SettingTemplateComponent.class, summoner);
+        SettingTemplateComponent settingTemplateC = Mappers.get(SettingTemplateComponent.class, summoner);
         boolean isDisabled = settingTemplateC.isDisabled;
         ObjectFloatMap<String> setting = settingTemplateC.setting;
         String labelText = settingTemplateC.labelText;
@@ -42,7 +43,7 @@ public class SettingSummoner extends EntityBuilderSummoner {
         Entity meterE = createMeterEntity();
 
         Meter meter = createMeterWidgetFor(meterConfig);
-        mappers.get(WidgetComponent.class, meterE).widget = meter;
+        Mappers.get(WidgetComponent.class, meterE).widget = meter;
 
         TypingLabel label = createPercentageLabel(labelText);
 

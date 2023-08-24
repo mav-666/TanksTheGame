@@ -9,8 +9,6 @@ import com.game.code.components.TransformComponent;
 import com.game.code.utils.Mappers;
 
 public class FollowCameraSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Camera camera;
 
     public FollowCameraSystem(Camera camera) {
@@ -20,6 +18,6 @@ public class FollowCameraSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mappers.get(TransformComponent.class, entity).position.set(camera.position.x, camera.position.y);
+        Mappers.get(TransformComponent.class, entity).position.set(camera.position.x, camera.position.y);
     }
 }

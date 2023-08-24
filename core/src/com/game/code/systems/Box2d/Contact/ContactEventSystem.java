@@ -9,14 +9,12 @@ import com.game.code.utils.Mappers;
 
 public class ContactEventSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public ContactEventSystem() {
         super(Family.all(EndsCollusionComponent.class, ContactEventComponent.class).get(), 5);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mappers.get(ContactEventComponent.class, entity).event.occur();
+        Mappers.get(ContactEventComponent.class, entity).event.occur();
     }
 }

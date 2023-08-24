@@ -13,8 +13,6 @@ import com.game.code.utils.Mappers;
 
 public class MovementSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final Vector2 linearVelocity = new Vector2();
 
     public MovementSystem() {
@@ -23,9 +21,9 @@ public class MovementSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        MovesComponent moves = mappers.get(MovesComponent.class, entity);
-        MobilityComponent mobility = mappers.get(MobilityComponent.class, entity);
-        Body body  = mappers.get(BodyComponent.class, entity).body;
+        MovesComponent moves = Mappers.get(MovesComponent.class, entity);
+        MobilityComponent mobility = Mappers.get(MobilityComponent.class, entity);
+        Body body  = Mappers.get(BodyComponent.class, entity).body;
         body.setAwake(true);
 
         if(moves.movementDirection != 0)

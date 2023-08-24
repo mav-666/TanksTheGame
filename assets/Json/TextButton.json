@@ -38,5 +38,10 @@
   10: {
     name: ImmortalComponent
   }
-
+  11: {
+    name: ContactSoundComponent
+    init: {
+      sound: boxContact
+    }
+  }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.FieldInitializers.TankConfig.*;
 import com.game.code.components.*;
+import com.game.code.utils.Mappers;
 
 import java.util.Arrays;
 
@@ -24,12 +25,12 @@ public class TankSummoner extends EntitySummoner {
 
     @Override
     public Entity summonBy(Entity summoner) {
-        String[] entityName = mappers.get(SummonsNowComponent.class, summoner).entityName.split(" ");
+        String[] entityName = Mappers.get(SummonsNowComponent.class, summoner).entityName.split(" ");
         isPlayer = Arrays.asList(entityName).contains("player");
         name = entityName.length >= 2 ? entityName[1] : "";
         id = entityName[0];
 
-        tankConfig = mappers.has(TankTemplateComponent.class, summoner) ? mappers.get(TankTemplateComponent.class, summoner).tankConfig : new TankConfig();
+        tankConfig = Mappers.has(TankTemplateComponent.class, summoner) ? Mappers.get(TankTemplateComponent.class, summoner).tankConfig : new TankConfig();
 
         Entity cab = createCab();
 
@@ -41,7 +42,7 @@ public class TankSummoner extends EntitySummoner {
         Entity head = createHead();
 
         ConnectedComponent HeadConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        HeadConnectedC.target = mappers.get(BodyComponent.class, cab).body;
+        HeadConnectedC.target = Mappers.get(BodyComponent.class, cab).body;
 
         entityBuilder.getComponent(InheritColorComponent.class).target = cab;
         entityBuilder.getComponent(InheritDeathComponent.class).target = cab;
@@ -51,7 +52,7 @@ public class TankSummoner extends EntitySummoner {
         TextureComponent textureC = entityBuilder.getComponent(TextureComponent.class);
 
         ConnectedComponent BarrelConnectedC = entityBuilder.getComponent(ConnectedComponent.class);
-        BarrelConnectedC.target = mappers.get(BodyComponent.class, cab).body;
+        BarrelConnectedC.target = Mappers.get(BodyComponent.class, cab).body;
         BarrelConnectedC.connectionPoint.set(0, -textureC.height/2);
 
         entityBuilder.getComponent(InheritAngleComponent.class).target = head;

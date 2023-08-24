@@ -12,8 +12,6 @@ import com.game.code.utils.Mappers;
 
 public class SummoningSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final EntitySummonerProvider summonerProvider;
 
     public SummoningSystem(EntitySummonerProvider summonerProvider) {
@@ -24,7 +22,7 @@ public class SummoningSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SummonerType summonerType = SummonerType.valueOf(mappers.get(SummonsNowComponent.class, entity).summonerType);
+        SummonerType summonerType = SummonerType.valueOf(Mappers.get(SummonsNowComponent.class, entity).summonerType);
         SummoningDirector summoningDirector = summonerProvider.provide(summonerType);
 
         summoningDirector.summonBy(entity);

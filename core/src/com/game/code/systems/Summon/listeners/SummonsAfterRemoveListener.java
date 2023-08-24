@@ -11,8 +11,6 @@ import com.game.code.utils.Mappers;
 
 public class SummonsAfterRemoveListener implements EntityListener {
     public static final Family FAMILY = Family.all(DestroyedComponent.class, SummonsAfterRemoveComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public SummonsAfterRemoveListener(Engine engine) {
@@ -21,7 +19,7 @@ public class SummonsAfterRemoveListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        SummonsAfterRemoveComponent summonsAfterRemove = mappers.get(SummonsAfterRemoveComponent.class, entity);
+        SummonsAfterRemoveComponent summonsAfterRemove = Mappers.get(SummonsAfterRemoveComponent.class, entity);
         SummonsNowComponent summons = engine.createComponent(SummonsNowComponent.class);
 
         summons.summonerType = summonsAfterRemove.summonerType;

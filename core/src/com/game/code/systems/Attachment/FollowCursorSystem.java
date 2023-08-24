@@ -11,8 +11,6 @@ import com.game.code.components.TransformComponent;
 import com.game.code.utils.Mappers;
 
 public class FollowCursorSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Viewport viewport;
 
     private Vector2 cursorPos = new Vector2();
@@ -37,6 +35,6 @@ public class FollowCursorSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        mappers.get(TransformComponent.class, entity).position.set(cursorPos);
+        Mappers.get(TransformComponent.class, entity).position.set(cursorPos);
     }
 }

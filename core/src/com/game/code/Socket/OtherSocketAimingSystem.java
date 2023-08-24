@@ -15,7 +15,6 @@ import org.json.JSONObject;
 public class OtherSocketAimingSystem extends DeactivatingSystem implements EntityListener {
     public final static Family FAMILY = Family.all(IdComponent.class).one(CanonComponent.class).get();
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Socket socket;
 
@@ -50,20 +49,20 @@ public class OtherSocketAimingSystem extends DeactivatingSystem implements Entit
     }
     
     private void setAngleFor(Entity entity, float degAngle) {
-        TransformComponent transformC = mappers.get(TransformComponent.class, entity);
+        TransformComponent transformC = Mappers.get(TransformComponent.class, entity);
 
         transformC.degAngle = degAngle;
     }
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 
     @Override
     public void entityRemoved(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         players.remove(id);
     }
 

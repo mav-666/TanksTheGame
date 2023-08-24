@@ -9,6 +9,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Timer;
 import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 import com.game.code.utils.PlayingSound;
@@ -17,8 +19,7 @@ public class SoundSystem extends IteratingSystem implements EntityListener {
     public static final Family FAMILY = Family.all(PlayerComponent.class, MobilityComponent.class, TransformComponent.class).get();
     private static final float AUDIBILITY = 10f;
     private static final float PITCH_RANGE = 0.15f;
-
-    private final Mappers mappers = Mappers.getInstance();
+    private static final float FADE_STEP = 0.25f;
 
     private Entity player;
     private final Vector2 playerPos = new Vector2();
@@ -54,23 +55,25 @@ public class SoundSystem extends IteratingSystem implements EntityListener {
         if(player == null)
             playerPos.set(0,0);
         else
-            playerPos.set(mappers.get(TransformComponent.class, player).position);
+            playerPos.set(Mappers.get(TransformComponent.class, player).position);
     }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        Vector2 sourcePos = mappers.get(TransformComponent.class, entity).position;
+        Vector2 sourcePos = Mappers.get(TransformComponent.class, entity).position;
         float volume = calcVolume(sourcePos);
         float pan = calcPan(sourcePos);
 
-        SoundComponent soundC = mappers.get(SoundComponent.class, entity);
+        SoundComponent soundC = Mappers.get(SoundComponent.class, entity);
 
         Array<PlayingSound> loopingSounds = soundC.loopingSounds;
-        processLoopingSounds(loopingSounds, volume, pan);
+        Array<PlayingSound> playingSounds = soundC.playingSounds;
+        processLoopingSounds(loopingSounds, playingSounds, volume, pan);
 
         Array<Sound> sounds = soundC.sounds;
         playSingleSounds(sounds, volume, pan);
 
+        playingSounds.clear();
         if(loopingSounds.isEmpty())
             entity.remove(SoundsComponent.class);
     }
@@ -86,10 +89,17 @@ public class SoundSystem extends IteratingSystem implements EntityListener {
         sounds.clear();
     }
 
-    private void processLoopingSounds(Array<PlayingSound> loopingSounds, float volume, float pan) {
+    private void processLoopingSounds(Array<PlayingSound> loopingSounds, Array<PlayingSound> playingSounds, float volume, float pan) {
         loopingSounds.forEach(sound -> {
-            sound.volume = volume;
-            sound.sound.setPan(sound.id, pan, volume);
+            if(sound.id == -1)
+                sound.id = sound.sound.loop();
+            if(playingSounds.contains(sound, true)) {
+                sound.volume = volume;
+                sound.sound.setPan(sound.id, pan, volume);
+            } else {
+                fadeSound(sound);
+                loopingSounds.removeValue(sound, true);
+            }
         });
     }
 
@@ -124,5 +134,20 @@ public class SoundSystem extends IteratingSystem implements EntityListener {
 
     private float calcPitch() {
         return 1 + (float)((Math.random() * (2 * PITCH_RANGE)) - PITCH_RANGE);
+    }
+
+    private void fadeSound(PlayingSound sound) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                if(sound.volume >= FADE_STEP) {
+                    sound.volume = sound.volume - FADE_STEP;
+                    sound.sound.setVolume(sound.id, sound.volume);
+                } else {
+                    sound.sound.stop(sound.id);
+                    this.cancel();
+                }
+            }
+        }, 0f, FADE_STEP);
     }
 }

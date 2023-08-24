@@ -7,10 +7,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Box2dDebugSystem extends EntitySystem {
 
-    private World world;
-    private Viewport viewport;
+    private final World world;
+    private final Viewport viewport;
 
-    private Box2DDebugRenderer debugRenderer;
+    private final Box2DDebugRenderer debugRenderer;
 
     public Box2dDebugSystem(World world, Viewport viewport) {
         super( 41);

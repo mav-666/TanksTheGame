@@ -9,22 +9,26 @@ import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 import com.game.code.utils.PlayingSound;
 
-public class AimingSoundListener implements EntityListener {
-    public static final Family FAMILY = Family.all(AimsComponent.class, AimingSoundComponent.class, SoundComponent.class).get();
+public class MovementSoundListener implements EntityListener {
+    public static final Family FAMILY = Family.all(MovesComponent.class, MovingSoundComponent.class, SoundComponent.class).get();
     private final Engine engine;
 
-    public AimingSoundListener(Engine engine) {
+    public MovementSoundListener(Engine engine) {
         this.engine = engine;
     }
 
     @Override
     public void entityAdded(Entity entity) {
-        AimingSoundComponent movingSoundC = Mappers.get(AimingSoundComponent.class, entity);
+        if(Mappers.get(MovesComponent.class, entity).movementDirection == 0)
+            return;
+
+        MovingSoundComponent movingSoundC = Mappers.get(MovingSoundComponent.class, entity);
         SoundComponent soundC = Mappers.get(SoundComponent.class, entity);
 
         if(movingSoundC.currentSound == null || !soundC.loopingSounds.contains(movingSoundC.currentSound, true)) {
             Sound sound = movingSoundC.sound;
             movingSoundC.currentSound = PlayingSound.create().sound(sound).build();
+            movingSoundC.currentSound.isPaused = false;
             soundC.loopingSounds.add(movingSoundC.currentSound);
         }
 

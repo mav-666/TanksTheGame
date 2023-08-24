@@ -13,8 +13,6 @@ import com.game.code.utils.Mappers;
 public class HealthMeterSystem extends EntitySystem implements EntityListener {
     public static final Family FAMILY = Family.all(PlayerComponent.class, HealthComponent.class).get();
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final Viewport viewport;
     private final Skin skin;
     private final Entity meter;
@@ -42,7 +40,7 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        healthC = mappers.get(HealthComponent.class, entity);
+        healthC = Mappers.get(HealthComponent.class, entity);
         createWidget(skin);
         createHealthMeter(healthMeter);
 
@@ -59,7 +57,7 @@ public class HealthMeterSystem extends EntitySystem implements EntityListener {
     }
 
     private void createHealthMeter(HealthMeter healthMeter) {
-        WidgetComponent widgetC = mappers.get(WidgetComponent.class, meter);
+        WidgetComponent widgetC = Mappers.get(WidgetComponent.class, meter);
 
         widgetC.widget = healthMeter;
         offset = widgetC.offset;

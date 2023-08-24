@@ -11,8 +11,6 @@ import java.util.Optional;
 
 public class BodySearcher {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public BodySearcher() {
 
     }
@@ -29,7 +27,7 @@ public class BodySearcher {
     }
 
     private Body searchForBodyComponent(Entity entity) {
-        ComponentMapper<BodyComponent> bodyM = mappers.getMapper(BodyComponent.class);
+        ComponentMapper<BodyComponent> bodyM = Mappers.getMapper(BodyComponent.class);
 
         if(bodyM.has(entity))
             return bodyM.get(entity).body;
@@ -38,7 +36,7 @@ public class BodySearcher {
     }
 
     private Body searchForConnectionComponent(Entity entity) {
-        ComponentMapper<ConnectedComponent> connectedM = mappers.getMapper(ConnectedComponent.class);
+        ComponentMapper<ConnectedComponent> connectedM = Mappers.getMapper(ConnectedComponent.class);
 
         if(connectedM.has(entity)) {
             return connectedM.get(entity).target;

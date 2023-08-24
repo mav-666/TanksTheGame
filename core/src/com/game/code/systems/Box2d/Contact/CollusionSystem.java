@@ -8,11 +8,9 @@ import com.game.code.utils.Mappers;
 
 public class CollusionSystem extends IteratingSystem implements EntityListener {
     public static final Family FAMILY = Family.all(CollusionComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
-    private final ComponentMapper<StartCollusionComponent> startCollusionM = mappers.getMapper(StartCollusionComponent.class);
-    private final ComponentMapper<CollusionComponent> collusionM = mappers.getMapper(CollusionComponent.class);
-    private final ComponentMapper<EndCollusionComponent> endCollusionM = mappers.getMapper(EndCollusionComponent.class);
+    private final ComponentMapper<StartCollusionComponent> startCollusionM = Mappers.getMapper(StartCollusionComponent.class);
+    private final ComponentMapper<CollusionComponent> collusionM = Mappers.getMapper(CollusionComponent.class);
+    private final ComponentMapper<EndCollusionComponent> endCollusionM = Mappers.getMapper(EndCollusionComponent.class);
 
     public CollusionSystem() {
         super(Family.one(StartsCollusionComponent.class, EndsCollusionComponent.class).get(), 98);
@@ -37,10 +35,10 @@ public class CollusionSystem extends IteratingSystem implements EntityListener {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if(mappers.has(StartsCollusionComponent.class, entity))
+        if(Mappers.has(StartsCollusionComponent.class, entity))
             removeStartsCollusion(entity);
 
-        if(mappers.has(EndsCollusionComponent.class, entity))
+        if(Mappers.has(EndsCollusionComponent.class, entity))
             removeEndsCollusion(entity);
 
     }

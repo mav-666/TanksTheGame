@@ -14,8 +14,6 @@ import com.game.code.utils.TweenUtils.TweenM;
 
 public class InvincibilityListener implements EntityListener {
     public static final Family FAMILY = Family.all(InvincibilityComponent.class, InvincibleComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Color damaged = Color.valueOf("781f2c");
 
     Color startColor = new Color();
@@ -26,7 +24,7 @@ public class InvincibilityListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        float invincibilitySeconds = mappers.get(InvincibilityComponent.class, entity).seconds;
+        float invincibilitySeconds = Mappers.get(InvincibilityComponent.class, entity).seconds;
 
         Timeline.createSequence()
                 .push(Tween.call((type, source) -> addBlinkEffectOn(entity, invincibilitySeconds)))
@@ -36,7 +34,7 @@ public class InvincibilityListener implements EntityListener {
     }
 
     private void addBlinkEffectOn(Entity entity, float seconds) {
-        Color color = mappers.getOrCreate(ColorComponent.class, entity).color;
+        Color color = Mappers.getOrCreate(ColorComponent.class, entity).color;
         startColor.set(color);
 
         Timeline.createSequence()

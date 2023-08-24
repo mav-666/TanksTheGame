@@ -15,7 +15,6 @@ public class HasFriendsComponentSetter implements EntityListener {
     public final static Family FAMILY = Family.all(BodyComponent.class, HasFriendsComponent.class).get();
 
     private final Set<Short> usedIndexes;
-    private final Mappers mappers = Mappers.getInstance();
 
     public HasFriendsComponentSetter() {
         usedIndexes = new HashSet<>();
@@ -28,8 +27,8 @@ public class HasFriendsComponentSetter implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        ComponentMapper<HasFriendsComponent> friendlyM = mappers.getMapper(HasFriendsComponent.class);
-        ComponentMapper<BodyComponent> bodyM = mappers.getMapper(BodyComponent.class);
+        ComponentMapper<HasFriendsComponent> friendlyM = Mappers.getMapper(HasFriendsComponent.class);
+        ComponentMapper<BodyComponent> bodyM = Mappers.getMapper(BodyComponent.class);
 
         short index = nextIndex();
 

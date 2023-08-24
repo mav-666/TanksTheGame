@@ -10,9 +10,7 @@ import com.game.code.components.DestroyedComponent;
 import com.game.code.components.ParticleComponent;
 import com.game.code.utils.Mappers;
 
-public class DestroyingSystem extends IteratingSystem {
-    private final Mappers mappers = Mappers.getInstance();
-    private final World world;
+public class DestroyingSystem extends IteratingSystem {    private final World world;
 
     public DestroyingSystem(World world) {
         super(Family.all(DestroyedComponent.class).get(), 99);
@@ -30,7 +28,7 @@ public class DestroyingSystem extends IteratingSystem {
     }
 
     private void destroyBody(Entity entity) {
-        ComponentMapper<BodyComponent> bodyM = mappers.getMapper(BodyComponent.class);
+        ComponentMapper<BodyComponent> bodyM = Mappers.getMapper(BodyComponent.class);
 
         if(bodyM.has(entity)) {
             world.destroyBody(bodyM.get(entity).body);
@@ -39,7 +37,7 @@ public class DestroyingSystem extends IteratingSystem {
     }
 
     private void destroyParticle(Entity entity) {
-        ComponentMapper<ParticleComponent> particleM = mappers.getMapper(ParticleComponent.class);
+        ComponentMapper<ParticleComponent> particleM = Mappers.getMapper(ParticleComponent.class);
 
         if(particleM.has(entity))
             particleM.get(entity).particleEffect.dispose();

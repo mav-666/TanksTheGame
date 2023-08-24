@@ -9,6 +9,7 @@ import com.game.code.components.ParticleComponent;
 import com.game.code.components.SummonsComponent;
 import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.TransformComponent;
+import com.game.code.utils.Mappers;
 
 public class ParticleSummoner extends EntitySummoner {
 
@@ -29,7 +30,7 @@ public class ParticleSummoner extends EntitySummoner {
 
     @Override
     protected void init(Entity summoner) {
-        initParticleEffect(mappers.get(SummonsNowComponent.class, summoner).entityName);
+        initParticleEffect(Mappers.get(SummonsNowComponent.class, summoner).entityName);
         super.init(summoner);
     }
 

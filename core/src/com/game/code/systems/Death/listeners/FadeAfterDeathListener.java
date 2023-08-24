@@ -13,8 +13,6 @@ import com.game.code.utils.Mappers;
 
 public class FadeAfterDeathListener implements EntityListener {
     public static final Family FAMILY = Family.all(DeadComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     private final Color fadeColor = Color.valueOf("646464");
@@ -25,11 +23,11 @@ public class FadeAfterDeathListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        mappers.getOrCreate(ColorComponent.class, entity).color.set(fadeColor);
+        Mappers.getOrCreate(ColorComponent.class, entity).color.set(fadeColor);
     }
 
     @Override
     public void entityRemoved(Entity entity) {
-        mappers.get(ColorComponent.class, entity).color.set(Color.WHITE);
+        Mappers.get(ColorComponent.class, entity).color.set(Color.WHITE);
     }
 }

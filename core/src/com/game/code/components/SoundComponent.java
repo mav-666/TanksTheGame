@@ -9,7 +9,7 @@ import com.game.code.utils.PlayingSound;
 public class SoundComponent implements Component, Pool.Poolable {
     public Array<Sound> sounds = new Array<>();
     public Array<PlayingSound> loopingSounds = new Array<>();
-    public Array<Sound> stoppedSound = new Array<>();
+    public Array<PlayingSound> playingSounds = new Array<>();
 
     @Override
     public void reset() {

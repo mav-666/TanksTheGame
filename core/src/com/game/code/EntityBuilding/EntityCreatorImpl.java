@@ -28,13 +28,11 @@ public class EntityCreatorImpl implements EntityCreator {
 
     @Override
     public void createEntityOn(float x, float y, float zIndex, String entityName) {
-        Mappers mappers = Mappers.getInstance();
-
-        TransformComponent transform = mappers.getOrCreate(TransformComponent.class, creationSettings);
+        TransformComponent transform = Mappers.getOrCreate(TransformComponent.class, creationSettings);
         transform.position.set(x, y);
         transform.zIndex = zIndex;
 
-        SummonsNowComponent summons = mappers.getOrCreate(SummonsNowComponent.class, creationSettings);
+        SummonsNowComponent summons = Mappers.getOrCreate(SummonsNowComponent.class, creationSettings);
         summons.entityName = entityName;
         summons.summonerType = summonerType.name();
 
@@ -51,7 +49,7 @@ public class EntityCreatorImpl implements EntityCreator {
 
     @Override
     public <T extends Component> T  getCreationSettings(Class<T> component) {
-        return Mappers.getInstance().getOrCreate(component, creationSettings);
+        return Mappers.getOrCreate(component, creationSettings);
     }
 
     @Override

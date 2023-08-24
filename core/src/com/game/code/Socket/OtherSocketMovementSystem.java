@@ -16,7 +16,6 @@ import org.json.JSONObject;
 public class OtherSocketMovementSystem extends DeactivatingSystem implements EntityListener {
     public final static Family FAMILY = Family.all(IdComponent.class, MobilityComponent.class).get();
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Socket socket;
 
@@ -59,7 +58,7 @@ public class OtherSocketMovementSystem extends DeactivatingSystem implements Ent
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 
@@ -75,7 +74,7 @@ public class OtherSocketMovementSystem extends DeactivatingSystem implements Ent
     }
 
     private void setTransformFor(Entity entity, float x, float y, float radAngle) {
-        Body body = mappers.get(BodyComponent.class, entity).body;
+        Body body = Mappers.get(BodyComponent.class, entity).body;
         body.setTransform(x, y, radAngle);
     }
 
@@ -85,7 +84,7 @@ public class OtherSocketMovementSystem extends DeactivatingSystem implements Ent
 
     @Override
     public void entityRemoved(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         movingPlayers.removeValue(id, true);
         playerTransforms.remove(id);
         players.remove(id);

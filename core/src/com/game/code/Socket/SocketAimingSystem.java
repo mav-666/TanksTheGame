@@ -16,7 +16,6 @@ import java.util.Collections;
 public class SocketAimingSystem extends IntervalIteratingSystem {
     private final static float TIME_STEP = 1/60f;
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Socket socket;
 
@@ -28,7 +27,7 @@ public class SocketAimingSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        float angle = mappers.get(TransformComponent.class, entity).degAngle;
+        float angle = Mappers.get(TransformComponent.class, entity).degAngle;
 
         socket.emit("playerAimed", new JSONObject(Collections.singletonMap("degAngle", angle)));
     }

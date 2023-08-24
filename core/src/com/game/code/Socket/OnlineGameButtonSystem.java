@@ -38,7 +38,7 @@ public class OnlineGameButtonSystem extends EntitySystem implements OnlineGameBu
     }
 
     public void refresh(Entity onlineGameButton, OnlineGameData newData) {
-        Mappers.getInstance().get(TextComponent.class, onlineGameButton).label.setText(prettyPrintData(newData));
+        Mappers.get(TextComponent.class, onlineGameButton).label.setText(prettyPrintData(newData));
     }
 
     private String prettyPrintData(OnlineGameData onlineGameData) {

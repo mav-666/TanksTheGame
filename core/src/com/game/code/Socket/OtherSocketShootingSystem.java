@@ -15,7 +15,6 @@ import org.json.JSONObject;
 public class OtherSocketShootingSystem extends DeactivatingSystem implements EntityListener {
     public final static Family FAMILY = Family.all(IdComponent.class, ProjectileTemplateComponent.class).get();
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Socket socket;
 
@@ -53,13 +52,13 @@ public class OtherSocketShootingSystem extends DeactivatingSystem implements Ent
 
     @Override
     public void entityAdded(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         players.put(id, entity);
     }
 
     @Override
     public void entityRemoved(Entity entity) {
-        String id = mappers.get(IdComponent.class, entity).id;
+        String id = Mappers.get(IdComponent.class, entity).id;
         players.remove(id);
     }
 

@@ -14,8 +14,6 @@ import com.game.code.utils.TweenUtils.TweenM;
 
 public class LifeSpanListener implements EntityListener {
     public static final Family FAMILY = Family.all(LifeSpanComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public LifeSpanListener(Engine engine) {
@@ -24,7 +22,7 @@ public class LifeSpanListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        float lifeSpan = mappers.get(LifeSpanComponent.class, entity).seconds;
+        float lifeSpan = Mappers.get(LifeSpanComponent.class, entity).seconds;
 
         Timeline.createSequence()
                 .pushPause(lifeSpan)

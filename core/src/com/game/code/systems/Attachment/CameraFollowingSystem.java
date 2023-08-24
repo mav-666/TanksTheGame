@@ -13,8 +13,6 @@ import com.game.code.utils.Mappers;
 
 public class CameraFollowingSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     Camera camera;
 
     public CameraFollowingSystem(Camera camera) {
@@ -25,7 +23,7 @@ public class CameraFollowingSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Vector2 target = mappers.get(TransformComponent.class, entity).position;
+        Vector2 target = Mappers.get(TransformComponent.class, entity).position;
         lerpToTarget(camera.position, target);
     }
 

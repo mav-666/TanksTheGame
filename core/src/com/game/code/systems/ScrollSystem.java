@@ -14,8 +14,6 @@ import com.game.code.utils.TweenUtils.ColorAccessor;
 import com.game.code.utils.TweenUtils.TweenM;
 
 public class ScrollSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
     private ScrollComponent scroll;
     private Vector2 position;
 
@@ -25,10 +23,10 @@ public class ScrollSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        scroll = mappers.get(ScrollComponent.class, entity);
-        position = mappers.get(TransformComponent.class, entity).position;
+        scroll = Mappers.get(ScrollComponent.class, entity);
+        position = Mappers.get(TransformComponent.class, entity).position;
 
-        int scrollingDirection = mappers.get(ScrollsComponent.class, entity).scrollingDirection;
+        int scrollingDirection = Mappers.get(ScrollsComponent.class, entity).scrollingDirection;
 
         if(scrollingDirection == 0)
             return;
@@ -69,12 +67,12 @@ public class ScrollSystem extends IteratingSystem {
     private void hideItem(Entity entity, int index, int direction) {
         float currentX = calcItemX(index);
 
-        Body body = mappers.get(BodyComponent.class, entity).body;
+        Body body = Mappers.get(BodyComponent.class, entity).body;
         body.setTransform(currentX, position.y, body.getAngle());
 
         Timeline transition = Timeline.createSequence()
                 .beginParallel()
-                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, 0.5f).target(0))
+                .push(Tween.to(Mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, 0.5f).target(0))
                 .push(Tween.to(body, BodyTransformAccessor.X, 0.5f).target(calcItemX(calcBoundIndex(-direction))))
                 .end()
                 .push(Tween.call((type, source) ->  {
@@ -102,7 +100,7 @@ public class ScrollSystem extends IteratingSystem {
     private void revealItem(Entity entity, int index, int direction) {
         float currentX = calcItemX(calcBoundIndex(direction));
 
-        Body body = mappers.get(BodyComponent.class, entity).body;
+        Body body = Mappers.get(BodyComponent.class, entity).body;
         body.setTransform(currentX, position.y, body.getAngle());
 
         Timeline transition = Timeline.createSequence()
@@ -111,7 +109,7 @@ public class ScrollSystem extends IteratingSystem {
                     entity.remove(HiddenBodyComponent.class);
                 }))
                 .beginParallel()
-                .push(Tween.to(mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, .5f).target(1))
+                .push(Tween.to(Mappers.getOrCreate(ColorComponent.class, entity).color, ColorAccessor.A, .5f).target(1))
                 .push(Tween.to(body, BodyTransformAccessor.X, .5f).target(calcItemX(index)))
                 .end();
 

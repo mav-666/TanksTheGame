@@ -10,17 +10,15 @@ import com.game.code.utils.Mappers;
 
 public class InheritColorSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public InheritColorSystem() {
         super(Family.all(ColorComponent.class, InheritColorComponent.class).get(), 13);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        ComponentMapper<ColorComponent> colorM = mappers.getMapper(ColorComponent.class);
+        ComponentMapper<ColorComponent> colorM = Mappers.getMapper(ColorComponent.class);
 
-        Entity original = mappers.get(InheritColorComponent.class, entity).target;
+        Entity original = Mappers.get(InheritColorComponent.class, entity).target;
 
         if(original != null && colorM.has(original))
             colorM.get(entity).color.set(colorM.get(original).color);

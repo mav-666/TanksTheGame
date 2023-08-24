@@ -8,9 +8,6 @@ import com.game.code.components.*;
 import com.game.code.utils.Mappers;
 
 public class ContactDamageSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
-
     public ContactDamageSystem() {
         super(Family.all(ContactDamageComponent.class, StartsCollusionComponent.class).get());
 
@@ -19,15 +16,15 @@ public class ContactDamageSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        StartCollusionComponent collusion = mappers.get(StartCollusionComponent.class, entity);
+        StartCollusionComponent collusion = Mappers.get(StartCollusionComponent.class, entity);
 
-        float damage = mappers.get(ContactDamageComponent.class, entity).damage;
+        float damage = Mappers.get(ContactDamageComponent.class, entity).damage;
 
         collusion.involved.forEach(involved -> dealDamageTo(involved, damage));
     }
 
     private void dealDamageTo(Entity entity, float damage) {
-        ComponentMapper<TakesDamageComponent> takesDamageM = mappers.getMapper(TakesDamageComponent.class);
+        ComponentMapper<TakesDamageComponent> takesDamageM = Mappers.getMapper(TakesDamageComponent.class);
         if(!takesDamageM.has(entity)) {
             TakesDamageComponent takesDamage = getEngine().createComponent(TakesDamageComponent.class);
             entity.add(takesDamage);

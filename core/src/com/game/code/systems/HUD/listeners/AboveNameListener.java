@@ -11,8 +11,6 @@ import com.game.code.utils.Mappers;
 
 public class AboveNameListener implements EntityListener {
     public static final Family FAMILY = Family.all(NameComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final ComponentInitializer componentInitializer;
     private final Engine engine;
 
@@ -25,7 +23,7 @@ public class AboveNameListener implements EntityListener {
     public void entityAdded(Entity entity) {
         TextComponent aboveText = createTextComponent();
 
-        aboveText.label.setText(mappers.get(NameComponent.class, entity).name);
+        aboveText.label.setText(Mappers.get(NameComponent.class, entity).name);
 
         entity.add(aboveText);
     }

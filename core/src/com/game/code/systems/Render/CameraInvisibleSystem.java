@@ -14,8 +14,6 @@ import com.game.code.utils.Mappers;
 
 public class CameraInvisibleSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final Camera camera;
 
     private final Vector3 leftBottomPoint = new Vector3();
@@ -30,8 +28,8 @@ public class CameraInvisibleSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        TransformComponent transform = mappers.get(TransformComponent.class, entity);
-        TextureComponent texture = mappers.get(TextureComponent.class, entity);
+        TransformComponent transform = Mappers.get(TransformComponent.class, entity);
+        TextureComponent texture = Mappers.get(TextureComponent.class, entity);
 
         float width = texture.width;
         float height = texture.height;

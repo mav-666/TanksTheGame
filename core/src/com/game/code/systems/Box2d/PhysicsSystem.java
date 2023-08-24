@@ -13,8 +13,6 @@ public class PhysicsSystem extends IntervalIteratingSystem {
 
     private static final float TIME_STEP = 1/60f;
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final World world;
 
     public PhysicsSystem(World world) {
@@ -31,8 +29,8 @@ public class PhysicsSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        TransformComponent transform = mappers.get(TransformComponent.class, entity);
-        Body body  = mappers.get(BodyComponent.class, entity).body;
+        TransformComponent transform = Mappers.get(TransformComponent.class, entity);
+        Body body  = Mappers.get(BodyComponent.class, entity).body;
 
         transform.position.set(body.getPosition());
         transform.degAngle = (float) Math.toDegrees(body.getAngle());

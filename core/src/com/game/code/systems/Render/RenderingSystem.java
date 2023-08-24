@@ -20,16 +20,14 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     public final static float PPM = 16f;
 
-    private final Mappers mappers = Mappers.getInstance();
-
     private final Batch batch;
     private final Camera camera;
 
-    private final ComponentMapper<TextureComponent> textureM = mappers.getMapper(TextureComponent.class);
-    private final ComponentMapper<ParticleComponent> particleM = mappers.getMapper(ParticleComponent.class);
-    private final ComponentMapper<TextComponent> textM = mappers.getMapper(TextComponent.class);
-    private final ComponentMapper<WidgetComponent> widgetM = mappers.getMapper(WidgetComponent.class);
-    private final ComponentMapper<TransformComponent> transformM = mappers.getMapper(TransformComponent.class);
+    private final ComponentMapper<TextureComponent> textureM = Mappers.getMapper(TextureComponent.class);
+    private final ComponentMapper<ParticleComponent> particleM = Mappers.getMapper(ParticleComponent.class);
+    private final ComponentMapper<TextComponent> textM = Mappers.getMapper(TextComponent.class);
+    private final ComponentMapper<WidgetComponent> widgetM = Mappers.getMapper(WidgetComponent.class);
+    private final ComponentMapper<TransformComponent> transformM = Mappers.getMapper(TransformComponent.class);
 
     private Vector2 position;
 
@@ -63,7 +61,7 @@ public class RenderingSystem extends SortedIteratingSystem {
     protected void processEntity(Entity entity, float deltaTime) {
         position = transformM.get(entity).position;
 
-        if(mappers.has(InvisibleComponent.class, entity))
+        if(Mappers.has(InvisibleComponent.class, entity))
             return;
 
         if(textureM.has(entity))
@@ -96,8 +94,8 @@ public class RenderingSystem extends SortedIteratingSystem {
         float originX = transform.origin.x + width/2;
         float originY = transform.origin.y + height/2;
 
-        if(mappers.has(ColorComponent.class, entity))
-            batch.setColor(mappers.get(ColorComponent.class, entity).color);
+        if(Mappers.has(ColorComponent.class, entity))
+            batch.setColor(Mappers.get(ColorComponent.class, entity).color);
 
         batch.draw(texture.textureRegion,
                 posX, posY,
@@ -125,8 +123,8 @@ public class RenderingSystem extends SortedIteratingSystem {
         Vector2 offset = textM.get(entity).offset;
         Widget label = textM.get(entity).label;
 
-        if(mappers.has(ColorComponent.class, entity))
-            label.setColor(mappers.get(ColorComponent.class, entity).color);
+        if(Mappers.has(ColorComponent.class, entity))
+            label.setColor(Mappers.get(ColorComponent.class, entity).color);
 
         drawActor(label, offset, deltaTime);
         batch.setColor(Color.WHITE);
@@ -153,7 +151,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 
     public static class ZComparator implements Comparator<Entity> {
 
-        private final ComponentMapper<TransformComponent> transformM = Mappers.getInstance().getMapper(TransformComponent.class);
+        private final ComponentMapper<TransformComponent> transformM = Mappers.getMapper(TransformComponent.class);
 
         @Override
         public int compare(Entity o1, Entity o2) {

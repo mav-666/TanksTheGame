@@ -10,7 +10,6 @@ import io.socket.client.Socket;
 
 public class SocketContactScoreSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final ObjectMap<Entity, Float> savedHPs = new ObjectMap<>();
     private final Socket socket;
@@ -24,15 +23,15 @@ public class SocketContactScoreSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if(mappers.has(CollidesComponent.class, entity))
-            mappers.get(CollusionComponent.class, entity).involved.forEach(this::processTarget);
-        if(mappers.has(StartsCollusionComponent.class, entity))
-            mappers.get(StartCollusionComponent.class, entity).involved.forEach(this::addTarget);
+        if(Mappers.has(CollidesComponent.class, entity))
+            Mappers.get(CollusionComponent.class, entity).involved.forEach(this::processTarget);
+        if(Mappers.has(StartsCollusionComponent.class, entity))
+            Mappers.get(StartCollusionComponent.class, entity).involved.forEach(this::addTarget);
     }
 
     private void addTarget(Entity target) {
-        if(!savedHPs.containsKey(target) && mappers.has(IdComponent.class, target) && mappers.has(HealthComponent.class, target))
-            savedHPs.put(target, mappers.get(HealthComponent.class, target).currentHP);
+        if(!savedHPs.containsKey(target) && Mappers.has(IdComponent.class, target) && Mappers.has(HealthComponent.class, target))
+            savedHPs.put(target, Mappers.get(HealthComponent.class, target).currentHP);
     }
 
     private void processTarget(Entity target) {
@@ -53,12 +52,12 @@ public class SocketContactScoreSystem extends IteratingSystem {
 
     private boolean checkHealthOf(Entity target) {
         float savedHP = this.savedHPs.get(target);
-        float currentHP = mappers.get(HealthComponent.class, target).currentHP;
+        float currentHP = Mappers.get(HealthComponent.class, target).currentHP;
 
         return savedHP > currentHP;
     }
 
     private boolean isDead(Entity target) {
-        return mappers.get(HealthComponent.class, target).currentHP <= 0;
+        return Mappers.get(HealthComponent.class, target).currentHP <= 0;
     }
 }

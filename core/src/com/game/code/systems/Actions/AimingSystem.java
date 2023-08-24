@@ -1,5 +1,4 @@
 package com.game.code.systems.Actions;
-;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -9,20 +8,17 @@ import com.game.code.components.AimsComponent;
 import com.game.code.utils.Mappers;
 
 public class AimingSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
-
     public AimingSystem() {
         super(Family.all(TransformComponent.class, AimsComponent.class, CanonComponent.class).get(), 11);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        Vector2 aimPoint = mappers.get(AimsComponent.class, entity).target;
+        Vector2 aimPoint = Mappers.get(AimsComponent.class, entity).target;
 
-        TransformComponent transform = mappers.get(TransformComponent.class, entity);
+        TransformComponent transform = Mappers.get(TransformComponent.class, entity);
 
-        CanonComponent canon = mappers.get(CanonComponent.class, entity);
+        CanonComponent canon = Mappers.get(CanonComponent.class, entity);
 
         Vector2 originToAim = aimPoint.cpy()
                 .sub(transform.position.x, transform.position.y).nor();

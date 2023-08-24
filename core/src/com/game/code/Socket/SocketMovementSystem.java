@@ -16,7 +16,6 @@ import java.util.Map;
 public class SocketMovementSystem extends IntervalIteratingSystem {
     private final static float TIME_STEP = 1/60f;
 
-    private final Mappers mappers = Mappers.getInstance();
 
     private final Socket socket;
 
@@ -28,12 +27,12 @@ public class SocketMovementSystem extends IntervalIteratingSystem {
 
     @Override
     protected void processEntity(Entity entity) {
-        TransformComponent transformC = mappers.get(TransformComponent.class, entity);
+        TransformComponent transformC = Mappers.get(TransformComponent.class, entity);
 
         socket.emit("playerMoved", new JSONObject(Map.of(
                 "x", transformC.position.x,
                 "y", transformC.position.y,
                 "degAngle", transformC.degAngle,
-                "isMoving", mappers.has(MovesComponent.class, entity))));
+                "isMoving", Mappers.has(MovesComponent.class, entity))));
     }
 }

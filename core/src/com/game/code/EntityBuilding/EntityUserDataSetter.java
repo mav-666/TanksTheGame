@@ -14,7 +14,7 @@ public class EntityUserDataSetter implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        Body body = Mappers.getInstance().get(BodyComponent.class, entity).body;
+        Body body = Mappers.get(BodyComponent.class, entity).body;
 
         if(body != null) {
             body.setUserData(entity);

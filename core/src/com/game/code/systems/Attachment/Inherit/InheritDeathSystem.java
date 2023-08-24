@@ -10,17 +10,15 @@ import com.game.code.utils.Mappers;
 
 public class InheritDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public InheritDeathSystem() {
         super(Family.all(InheritDeathComponent.class).get(), 13);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        ComponentMapper<DeadComponent> deadM = mappers.getMapper(DeadComponent.class);
+        ComponentMapper<DeadComponent> deadM = Mappers.getMapper(DeadComponent.class);
 
-        Entity original = mappers.get(InheritDeathComponent.class, entity).target;
+        Entity original = Mappers.get(InheritDeathComponent.class, entity).target;
 
         if(original == null) return;
 

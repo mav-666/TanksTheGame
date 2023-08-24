@@ -7,8 +7,6 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.game.code.components.*;
 
 public class CollusionRegister implements ContactListener {
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     public CollusionRegister(Engine engine) {
@@ -29,7 +27,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addStartCollusion(Entity A, Entity B) {
-        ComponentMapper<StartCollusionComponent> startCollusionM = mappers.getMapper(StartCollusionComponent.class);
+        ComponentMapper<StartCollusionComponent> startCollusionM = Mappers.getMapper(StartCollusionComponent.class);
 
         if(startCollusionM.has(A)) {
             startCollusionM.get(A).involved.add(B);
@@ -56,7 +54,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void endCollusion(Entity A, Entity B) {
-        ComponentMapper<CollusionComponent> collusionM = mappers.getMapper(CollusionComponent.class);
+        ComponentMapper<CollusionComponent> collusionM = Mappers.getMapper(CollusionComponent.class);
 
         if(collusionM.has(A))
             collusionM.get(A).involved.removeValue(B, true);
@@ -69,7 +67,7 @@ public class CollusionRegister implements ContactListener {
     }
 
     private void addEndsCollusionComponent(Entity A, Entity B) {
-        ComponentMapper<EndCollusionComponent> endCollusionM = mappers.getMapper(EndCollusionComponent.class);
+        ComponentMapper<EndCollusionComponent> endCollusionM = Mappers.getMapper(EndCollusionComponent.class);
 
         if(endCollusionM.has(A)) {
             endCollusionM.get(A).involved.add(B);

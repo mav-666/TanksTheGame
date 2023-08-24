@@ -8,6 +8,7 @@ import com.game.code.UI.Meter;
 import com.game.code.components.SummonsNowComponent;
 import com.game.code.components.WidgetComponent;
 import com.game.code.screens.Loading.TaskLoader;
+import com.game.code.utils.Mappers;
 import io.socket.client.Ack;
 import io.socket.client.Socket;
 import org.json.JSONObject;
@@ -36,10 +37,10 @@ public class HostScreen extends GameLobbyScreen {
 
             @Override
             public Entity summonBy(Entity summoner) {
-                String fillingName = mappers.get(SummonsNowComponent.class, summoner).entityName;
+                String fillingName = Mappers.get(SummonsNowComponent.class, summoner).entityName;
                 Entity meterE =  super.summonBy(summoner);
 
-                Meter meter = ((Meter) mappers.get(WidgetComponent.class, meterE).widget);
+                Meter meter = ((Meter) Mappers.get(WidgetComponent.class, meterE).widget);
 
                 meter.getSignal().add(((signal, value) ->
                         host.emit("settingChanged", new JSONObject(Map.of("name", fillingName, "value", value)))));

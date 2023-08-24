@@ -85,7 +85,7 @@ public abstract class EngineScreen extends AbstractScreen implements LoadableScr
     protected void initEngine() {
         this.viewport = initViewport();
         engine.includeBasic(entitySummonerProvider, world, viewport, app.batch);
-        Mappers.getInstance().setEngine(engine);
+        Mappers.setEngine(engine);
     }
 
     protected abstract Viewport initViewport();

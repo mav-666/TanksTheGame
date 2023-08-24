@@ -9,8 +9,6 @@ import com.game.code.utils.Mappers;
 import java.util.Optional;
 
 public class FriendsMaker {
-
-    private final Mappers mappers = Mappers.getInstance();
     private final BodySearcher bodySearcher;
 
     public FriendsMaker() {
@@ -19,7 +17,7 @@ public class FriendsMaker {
     }
 
     public void makeFriendsTo(Entity friend, Entity newFriend) {
-        ComponentMapper<HasFriendsComponent> friendlyM = mappers.getMapper(HasFriendsComponent.class);
+        ComponentMapper<HasFriendsComponent> friendlyM = Mappers.getMapper(HasFriendsComponent.class);
 
         Optional<Body> friendBody = bodySearcher.searchForBodyIn(friend);
         Optional<Body> newFriendBody = bodySearcher.searchForBodyIn(newFriend);

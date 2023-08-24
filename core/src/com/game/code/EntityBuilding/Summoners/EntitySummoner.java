@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.SummoningDirector;
 import com.game.code.components.*;
+import com.game.code.utils.Mappers;
 
 public class EntitySummoner extends EntityBuilderSummoner implements SummoningDirector {
 
@@ -23,7 +24,7 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
 
     @Override
     public Entity summonBy(Entity summoner) {
-        entityName = mappers.get(SummonsNowComponent.class, summoner).entityName;
+        entityName = Mappers.get(SummonsNowComponent.class, summoner).entityName;
 
         build();
 
@@ -43,10 +44,10 @@ public class EntitySummoner extends EntityBuilderSummoner implements SummoningDi
     }
 
     protected void initTransformBy(Entity summoner) {
-        SummonsComponent summonsC = mappers.get(SummonsNowComponent.class, summoner);
+        SummonsComponent summonsC = Mappers.get(SummonsNowComponent.class, summoner);
 
         TransformComponent entityTransform = entityBuilder.getComponent(TransformComponent.class);
-        TransformComponent summonerTransform = mappers.get(TransformComponent.class, summoner);
+        TransformComponent summonerTransform = Mappers.get(TransformComponent.class, summoner);
 
         entityTransform.position.set(summonerTransform.position).add(summonsC.offset);
         entityTransform.degAngle = summonsC.degAngle;

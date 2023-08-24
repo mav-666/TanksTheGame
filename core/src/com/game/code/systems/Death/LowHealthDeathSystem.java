@@ -10,15 +10,13 @@ import com.game.code.utils.Mappers;
 
 public class LowHealthDeathSystem extends IteratingSystem {
 
-    private final Mappers mappers = Mappers.getInstance();
-
     public LowHealthDeathSystem() {
         super(Family.all(HealthComponent.class).exclude(ImmortalComponent.class, DeadComponent.class).get());
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        HealthComponent health = mappers.get(HealthComponent.class, entity);
+        HealthComponent health = Mappers.get(HealthComponent.class, entity);
 
         if(health.currentHP <= 0)
             entity.add(getEngine().createComponent(DeadComponent.class));

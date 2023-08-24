@@ -13,8 +13,6 @@ import com.game.code.utils.TweenUtils.TweenM;
 
 public class RespawnListener implements EntityListener {
     public static final Family FAMILY = Family.all(RespawnsAfterDeathComponent.class, DeadComponent.class).get();
-
-    private final Mappers mappers = Mappers.getInstance();
     private final Engine engine;
 
     private final Family spawnFamily = Family.all(SpawnComponent.class, TransformComponent.class).get();
@@ -25,7 +23,7 @@ public class RespawnListener implements EntityListener {
 
     @Override
     public void entityAdded(Entity entity) {
-        float respawnDelay = mappers.get(RespawnsAfterDeathComponent.class, entity).delaySec;
+        float respawnDelay = Mappers.get(RespawnsAfterDeathComponent.class, entity).delaySec;
 
         Timeline.createSequence()
                 .pushPause(respawnDelay)
@@ -42,7 +40,7 @@ public class RespawnListener implements EntityListener {
     }
     
     private void resetHealthOf(Entity entity) {
-        HealthComponent healthC = mappers.get(HealthComponent.class, entity);
+        HealthComponent healthC = Mappers.get(HealthComponent.class, entity);
 
         healthC.currentHP = healthC.maxHP;
         
@@ -51,7 +49,7 @@ public class RespawnListener implements EntityListener {
 
     private void makeInvincible(Entity entity) {
         entity.add(engine.createComponent(InvincibleComponent.class));
-        if(!mappers.has(InvincibilityComponent.class, entity)) {
+        if(!Mappers.has(InvincibilityComponent.class, entity)) {
             InvincibilityComponent invincibilityC = entity.getComponent(InvincibilityComponent.class);
             invincibilityC.seconds = .5f;
             entity.add(invincibilityC);
@@ -60,12 +58,12 @@ public class RespawnListener implements EntityListener {
     
     private void placeOnSpawn(Entity entity) {
         Entity spawn = engine.getEntitiesFor(spawnFamily).random();
-        Vector2 spawnPos = mappers.get(TransformComponent.class, spawn).position;
+        Vector2 spawnPos = Mappers.get(TransformComponent.class, spawn).position;
 
-        if(mappers.has(BodyComponent.class, entity))
-            mappers.get(BodyComponent.class, entity).body.setTransform(spawnPos, 0);
+        if(Mappers.has(BodyComponent.class, entity))
+            Mappers.get(BodyComponent.class, entity).body.setTransform(spawnPos, 0);
         else
-            mappers.get(TransformComponent.class, entity).position.set(spawnPos);
+            Mappers.get(TransformComponent.class, entity).position.set(spawnPos);
     }
 
     @Override

@@ -18,8 +18,6 @@ import com.game.code.utils.TweenUtils.TweenM;
 import com.game.code.utils.TweenUtils.Vector2Accessor;
 
 public class ShootingSystem extends IteratingSystem {
-
-    private final Mappers mappers = Mappers.getInstance();
     private final BodySearcher bodySearcher;
 
     private final SummoningDirector summoningDirector;
@@ -49,7 +47,7 @@ public class ShootingSystem extends IteratingSystem {
     private void addRecharge(Entity entity) {
         entity.add(getEngine().createComponent(RechargesComponent.class));
 
-        float seconds = mappers.get(RechargingComponent.class, entity).seconds;
+        float seconds = Mappers.get(RechargingComponent.class, entity).seconds;
 
         Timeline.createSequence()
                 .pushPause(seconds)
@@ -62,7 +60,7 @@ public class ShootingSystem extends IteratingSystem {
 
         if(optionalBody.isEmpty()) return;
 
-        TransformComponent projectileTransform = mappers.get(TransformComponent.class, projectile);
+        TransformComponent projectileTransform = Mappers.get(TransformComponent.class, projectile);
 
         float recoil = calculateRecoil(entity, optionalBody.get().getAngle());
 
@@ -73,8 +71,8 @@ public class ShootingSystem extends IteratingSystem {
     }
 
     private float calculateRecoil(Entity entity, float bodyAngle) {
-        float degAngle = mappers.get(TransformComponent.class, entity).degAngle;
-        float recoil = mappers.get(ProjectileTemplateComponent.class, entity).recoil;
+        float degAngle = Mappers.get(TransformComponent.class, entity).degAngle;
+        float recoil = Mappers.get(ProjectileTemplateComponent.class, entity).recoil;
 
         return recoil * calculateRecoilStrength(degAngle, bodyAngle);
     }
@@ -88,9 +86,9 @@ public class ShootingSystem extends IteratingSystem {
     }
 
     private void addRecoilAnimation(Entity entity) {
-        ComponentMapper<TextureComponent> textureM = mappers.getMapper(TextureComponent.class);
+        ComponentMapper<TextureComponent> textureM = Mappers.getMapper(TextureComponent.class);
 
-        if(!mappers.has(AnimatedRecoilComponent.class, entity) || !textureM.has(entity))
+        if(!Mappers.has(AnimatedRecoilComponent.class, entity) || !textureM.has(entity))
                 return;
 
         Vector2 offset = textureM.get(entity).offset;

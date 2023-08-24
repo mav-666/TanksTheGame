@@ -5,21 +5,24 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.audio.Sound;
-import com.game.code.components.*;
+import com.game.code.components.AppearSoundComponent;
+import com.game.code.components.ContactSoundComponent;
+import com.game.code.components.SoundComponent;
+import com.game.code.components.SoundsComponent;
+
 import com.game.code.utils.Mappers;
 
-public class ShootingSoundListener implements EntityListener {
-    public static final Family FAMILY = Family.all(ShootsComponent.class, ShootingSoundComponent.class, SoundComponent.class)
-            .exclude(RechargesComponent.class).get();
+public class AppearSoundListener implements EntityListener {
+    public static final Family FAMILY = Family.all(AppearSoundComponent.class, SoundComponent.class).get();
     private final Engine engine;
 
-    public ShootingSoundListener(Engine engine) {
+    public AppearSoundListener(Engine engine) {
         this.engine = engine;
     }
 
     @Override
     public void entityAdded(Entity entity) {
-        Sound sound = Mappers.get(ShootingSoundComponent.class, entity).sound;
+        Sound sound = Mappers.get(AppearSoundComponent.class, entity).sound;
 
         Mappers.get(SoundComponent.class, entity).sounds.add(sound);
 
