@@ -1,12 +1,10 @@
 package com.game.code.utils;
 
-import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.EntityBuilding.ComponentInitializer;
-import com.game.code.EntityBuilding.EntityBuilder;
 import com.game.code.EntityBuilding.EntityUserDataSetter;
 import com.game.code.EntityBuilding.HasFriendsComponentSetter;
 import com.game.code.EntityBuilding.Summoners.EntitySummonerProvider;
@@ -22,11 +20,10 @@ import com.game.code.systems.Attachment.FollowCursorSystem;
 import com.game.code.systems.Attachment.Inherit.InheritAngleSystem;
 import com.game.code.systems.Attachment.Inherit.InheritColorSystem;
 import com.game.code.systems.Attachment.Inherit.InheritDeathSystem;
-import com.game.code.systems.Box2d.Box2dDebugSystem;
 import com.game.code.systems.Box2d.ConnectionSystem;
 import com.game.code.systems.Box2d.Contact.CollusionSystem;
-import com.game.code.systems.Box2d.Contact.ContactBreakSystem;
-import com.game.code.systems.Box2d.Contact.ContactDamageSystem;
+import com.game.code.systems.Box2d.Contact.ContactBreakListener;
+import com.game.code.systems.Box2d.Contact.ContactDamageListener;
 import com.game.code.systems.Box2d.Contact.ContactEventSystem;
 import com.game.code.systems.Box2d.DestroyingSystem;
 import com.game.code.systems.Box2d.PhysicsSystem;
@@ -45,12 +42,10 @@ import com.game.code.systems.Input.AimingInputSystem;
 import com.game.code.systems.Input.MovementInputSystem;
 import com.game.code.systems.Input.ShootingInputSystem;
 import com.game.code.systems.Render.CameraInvisibleSystem;
-import com.game.code.systems.Render.GLProfileSystem;
 import com.game.code.systems.Render.RenderingSystem;
 import com.game.code.systems.ScrollSystem;
 import com.game.code.systems.Sound.SoundSystem;
 import com.game.code.systems.Sound.listeners.*;
-import com.game.code.systems.Summon.DebugSummonSystem;
 import com.game.code.systems.Summon.SummoningSystem;
 import com.game.code.systems.Summon.SummonsAfterCollusionSystem;
 import com.game.code.systems.Summon.SummonsWhileMovingSystem;
@@ -133,9 +128,9 @@ public class CustomizableEngine extends PooledEngine {
 
         this.addEntityListener(LifeSpanListener.FAMILY, new LifeSpanListener(this));
 
-        this.addSystem(new ContactDamageSystem());
-        this.addSystem(new ContactEventSystem());
-        this.addSystem(new ContactBreakSystem());
+        this.addEntityListener(ContactDamageListener.FAMILY, new ContactDamageListener(this));
+        this.addEntityListener(ContactEventSystem.FAMILY, new ContactEventSystem());
+        this.addEntityListener(ContactBreakListener.FAMILY, new ContactBreakListener(this));
         
         this.addSystem(new CollusionSystem());
         
@@ -167,19 +162,9 @@ public class CustomizableEngine extends PooledEngine {
         this.addSystem(new OtherSocketMovementSystem(socket));
         this.addSystem(new SocketMovementSystem(socket));
 
+        this.addSystem(new OtherSocketDamagingSystem(socket));
+        this.addEntityListener(SocketDamagingSystem.FAMILY, new SocketDamagingSystem(socket));
+
         this.addSystem(new SocketPlayerCreationSystem(socket, playerCreator, componentInitializer));
-    }
-    
-    public void includeDebug(EntityBuilder entityBuilder, World world, Viewport viewport) {
-        EntitySystem profile = new GLProfileSystem();
-        profile.setProcessing(false);
-        this.addSystem(profile);
-
-        this.addSystem(new DebugSummonSystem(entityBuilder, viewport));
-
-        EntitySystem debug = new Box2dDebugSystem(world, viewport);
-        debug.setProcessing(false);
-        this.addSystem(debug);
-
     }
 }

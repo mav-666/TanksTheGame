@@ -1,20 +1,22 @@
 package com.game.code.systems.Box2d.Contact;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.game.code.components.ContactEventComponent;
 import com.game.code.components.EndsCollusionComponent;
 import com.game.code.utils.Mappers;
 
-public class ContactEventSystem extends IteratingSystem {
+public class ContactEventSystem implements EntityListener {
+    public static final Family FAMILY = Family.all(EndsCollusionComponent.class, ContactEventComponent.class).get();
 
-    public ContactEventSystem() {
-        super(Family.all(EndsCollusionComponent.class, ContactEventComponent.class).get(), 5);
+    @Override
+    public void entityAdded(Entity entity) {
+        Mappers.get(ContactEventComponent.class, entity).event.occur();
     }
 
     @Override
-    protected void processEntity(Entity entity, float deltaTime) {
-        Mappers.get(ContactEventComponent.class, entity).event.occur();
+    public void entityRemoved(Entity entity) {
+
     }
 }

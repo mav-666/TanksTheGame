@@ -16,7 +16,7 @@ public class PhysicsSystem extends IntervalIteratingSystem {
     private final World world;
 
     public PhysicsSystem(World world) {
-        super(Family.all(TransformComponent.class, BodyComponent.class).get(), TIME_STEP);
+        super(Family.all(TransformComponent.class, BodyComponent.class).get(), TIME_STEP, 2);
 
         this.world = world;
     }

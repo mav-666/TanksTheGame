@@ -7,10 +7,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.game.code.Application;
 import com.game.code.EntityBuilding.Summoners.SummonerType;
 import com.game.code.EntityBuilding.battlefiled.*;
-import com.game.code.Socket.OtherSocketAimingSystem;
-import com.game.code.Socket.OtherSocketMovementSystem;
-import com.game.code.Socket.OtherSocketShootingSystem;
-import com.game.code.Socket.SocketPlayerCreationSystem;
+import com.game.code.Socket.*;
 import com.game.code.UI.Meter;
 import com.game.code.components.*;
 import com.game.code.screens.Loading.TaskLoader;
@@ -49,6 +46,7 @@ public abstract class GameLobbyScreen extends EngineScreen {
     protected void initEngine() {
         super.initEngine();
         engine.removeSystem(engine.getSystem(DamagingSystem.class));
+        engine.removeSystem(engine.getSystem(OtherSocketDamagingSystem.class));
     }
 
     @Override

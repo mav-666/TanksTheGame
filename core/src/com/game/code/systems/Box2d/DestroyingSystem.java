@@ -10,10 +10,11 @@ import com.game.code.components.DestroyedComponent;
 import com.game.code.components.ParticleComponent;
 import com.game.code.utils.Mappers;
 
-public class DestroyingSystem extends IteratingSystem {    private final World world;
+public class DestroyingSystem extends IteratingSystem {
+    private final World world;
 
     public DestroyingSystem(World world) {
-        super(Family.all(DestroyedComponent.class).get(), 99);
+        super(Family.all(DestroyedComponent.class).get(), 1);
 
         this.world = world;
     }

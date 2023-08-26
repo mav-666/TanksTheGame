@@ -9,8 +9,8 @@ import java.net.URI;
 import java.util.Collections;
 
 public class ClientSocket {
-    private final static String SERVER_URI = "http://localhost:8080/";
-//    http://localhost:8080/
+    private final static String SERVER_URI = "https://mav6stanks.onrender.com";
+//    https://mav6stanks.onrender.com
 
     private final URI uri = URI.create(SERVER_URI);
     private final IO.Options options = IO.Options.builder().build();

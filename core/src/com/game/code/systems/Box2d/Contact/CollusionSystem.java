@@ -13,7 +13,7 @@ public class CollusionSystem extends IteratingSystem implements EntityListener {
     private final ComponentMapper<EndCollusionComponent> endCollusionM = Mappers.getMapper(EndCollusionComponent.class);
 
     public CollusionSystem() {
-        super(Family.one(StartsCollusionComponent.class, EndsCollusionComponent.class).get(), 98);
+        super(Family.one(StartsCollusionComponent.class, EndsCollusionComponent.class).get(), 3);
     }
 
     @Override

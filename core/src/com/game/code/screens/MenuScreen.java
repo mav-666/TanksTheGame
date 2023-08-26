@@ -25,7 +25,6 @@ public class MenuScreen extends EngineScreen {
     protected void initEngine() {
         super.initEngine();
         entitySummonerProvider.add(new KeyboardSummoner(entityBuilder, engine, app.skin));
-        engine.includeDebug(entityBuilder, world, viewport);
     }
 
     @Override

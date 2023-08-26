@@ -5,11 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntityListener;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Timer;
 import com.game.code.components.*;
 import com.game.code.utils.Mappers;
@@ -106,9 +104,6 @@ public class SoundSystem extends IteratingSystem implements EntityListener {
     private void playSoundFrom(Sound sound, long id, float volume, float pan, float pitch) {
         sound.setPan(id, pan, volume);
         sound.setPitch(id, pitch);
-
-        Gdx.app.log("Sound"," V: " + volume + " P: " + pan + " PI: " + pitch);
-
     }
 
     private float calcVolume(Vector2 sourcePos) {

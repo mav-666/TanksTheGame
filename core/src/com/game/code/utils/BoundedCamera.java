@@ -20,9 +20,6 @@ public class BoundedCamera extends OrthographicCamera {
 
     @Override
     public void update(){
-        if(Gdx.input.isKeyPressed(Input.Keys.U)) zoom += 0.1;
-        if(Gdx.input.isKeyPressed(Input.Keys.O)) zoom -= 0.1;
-
         boundsX = viewportWidth/2 + bounds.startX();
         boundsY = viewportHeight/2 + bounds.startX();
 

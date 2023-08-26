@@ -186,7 +186,6 @@ public class GameScreen extends EngineScreen {
     @Override
     public void show() {
         app.getSocket("/inRoom").emit("ready");
-        engine.includeDebug(entityBuilder, world, viewport);
         createGrid();
     }
 

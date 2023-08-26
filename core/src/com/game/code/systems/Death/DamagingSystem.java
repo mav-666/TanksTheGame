@@ -8,17 +8,15 @@ import com.game.code.utils.Mappers;
 
 public class DamagingSystem extends IteratingSystem {
 
-
     public DamagingSystem() {
         super(Family.all(HealthComponent.class, TakesDamageComponent.class).get(), 90);
     }
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-
         HealthComponent healthC = Mappers.get(HealthComponent.class, entity);
 
-        if(isInvincible(entity) || healthC.currentHP <= 0) {
+        if(!Mappers.has(IdComponent.class, entity) && (isInvincible(entity) || healthC.currentHP <= 0)) {
             entity.remove(TakesDamageComponent.class);
             return;
         }
