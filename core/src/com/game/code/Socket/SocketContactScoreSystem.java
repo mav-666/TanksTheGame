@@ -61,7 +61,6 @@ public class SocketContactScoreSystem extends EntitySystem {
 
                     private boolean isDead(Entity target) {
                         float damage = Mappers.get(TakesDamageComponent.class, target).damage;
-                        Gdx.app.log("afa", Mappers.get(HealthComponent.class, target).currentHP + " " + damage +  "");
                         return Mappers.get(HealthComponent.class, target).currentHP - damage <= 0;
                     }
 

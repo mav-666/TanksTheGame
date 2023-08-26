@@ -26,8 +26,6 @@ public class SocketDamagingSystem implements EntityListener {
     public void entityAdded(Entity entity) {
         float damage = Mappers.get(TakesDamageComponent.class, entity).damage;
 
-        Gdx.app.log("player damage", damage + " ");
-
         socket.emit("takeDamage", new JSONObject(Map.of("damage", damage)));
     }
 

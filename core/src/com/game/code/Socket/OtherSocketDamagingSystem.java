@@ -48,8 +48,6 @@ public class OtherSocketDamagingSystem extends DeactivatingSystem implements Ent
             String id = data.getString("id");
             float damage = (float) data.getDouble("damage");
 
-            Gdx.app.log(id, damage + " ");
-
             if(players.containsKey(id))
                 dealDamageTo(players.get(id), damage);
 
