@@ -1,10 +1,7 @@
 package com.game.code.utils;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-//камера привязанная к объекту, не выходит за границы карты
 public class BoundedCamera extends OrthographicCamera {
     
     private Bounds bounds;
@@ -27,10 +24,7 @@ public class BoundedCamera extends OrthographicCamera {
 
        super.update();
     }
-    //красивое перемещение камеры
 
-
-    //проверить пересечение границ
     private void checkBorderCrossed(){
         if(position.x < boundsX){
             position.x= boundsX;

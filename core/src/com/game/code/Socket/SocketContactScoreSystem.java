@@ -1,7 +1,6 @@
 package com.game.code.Socket;
 
 import com.badlogic.ashley.core.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.game.code.components.*;
 import com.game.code.utils.Mappers;
