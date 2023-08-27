@@ -47,7 +47,7 @@ import com.game.code.systems.ScrollSystem;
 import com.game.code.systems.Sound.SoundSystem;
 import com.game.code.systems.Sound.listeners.*;
 import com.game.code.systems.Summon.SummoningSystem;
-import com.game.code.systems.Summon.SummonsAfterCollusionSystem;
+import com.game.code.systems.Summon.SummonsAfterCollusionListener;
 import com.game.code.systems.Summon.SummonsWhileMovingSystem;
 import com.game.code.systems.Summon.listeners.SummoningAfterDeathListener;
 import com.game.code.systems.Summon.listeners.SummonsAfterRemoveListener;
@@ -134,7 +134,7 @@ public class CustomizableEngine extends PooledEngine {
         
         this.addSystem(new CollusionSystem());
         
-        this.addSystem(new SummonsAfterCollusionSystem());
+        this.addEntityListener(SummonsAfterCollusionListener.FAMILY, new SummonsAfterCollusionListener(this));
         this.addEntityListener(SummonsAfterRemoveListener.FAMILY,new SummonsAfterRemoveListener(this));
     }
 
